@@ -30,11 +30,9 @@ EiBuffer - Serializer to save and load data as well send packets for servers.
 {
   EiBuffer buffer = new EiBuffer(sizeOfBuffer);
   buffer.SetDynamic(); <- Makes it dynamic and scale as a list, but becomes slower and creates GC on new sizes.
-  
   buffer.Write(myInt);
   buffer.Write(myTexture2D);
   buffer.Write(myPositionVec3);
-  
   buffer.WriteToFile(pathToFile);
 }
 
@@ -42,7 +40,6 @@ EiPropertyEvent<T> - A simple way of doing a property where you can subscribe to
 {
   EiPropertyEvent<float> health = new EiPropertyEvent<float>(100f);
   health.Subscribe(OnHealthChanged);
-
   health.Value = 74f;
 }
 
