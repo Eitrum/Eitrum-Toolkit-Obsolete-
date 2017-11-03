@@ -52,6 +52,32 @@ namespace Eitrum
 			}
 		}
 
+		public void Move (EiLLNode<T> node, EiLinkedList<T> otherList)
+		{
+			if (node.List != this)
+				throw new Exception ("You are not allowed to move nodes from other list without going through its own list");
+			
+			if (count == 1) {
+				this.node = null;
+			}
+
+			node.Prev.Next = node.Next;
+			node.Next.Prev = node.Prev;
+
+			node.List = otherList;
+
+			if (otherList.Count () == 0) {
+				node.Next = node;
+				node.Prev = node;
+				otherList.node = node;
+			} else {
+				otherList.node.Prev.Next = node;
+				node.Prev = otherList.node.Prev;
+				node.Next = otherList.node;
+				otherList.node.Prev = node;
+			}
+		}
+
 		#endregion
 
 		#region Remove
@@ -113,6 +139,32 @@ namespace Eitrum
 		#endregion
 
 		#region Helper
+
+		public T First ()
+		{
+			if (node == null)
+				return null;
+			return node.Value;
+		}
+
+		public T Last ()
+		{
+			if (node == null)
+				return null;
+			return node.Prev.Value;
+		}
+
+		public EiLLNode<T> FirstNode ()
+		{
+			return node;
+		}
+
+		public EiLLNode<T> LastNode ()
+		{
+			if (node == null)
+				return null;
+			return node.Prev;
+		}
 
 		public EiLLIterator<T> GetIterator ()
 		{
@@ -210,6 +262,20 @@ namespace Eitrum
 			Next = null;
 			Prev = null;
 			List = null;
+		}
+
+		#endregion
+
+		#region Helpers
+
+		public void RemoveFromList ()
+		{
+			List.Remove (this);
+		}
+
+		public void MoveTo (EiLinkedList<T> otherList)
+		{
+			List.Move (this, otherList);
 		}
 
 		#endregion

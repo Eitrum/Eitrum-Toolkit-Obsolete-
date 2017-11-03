@@ -7,11 +7,6 @@ namespace Eitrum
 	{
 		#region Variables
 
-		/// <summary>
-		/// The entity link, should only be used for/on entities!
-		/// </summary>
-		protected EiBasicEntity entity;
-
 		// Should Not ever be touched by anything!!! Used by core engine for performance
 		public EiLLNode<EiUpdateInterface> preUpdateNode;
 		public EiLLNode<EiUpdateInterface> updateNode;
@@ -22,19 +17,6 @@ namespace Eitrum
 		#endregion
 
 		#region Properties
-
-		/// <summary>
-		/// Gets the entity. Call only on entity objects, else colliders and rigidbody will appear, making the object physics based.
-		/// </summary>
-		/// <value>The entity.</value>
-		public virtual EiBasicEntity Entity {
-			get {
-				if (entity == null) {
-					entity = this.GetOrAddComponent<EiBasicEntity> ();
-				}
-				return entity;
-			}
-		}
 
 		#endregion
 
