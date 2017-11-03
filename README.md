@@ -39,7 +39,8 @@ EiBuffer - Serializer to save and load data as well send packets for servers.
 ```
 
 EiPropertyEvent<T> - A simple way of doing a property where you can subscribe to on changes. Supports multi thread with callbacks on Unity Thread. 
-```{
+```
+    {
   EiPropertyEvent<float> health = new EiPropertyEvent<float>(100f);
   health.Subscribe(OnHealthChanged);
   health.Value = 74f;
@@ -49,6 +50,8 @@ EiSyncronizedList + EiSyncronizedQueue - Two wrappers for having threading suppo
 
 
 Both EiComponent and EiCore also has a Singleton structure to be able to create singleton easier.
-```public class MyComponent : EiComponentSingleton<MyComponent>{}```
+```
+public class MyComponent : EiComponentSingleton<MyComponent>{}
+```
   This will make a singleton out of this script, it will search in resource folder for a prefab that shares the same name as the script.
   If it doesnt find any, it will create a new game object.
