@@ -8,7 +8,6 @@ namespace Eitrum
 		#region Variables
 
 		bool isDestroyed = false;
-		private Action onDestroy;
 
 		// Should Not ever be touched by anything!!! Used by core engine for performance
 		public EiLLNode<EiUpdateInterface> preUpdateNode;
@@ -21,31 +20,54 @@ namespace Eitrum
 
 		#region Properties
 
-		public virtual bool IsDestroyed {
+		public bool IsDestroyed {
 			get {
 				return isDestroyed;
 			}set {
 				if (value && !isDestroyed) {
-					Destroy ();
+					DestroyThis ();
 				}
 			}
 		}
 
-		public Action OnDestroy {
-			get{ return onDestroy; }
+		public EiComponent Component {
+			get {
+				return null;
+			}
+		}
+
+		public EiCore Core {
+			get {
+				return this;
+			}
+		}
+
+		public bool IsNull {
+			get {
+				return isDestroyed;
+			}
 		}
 
 		#endregion
 
 		#region Core
 
-		public void Destroy ()
+		public static void Destroy (EiCore core)
+		{
+			core.DestroyThis ();
+		}
+
+		public void DestroyThis ()
 		{
 			if (isDestroyed == false) {
 				isDestroyed = true;
-				if (onDestroy != null)
-					onDestroy ();
+				OnDestroy ();
 			}
+		}
+
+		protected virtual void OnDestroy ()
+		{
+
 		}
 
 		#endregion
@@ -77,30 +99,9 @@ namespace Eitrum
 			
 		}
 
-		public bool IsNull {
-			get {
-				return isDestroyed;
-			}
-		}
-
 		#endregion
 
 		#region Subscribe/Unsubscribe
-
-		#region OnDestroy
-
-		public void OnDestroySubscribe (Action action)
-		{
-			onDestroy += action;
-		}
-
-		public void OnDestroyUnsubscribe (Action action)
-		{
-			if (onDestroy != null)
-				onDestroy -= action;
-		}
-
-		#endregion
 
 		#region Update Timer
 

@@ -82,7 +82,7 @@ namespace Eitrum
 
 		#region Core
 
-		public override bool IsDestroyed {
+		public new bool IsDestroyed {
 			get {
 				return comp == null || (core == null || core.IsDestroyed) || base.IsDestroyed;
 			}

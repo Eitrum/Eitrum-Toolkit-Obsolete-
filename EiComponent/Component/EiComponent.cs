@@ -45,6 +45,24 @@ namespace Eitrum
 			}
 		}
 
+		public EiComponent Component {
+			get {
+				return this;
+			}
+		}
+
+		public EiCore Core {
+			get {
+				return null;
+			}
+		}
+
+		public bool IsNull {
+			get {
+				return this == null;
+			}
+		}
+
 		#endregion
 
 		#region Virtual Update Calls
@@ -72,12 +90,6 @@ namespace Eitrum
 		public virtual void ThreadedUpdateComponent (float time)
 		{
 
-		}
-
-		public bool IsNull {
-			get {
-				return this == null;
-			}
 		}
 
 		#endregion

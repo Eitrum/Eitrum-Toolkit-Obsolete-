@@ -40,12 +40,31 @@ namespace Eitrum
 			public int joyNum = 0;
 		}
 
+		#region Config Settings (Menu Items)
 
-		[MenuItem ("Eitrum/Configure/Input Manager")]
+		[MenuItem ("Eitrum/Configure/Input Manager Simple")]
+		public static void ConfigureStandardSettingsSimple ()
+		{
+			ClearAxis ();
+			GenerateDefault ();
+			GenerateJoystickAxisSimple ();
+		}
+
+		[MenuItem ("Eitrum/Configure/Input Manager Advanced")]
 		public static void ConfigureStandardSettings ()
 		{
 			ClearAxis ();
+			GenerateDefault ();
+			GenerateJoystickAxisSimple ();
+			GenerateJoystickAxisAdvanced ();
+		}
 
+		#endregion
+
+		#region Generations
+
+		static void GenerateDefault ()
+		{
 			AddAxis (new InputAxis () {
 				name = "Vertical",
 				sensitivity = 1f,
@@ -64,20 +83,65 @@ namespace Eitrum
 				positiveButton = "d",
 				negativeButton = "a"
 			});
-			AddAxis (new InputAxis () { name = "Mouse X", sensitivity = 1f, type = AxisType.MouseMovement, axis = 1 });
 			AddAxis (new InputAxis () {
-				name = "Mouse Y",
+				name = "Submit",
+				sensitivity = 1f,
+				dead = 0f,
+				type = AxisType.KeyOrMouseButton,
+				axis = 1,
+				positiveButton = "return",
+				negativeButton = ""
+			});
+			AddAxis (new InputAxis () {
+				name = "Cancel",
+				sensitivity = 1f,
+				dead = 0f,
+				type = AxisType.KeyOrMouseButton,
+				axis = 1,
+				positiveButton = "escape",
+				negativeButton = ""
+			});
+			AddAxis (new InputAxis () {
+				name = "Mouse_X",
+				sensitivity = 1f,
+				type = AxisType.MouseMovement,
+				axis = 1
+			});
+			AddAxis (new InputAxis () {
+				name = "Mouse_Y",
 				sensitivity = 1f,
 				type = AxisType.MouseMovement,
 				axis = 2,
 				invert = true
 			});
-			AddAxis (new InputAxis () { name = "Mouse ScrollWheel", sensitivity = 1f, type = AxisType.MouseMovement, axis = 3 });
+			AddAxis (new InputAxis () {
+				name = "Mouse_Scroll_Wheel",
+				sensitivity = 1f,
+				type = AxisType.MouseMovement,
+				axis = 3
+			});
+		}
 
+		static void GenerateJoystickAxisSimple ()
+		{
+			for (int axises = 0; axises < 24; axises++) {
+				AddAxis (new InputAxis () {
+					name = string.Format ("Joystick_Axis_{0}", axises + 1),
+					dead = 0.19f,
+					sensitivity = 1f,
+					type = AxisType.JoystickAxis,
+					axis = axises + 1,
+					joyNum = 0
+				});
+			}
+		}
+
+		static void GenerateJoystickAxisAdvanced ()
+		{
 			for (int joysticks = 0; joysticks < 8; joysticks++) {
 				for (int axises = 0; axises < 24; axises++) {
 					AddAxis (new InputAxis () {
-						name = string.Format ("Joystick {0} A {1}", joysticks + 1, axises + 1),
+						name = string.Format ("Joystick_{0}_Axis_{1}", joysticks + 1, axises + 1),
 						dead = 0.19f,
 						sensitivity = 1f,
 						type = AxisType.JoystickAxis,
@@ -87,6 +151,10 @@ namespace Eitrum
 				}
 			}
 		}
+
+		#endregion
+
+		#region Core
 
 		private static void ClearAxis ()
 		{
@@ -154,6 +222,8 @@ namespace Eitrum
 			} while (child.Next (false));
 			return null;
 		}
+
+		#endregion
 	}
 }
 

@@ -2,7 +2,7 @@
 
 namespace Eitrum
 {
-	public interface EiUpdateInterface
+	public interface EiUpdateInterface : EiBaseInterface
 	{
 		void PreUpdateComponent (float time);
 
@@ -14,7 +14,6 @@ namespace Eitrum
 
 		void ThreadedUpdateComponent (float time);
 
-		bool IsNull{ get; }
 	}
 }
 

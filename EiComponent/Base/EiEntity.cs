@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Eitrum
@@ -8,9 +10,28 @@ namespace Eitrum
 	{
 		#region Variables
 
+		[Header ("Entity Settings")]
 		[SerializeField]
 		protected string entityName = "default-entity";
 
+		[SerializeField]
+		[Tooltip ("Will Generate a bit of overhead but makes it possible to search for any entity")]
+		protected bool subscribeToEntityList = false;
+
+		[SerializeField]
+		protected bool spawnAsChildOfEntityTypeParent = true;
+
+		[SerializeField]
+		[Readonly]
+		protected int entityTypeId = 0;
+
+		[SerializeField]
+		[Readonly]
+		protected int entityId = 0;
+
+		private static int uniqueIdGenerator = 1;
+
+		[Header ("Components")]
 		[SerializeField]
 		protected Rigidbody body;
 
@@ -32,6 +53,30 @@ namespace Eitrum
 				return entityName;
 			}set {
 				entityName = value;
+			}
+		}
+
+		public virtual int EntityTypeId {
+			get {
+				if (entityTypeId == 0) {
+					entityTypeId = entityName.GetHashCode ();
+				}
+				return entityTypeId;
+			}
+		}
+
+		public virtual int EntityId {
+			get {
+				if (entityId == 0) {
+					entityId = AllocateEntityId;
+				}
+				return entityId;
+			}
+		}
+
+		public static int AllocateEntityId {
+			get {
+				return uniqueIdGenerator++;
 			}
 		}
 
@@ -72,10 +117,22 @@ namespace Eitrum
 
 		#region Core
 
+		void Awake ()
+		{
+
+		}
+
 		public void FreezePhysics ()
 		{
 			if (body) {
 				body.isKinematic = true;
+			}
+		}
+
+		public void UnfreezePhysics ()
+		{
+			if (body) {
+				body.isKinematic = false;
 			}
 		}
 
