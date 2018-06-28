@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Eitrum
 {
@@ -10,6 +11,18 @@ namespace Eitrum
 
 		private EiLLNode<T> node;
 		private int count;
+
+		#endregion
+
+		#region Properties
+
+		public int Length {
+			get {
+				lock (this) {
+					return count;
+				}
+			}
+		}
 
 		#endregion
 

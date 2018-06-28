@@ -108,7 +108,7 @@ namespace Eitrum
 
 		#if UNITY_EDITOR
 
-		[MenuItem ("Assets/Create/New Input Config")]
+		[MenuItem ("Assets/Create/Eitrum/New Input Config")]
 		public static void CreateInputConfig ()
 		{
 			var obj = Default;

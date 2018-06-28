@@ -65,6 +65,15 @@ namespace Eitrum
 
 		#endregion
 
+		#region Instantiate
+
+		public new static T Instantiate<T> (T prefab) where T : UnityEngine.Object
+		{
+			return UnityEngine.Object.Instantiate<T> (prefab);
+		}
+
+		#endregion
+
 		#region Virtual Update Calls
 
 		public virtual void PreUpdateComponent (float time)
