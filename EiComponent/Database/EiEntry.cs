@@ -1,19 +1,12 @@
 ﻿using System;
-using UnityEngine;
 
-namespace Eitrum
-{
-	public class EiEntry : EiScriptableObject<EiEntry>
-	{
-		[Readonly]
-		public new string name = "Entry";
-		[Readonly]
-		public UnityEngine.Object targetObject;
-
-		[Header ("Network Database")]
-		[Readonly]
-		public int category = 0;
-		[Readonly]
-		public int entry = 0;
-	}
+namespace Eitrum {
+    [Serializable]
+    public class EiEntry {
+        [Readonly]
+        public string itemName = "empty";
+        public UnityEngine.Object item;
+        [Readonly]
+        public int uniqueId = -1;
+    }
 }

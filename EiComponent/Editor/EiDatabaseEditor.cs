@@ -1,211 +1,110 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
 
-namespace Eitrum
-{
-	[CustomEditor (typeof(EiDatabase))]
-	public class EiDatabaseEditor : Editor
-	{
-		public override void OnInspectorGUI ()
-		{
-			EiDatabase db = (EiDatabase)target;
-			DrawDatabase (db);
-		}
+namespace Eitrum {
 
-		private void DrawCategory (EiCategory category, int index)
-		{
-			MoveRight ();
-			EditorGUILayout.BeginHorizontal ();
-			category.folded = EditorGUILayout.Foldout (category.folded, string.Format ("({0}) {1}", index, category.name));
-			category.name = EditorGUILayout.TextField (category.name);
-			EditorGUILayout.EndHorizontal ();
+    [CustomEditor(typeof(EiDatabase))]
+    public class EiDatabaseEditor : Editor {
 
-			if (category.folded) {
-				
-				var entries = category.entries;
-				if (entries == null) {
-					entries = new List<EiEntry> ();
-				}
+        static List<bool> categoriesFolded = new List<bool>();
 
-				if (entries.Count == 0) {
-					EditorGUILayout.LabelField ("No Entries");
-				}
+        public override void OnInspectorGUI() {
 
-				for (int i = 0; i < entries.Count; i++) {
-					var entry = entries [i];
-					if (entry == null) {
-						entries.RemoveAt (i);
-						i--;
-						continue;
-					}
-					entry.category = index;
-					entry.entry = i;
-					DrawEntry (entries [i], i);
-				}
+            var database = (EiDatabase)target;
+            DrawDatabase(database);
+        }
 
-				EditorGUILayout.BeginHorizontal ();
-				if (GUILayout.Button ("Add Entry", GUILayout.Width (100f))) {
-					var entry = EiEntry.CreateAsset ("Eitrum/EiDatabaseItems/Entries");
-					category.entries.Add (entry);
-				}
-				if (GUILayout.Button ("Remove Category", GUILayout.Width (140f))) {
-					DestroyCategory (category);
-				}
-				if (GUILayout.Button ("Clear Empty", GUILayout.Width (100f))) {
-					for (int i = 0; i < entries.Count; i++) {
-						var entry = entries [i];
-						if (entry != null && entry.targetObject == null) {
-							entry.DestroyFile ();
-						}
-					}
-				}
-				EditorGUILayout.EndHorizontal ();
-			}
-			MoveLeft ();
-			if (category && category.folded) {
-				GUILayout.Space (8f);
-			}
-		}
+        private void DrawDatabase(EiDatabase db) {
+            EditorGUILayout.LabelField(string.Format("Categories ({0})", db.categories.Count));
+            var categories = db.categories;
+            while(categories.Count > categoriesFolded.Count) {
+                categoriesFolded.Add(false);
+            }
 
-		private void DrawEntry (EiEntry entry, int index)
-		{
-			MoveRight ();
-			entry.name = entry.targetObject ? entry.targetObject.name : "Empty Entry";
-			var pre = entry.targetObject;
-			var preEntryObj = entry;
-			entry.targetObject = EditorGUILayout.ObjectField (string.Format ("({0}) {1}", index, entry.name), entry.targetObject, typeof(UnityEngine.Object), false);
-			if (pre != null) {
-				if (entry.targetObject == null) {
-					preEntryObj.DestroyFile ();
-				}
-			}
-			MoveLeft ();
-		}
+            for(int i = 0; i < categories.Count; i++) {
+                var cat = categories[i];
+                if(!DrawCategory(db, cat, i)) {
+                    db.categories.RemoveAt(i);
+                    i--;
+                }
+            }
 
-		private void DrawDatabase (EiDatabase db)
-		{
-			var categories = db.categories;
-			if (categories == null) {
-				categories = new List<EiCategory> ();
-			}
+            EditorGUILayout.BeginHorizontal();
 
-			if (categories.Count == 0) {
-				EditorGUILayout.LabelField ("No Categories");
-			}
+            if(GUILayout.Button("Add Category", GUILayout.Width(100f))) {
+                categories.Add(new EiCategory());
+            }
+            EditorGUILayout.EndHorizontal();
+        }
 
-			for (int i = 0; i < categories.Count; i++) {
-				if (categories [i] == null) {
-					categories.RemoveAt (i);
-					i--;
-					continue;
-				}
-				DrawCategory (categories [i], i);
-			}
+        private bool DrawCategory(EiDatabase database, EiCategory category, int index) {
+            EditorGUILayout.BeginHorizontal();
+            categoriesFolded[index] = EditorGUILayout.Foldout(categoriesFolded[index], "Entries (" + category.entries.Count + ")", true);
+            category.categoryName = EditorGUILayout.TextField(category.categoryName);
+            if(GUILayout.Button("X", GUILayout.Width(24f))) {
+                EditorGUILayout.EndHorizontal();
+                return false;
+            }
+            EditorGUILayout.EndHorizontal();
 
-			EditorGUILayout.BeginHorizontal ();
-			if (GUILayout.Button ("Add Category", GUILayout.Width (100f))) {
-				var category = EiCategory.CreateAsset ("Eitrum/EiDatabaseItems/Categories");
-				db.categories.Add (category);
-			}
-			if (GUILayout.Button ("Clean Empty Entries", GUILayout.Width (150f))) {
-				for (int i = 0; i < categories.Count; i++) {
-					if (categories [i] == null) {
-						categories.RemoveAt (i);
-						i--;
-						continue;
-					}
-					var entries = categories [i].entries;
-					for (int i2 = 0; i2 < entries.Count; i2++) {
-						var entry = entries [i2];
-						if (entry == null) {
-							entries.RemoveAt (i2);
-							i2--;
-							continue;
-						}
-						if (entry != null && entry.targetObject == null) {
-							entry.DestroyFile ();
-						}
-					}
-				}
-			}
-			if (GUILayout.Button ("Save + Format", GUILayout.Width (110f))) {
-				float totalFiles = 0;
-				float filesChecked = 0;
-				for (int i = 0; i < categories.Count; i++) {
-					for (int i2 = 0; i2 < categories [i].entries.Count; i2++) {
-						totalFiles++;
-					}
-				}
+            if(categoriesFolded[index]) {
+                BeginSubCategory();
+                var entries = category.entries;
+                for(int i = 0; i < entries.Count; i++) {
+                    var ent = entries[i];
+                    if(!DrawEntry(ent, i)) {
+                        category.entries.RemoveAt(i);
+                        i--;
+                    }
+                }
 
-				for (int i = 0; i < categories.Count; i++) {
-					var category = categories [i];
-					if (category == null) {
-						categories.RemoveAt (i);
-						i--;
-						continue;
-					}
-					if (!category.folded) {
-						continue;
-					}
-					var pathName = AssetDatabase.GetAssetPath (category);
-					var nameAttempt = AssetDatabase.RenameAsset (pathName, category.name);
-					int nameIndex = 0;
-					while (nameAttempt != "") {
-						nameAttempt = AssetDatabase.RenameAsset (pathName, category.name + " " + nameIndex++);
-					}
+                EditorGUILayout.BeginHorizontal();
 
-					var entries = categories [i].entries;
-					for (int i2 = 0; i2 < entries.Count; i2++) {
-						var entry = entries [i2];
-						if (entry == null) {
-							entries.RemoveAt (i2);
-							i2--;
-							continue;
-						}
-						if (entry != null && entry.targetObject != null) {
-							entry.category = i;
-							entry.entry = i2;
-							pathName = AssetDatabase.GetAssetPath (entry);
-							nameAttempt = AssetDatabase.RenameAsset (pathName, entry.name);
-							nameIndex = 0;
-							while (nameAttempt != "") {
-								nameAttempt = AssetDatabase.RenameAsset (pathName, entry.name + " " + nameIndex++);
-							}
-						}
-						EditorUtility.DisplayProgressBar ("Formatting Files", pathName, filesChecked / totalFiles);
-						filesChecked++;
-					}
-				}
-				EditorUtility.ClearProgressBar ();
-			}
-			EditorGUILayout.EndHorizontal ();
-		}
+                if(GUILayout.Button("Add Item", GUILayout.Width(100f))) {
+                    category.entries.Add(new EiEntry()
+                        {
+                            uniqueId = database.uniqueIdGeneration++
+                        });
+                }
+                var obj = EditorGUILayout.ObjectField(null, typeof(UnityEngine.Object), false, GUILayout.Width(100f));
+                if(obj) {
+                    category.entries.Add(new EiEntry()
+                        {
+                            item = obj,
+                            uniqueId = database.uniqueIdGeneration++
+                        });
+                }
 
-		private void DestroyCategory (EiCategory category)
-		{
-			var entries = category.entries;
-			for (int i = 0; i < entries.Count; i++) {
-				if (entries [i] != null) {
-					entries [i].DestroyFile ();
-				}
-			}
-			category.DestroyFile ();
-		}
+                EditorGUILayout.EndHorizontal();
 
-		private void MoveRight ()
-		{
-			EditorGUILayout.BeginHorizontal ();
-			GUILayout.Space (12f);
-			EditorGUILayout.BeginVertical ();
-		}
+                EndSubCategory();
+            }
+            return true;
+        }
 
-		private void MoveLeft ()
-		{
-			EditorGUILayout.EndVertical ();
-			EditorGUILayout.EndHorizontal ();
-		}
-	}
+        private bool DrawEntry(EiEntry entry, int index) {
+            EditorGUILayout.BeginHorizontal();
+            entry.itemName = entry.item ? entry.item.name : "empty";
+            entry.item = EditorGUILayout.ObjectField(entry.item, typeof(UnityEngine.Object), false); 
+            if(GUILayout.Button("X", GUILayout.Width(24f))) {
+                EditorGUILayout.EndHorizontal();
+                return false;
+            }
+            EditorGUILayout.EndHorizontal();
+            return true;
+        }
+
+        private void BeginSubCategory() {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(12f);
+            EditorGUILayout.BeginVertical();
+        }
+
+        private void EndSubCategory() {
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal();
+        }
+    }
 }
-

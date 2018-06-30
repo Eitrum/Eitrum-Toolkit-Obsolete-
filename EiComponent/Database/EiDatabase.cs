@@ -2,39 +2,60 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Eitrum
-{
-	public class EiDatabase : EiComponentSingleton<EiDatabase>
-	{
-		#region Singleton
+namespace Eitrum {
+    public class EiDatabase : EiComponentSingleton<EiDatabase> {
 
-		public override bool KeepInResources ()
-		{
-			return true;
-		}
+        #region Singleton
 
-		#endregion
+        public override bool KeepInResources() {
+            return true;
+        }
 
-		public List<EiCategory> categories = new List<EiCategory> ();
+        public override void SingletonCreation() {
+            for(int i = 0; i < categories.Count; i++) {
+                var entries = categories[i].entries;
+                for(int e = 0; e < entries.Count; e++) {
+                    var uid = entries[e].uniqueId;
+                    var item = entries[e].item;
+                    dictionaryLookup.Add(uid, item);
+                }
+            }
+        }
 
-		public static UnityEngine.Object Instantiate (int category, int entry)
-		{
-			return MonoBehaviour.Instantiate (Instance.categories [category].entries [entry].targetObject);
-		}
+        #endregion
 
-		public static UnityEngine.Object Instantiate (EiEntry entry)
-		{
-			return MonoBehaviour.Instantiate (entry.targetObject);
-		}
+        #region Variables
 
-		public static T Instantiate<T> (int category, int entry) where T : UnityEngine.Object
-		{
-			return Instantiate (category, entry) as T;
-		}
+        public int uniqueIdGeneration = 0;
+        public List<EiCategory> categories = new List<EiCategory>();
+        private Dictionary<int, UnityEngine.Object> dictionaryLookup = new Dictionary<int, UnityEngine.Object>();
 
-		public static T Instantiate <T> (EiEntry entry) where T : UnityEngine.Object
-		{
-			return Instantiate (entry) as T;
-		}
-	}
+        #endregion
+
+        #region Get Object
+
+        public UnityEngine.Object GetObject(int uniqueId) {
+            if(dictionaryLookup.ContainsKey(uniqueId))
+                return dictionaryLookup[uniqueId];
+            return null;
+        }
+
+        public GameObject GetGameObject(int uniqueId) {
+            return GetObject(uniqueId) as GameObject;
+        }
+
+        public AudioClip GetAudioClip(int uniqueId) {
+            return GetObject(uniqueId) as AudioClip;
+        }
+
+        public Animation GetAnimation(int uniqueId) {
+            return GetObject(uniqueId) as Animation;
+        }
+
+        public T GetObjectAs<T>(int uniqueId) where T : UnityEngine.Object {
+            return GetObject(uniqueId) as T;
+        }
+
+        #endregion
+    }
 }
