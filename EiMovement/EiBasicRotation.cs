@@ -5,7 +5,7 @@ using Eitrum.EiNet;
 namespace Eitrum.Movement
 {
 	[AddComponentMenu ("Eitrum/Movement/Basic Rotation")]	
-	public class EiBasicRotation : EiComponent, EiNetInterface
+	public class EiBasicRotation : EiComponent, EiNetworkObservableInterface
 	{
 		#region Variables
 
@@ -75,20 +75,10 @@ namespace Eitrum.Movement
 
 		#region EiNetInterface implementation
 
-		public void NetWriteTo (EiBuffer buffer)
+
+		public void OnNetworkSerialize (EiBuffer buffer, bool isWriting)
 		{
 			throw new NotImplementedException ();
-		}
-
-		public void NetReadFrom (EiBuffer buffer)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public int NetPackageSize {
-			get {
-				throw new NotImplementedException ();
-			}
 		}
 
 		#endregion

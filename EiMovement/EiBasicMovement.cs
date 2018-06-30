@@ -7,7 +7,7 @@ using Eitrum.EiNet;
 namespace Eitrum.Movement
 {
 	[AddComponentMenu ("Eitrum/Movement/Basic Movement")]
-	public class EiBasicMovement : EiComponent, EiNetInterface
+	public class EiBasicMovement : EiComponent, EiNetworkObservableInterface
 	{
 		#region Variables
 
@@ -666,37 +666,30 @@ namespace Eitrum.Movement
 
 		public virtual void SubscribeOnStateChange (Action<int> method)
 		{
-			currentState.SubscribeThreadSafe (method);
+			currentState.SubscribeAnyThread (method);
 		}
 
 		public virtual void UnsubscribeOnStateChange (Action<int> method)
 		{
-			currentState.UnsubscribeThreadSafe (method);
+			currentState.UnsubscribeAnyThread (method);
 		}
 
 		#endregion
 
-		#region EiNetInterface implementation
+		#region EiNetworkObservableInterface implementation
 
-		public void NetWriteTo (EiBuffer buffer)
+		public void OnNetworkSerialize (EiBuffer buffer, bool isWriting)
 		{
-			buffer.Write (inputDirection.ToVector2_XZ ());
-			buffer.Write (Body.position);
-			buffer.Write (isRunning);
-			buffer.Write (isWalking);
-		}
-
-		public void NetReadFrom (EiBuffer buffer)
-		{
-			inputDirection = buffer.ReadVector2 ().ToVector3_XZ ();
-			Body.MovePosition (buffer.ReadVector3 ());
-			isRunning = buffer.ReadBoolean ();
-			isWalking = buffer.ReadBoolean ();
-		}
-
-		public int NetPackageSize {
-			get {
-				return 22;
+			if (isWriting) {
+				buffer.Write (inputDirection.ToVector2_XZ ());
+				buffer.Write (Body.position);
+				buffer.Write (isRunning);
+				buffer.Write (isWalking);
+			} else {
+				inputDirection = buffer.ReadVector2 ().ToVector3_XZ ();
+				Body.MovePosition (buffer.ReadVector3 ());
+				isRunning = buffer.ReadBoolean ();
+				isWalking = buffer.ReadBoolean ();
 			}
 		}
 

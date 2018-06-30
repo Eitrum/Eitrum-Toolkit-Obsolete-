@@ -5,7 +5,7 @@ using Eitrum.EiNet;
 namespace Eitrum.Movement
 {
 	[AddComponentMenu ("Eitrum/Movement/Stamina")]
-	public class EiStamina : EiComponent, EiNetInterface
+	public class EiStamina : EiComponent, EiNetworkObservableInterface
 	{
 		#region Variables
 
@@ -167,29 +167,21 @@ namespace Eitrum.Movement
 
 		#endregion
 
-		#region EiNetInterface implementation
+		#region EiNetworkObservable implementation
 
-		public void NetWriteTo (EiBuffer buffer)
+		public void OnNetworkSerialize (EiBuffer buffer, bool isWriting)
 		{
-			buffer.Write (baseMaxStamina.Value);
-			buffer.Write (maxStaminaMultiplier.Value);
-			buffer.Write (currentStaminaPercentage.Value);
-		}
-
-		public void NetReadFrom (EiBuffer buffer)
-		{
-			baseMaxStamina.Value = buffer.ReadFloat ();
-			maxStaminaMultiplier.Value = buffer.ReadFloat ();
-			currentStaminaPercentage.Value = buffer.ReadFloat ();
-		}
-
-		public int NetPackageSize {
-			get {
-				return 12;
+			if (isWriting) {
+				buffer.Write (baseMaxStamina.Value);
+				buffer.Write (maxStaminaMultiplier.Value);
+				buffer.Write (currentStaminaPercentage.Value);
+			} else {
+				baseMaxStamina.Value = buffer.ReadFloat ();
+				maxStaminaMultiplier.Value = buffer.ReadFloat ();
+				currentStaminaPercentage.Value = buffer.ReadFloat ();
 			}
 		}
 
 		#endregion
 	}
 }
-
