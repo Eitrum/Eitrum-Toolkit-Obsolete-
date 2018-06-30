@@ -133,7 +133,7 @@ namespace Eitrum
 			EiLLNode<EiMessageSubscriber<T>> subsNode;
 			while (iterator.Next (out subsNode)) {
 				if (subsNode.Value.IsDestroyed) {
-					subscribers.Remove (subsNode);
+					iterator.DestroyCurrent ();
 				} else
 					subsNode.Value.Send (message);
 			}
@@ -145,7 +145,7 @@ namespace Eitrum
 			EiLLNode<EiMessageSubscriber<T>> subsNode;
 			while (iterator.Next (out subsNode)) {
 				if (subsNode.Value.IsDestroyed) {
-					subscribers.Remove (subsNode);
+					iterator.DestroyCurrent ();
 				} else if (subsNode.Value.channel == channel)
 					subsNode.Value.Send (message);
 			}

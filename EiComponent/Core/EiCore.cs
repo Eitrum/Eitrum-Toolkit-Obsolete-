@@ -210,12 +210,12 @@ namespace Eitrum
 
 		#region Message System
 
-		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (Action<T> action)
+		protected EiLLNode<EiMessageSubscriber<T>> SubscribeUnityThread<T> (Action<T> action)
 		{
 			return EiMessage.Subscribe (this, action);
 		}
 
-		protected void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
+		protected void UnsubscribeUnityThread<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
 		{
 			EiMessage.Unsubscribe (subscriber);
 		}

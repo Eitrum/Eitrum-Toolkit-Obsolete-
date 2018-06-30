@@ -47,8 +47,8 @@ namespace Eitrum.Health
 
 		void Awake ()
 		{
-			shieldComponent.GetCurrentShield ().Subscribe (ShieldChange);
-			timeBetweenEachHeal.SubscribeAndRun (TimeBetweenHealSetting);
+			shieldComponent.GetCurrentShield ().SubscribeUnityThread (ShieldChange);
+			timeBetweenEachHeal.SubscribeUnityThreadAndRun (TimeBetweenHealSetting);
 			SubscribeThreadedUpdate ();
 		}
 

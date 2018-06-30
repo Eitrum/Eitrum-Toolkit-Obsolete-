@@ -56,7 +56,7 @@ namespace Eitrum.Health
 			var ent = Entity;
 			subscribedDamagePipeline.Add (0, ApplyDamage);
 			subscribedHealingPipeline.Add (0, ApplyHeal);
-			currentHealth.Subscribe (OnHealthChange);
+			currentHealth.SubscribeUnityThread (OnHealthChange);
 		}
 
 		public virtual void Damage (EiCombatData damageData)
@@ -105,7 +105,7 @@ namespace Eitrum.Health
 			if (triggerDeathAtZeroLife) {
 				if (!isDead) {
 					onDeath.Trigger ();
-					onDeathEntity.Trigger (entity);
+					onDeathEntity.Trigger (Entity);
 					isDead = true;
 				}
 			}
@@ -116,7 +116,7 @@ namespace Eitrum.Health
 			if (triggerDeathAtZeroLife) {
 				if (value <= 0f && !isDead) {
 					onDeath.Trigger ();
-					onDeathEntity.Trigger (entity);
+					onDeathEntity.Trigger (Entity);
 					isDead = true;
 				}
 			}

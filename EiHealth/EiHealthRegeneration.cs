@@ -51,7 +51,7 @@ namespace Eitrum.Health
 
 		void Awake ()
 		{
-			timeBetweenEachHeal.SubscribeAndRun (TimeBetweenHealSetting);
+			timeBetweenEachHeal.SubscribeUnityThreadAndRun (TimeBetweenHealSetting);
 			SubscribeThreadedUpdate ();
 		}
 

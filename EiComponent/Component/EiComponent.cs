@@ -8,9 +8,13 @@ namespace Eitrum
 	{
 		#region Variables
 
-		protected EiEntity entity;
-
-		protected EiNetworkEntity netEntity;
+		[SerializeField]
+		[HideInInspector]
+		private EiEntity entity;
+		[SerializeField]
+		[HideInInspector]
+		#pragma warning disable
+		private EiNetworkView networkView;
 
 		// Should Not ever be touched by anything!!! Used by core engine for performance
 		public EiLLNode<EiUpdateInterface> preUpdateNode;
@@ -31,11 +35,17 @@ namespace Eitrum
 			}
 		}
 
-		public virtual EiNetworkEntity NetworkEntity {
+		public virtual bool IsNetworked {
 			get {
-				if (!netEntity)
-					netEntity = GetComponent<EiNetworkEntity> ();
-				return netEntity;
+				return networkView != null;
+			}
+		}
+
+		public virtual EiNetworkView NetworkView {
+			get {
+				if (!networkView)
+					networkView = GetComponent<EiNetworkView> ();
+				return networkView;
 			}
 		}
 
@@ -222,6 +232,11 @@ namespace Eitrum
 			EiMessage.Unsubscribe<T> (subscriber);
 		}
 
+		public void Publish<T> (T message) where T : EiCore
+		{
+			EiMessage<T>.Publish (message);
+		}
+
 		#endregion
 
 		#endregion
@@ -245,7 +260,7 @@ namespace Eitrum
 		protected virtual void AttachComponents ()
 		{
 			entity = GetComponent<EiEntity> ();
-			netEntity = GetComponent<EiNetworkEntity> ();
+			networkView = GetComponent<EiNetworkView> ();
 		}
 
 		#endif

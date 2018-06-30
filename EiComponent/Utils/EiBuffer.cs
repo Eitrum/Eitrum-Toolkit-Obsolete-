@@ -422,6 +422,20 @@ namespace Eitrum
 			return value;
 		}
 
+		public string ReadUTF8 ()
+		{
+			var length = ReadInt ();
+			var value = Encoding.UTF8.GetString (ReadByteArray (length));
+			return value;
+		}
+
+		public string ReadUTF32 ()
+		{
+			var length = ReadInt ();
+			var value = Encoding.UTF32.GetString (ReadByteArray (length));
+			return value;
+		}
+
 		public Type ReadType ()
 		{
 			return Type.GetType (ReadASCII ());
@@ -579,6 +593,24 @@ namespace Eitrum
 		public EiBuffer WriteStringNoHeader (string value)
 		{
 			var buffer = Encoding.ASCII.GetBytes (value);
+			Write (buffer);
+			return this;
+		}
+
+		public EiBuffer WriteUTF8 (string value)
+		{
+			var buffer = Encoding.UTF8.GetBytes (value);
+			var length = buffer.Length;
+			Write (length);
+			Write (buffer);
+			return this;
+		}
+
+		public EiBuffer WriteUTF32 (string value)
+		{
+			var buffer = Encoding.UTF32.GetBytes (value);
+			var length = buffer.Length;
+			Write (length);
 			Write (buffer);
 			return this;
 		}

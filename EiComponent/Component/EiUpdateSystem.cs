@@ -83,7 +83,7 @@ namespace Eitrum
 			var dataIterator = timerUpdateList.GetIterator ();
 			while (dataIterator.Next (out dataNode)) {
 				if (dataNode.Value.comp.IsNull)
-					timerUpdateList.Remove (dataNode);
+					dataIterator.DestroyCurrent ();
 				else
 					dataNode.Value.Update (time);
 			}
@@ -96,7 +96,7 @@ namespace Eitrum
 			var preiterator = preUpdateList.GetIterator ();
 			while (preiterator.Next (out pre)) {
 				if (pre.Value.IsNull)
-					preUpdateList.Remove (pre);
+					preiterator.DestroyCurrent ();
 				else
 					pre.Value.PreUpdateComponent (time);
 			}
@@ -109,7 +109,7 @@ namespace Eitrum
 			var iterator = updateList.GetIterator ();
 			while (iterator.Next (out comp)) {
 				if (comp.Value.IsNull)
-					updateList.Remove (comp);
+					iterator.DestroyCurrent ();
 				else
 					comp.Value.UpdateComponent (time);
 			}
@@ -125,7 +125,7 @@ namespace Eitrum
 			var iterator = lateUpdateList.GetIterator ();
 			while (iterator.Next (out comp)) {
 				if (comp.Value.IsNull)
-					lateUpdateList.Remove (comp);
+					iterator.DestroyCurrent ();
 				else
 					comp.Value.LateUpdateComponent (time);
 			}
@@ -138,7 +138,7 @@ namespace Eitrum
 			var iterator = fixedUpdateList.GetIterator ();
 			while (iterator.Next (out comp)) {
 				if (comp.Value.IsNull)
-					fixedUpdateList.Remove (comp);
+					iterator.DestroyCurrent ();
 				else
 					comp.Value.FixedUpdateComponent (time);
 			}

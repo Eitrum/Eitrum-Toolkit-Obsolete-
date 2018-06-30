@@ -82,7 +82,7 @@ namespace Eitrum.Health
 		{
 			healthComponent.SubscribeDamagePipeline (damagePriorityLevel, ApplyDamage);
 			healthComponent.SubscribeHealingPipeline (-damagePriorityLevel, ApplyHeal);
-			currentShield.Subscribe (ShieldClamp);
+			currentShield.SubscribeUnityThread (ShieldClamp);
 		}
 
 		void ApplyHeal (EiDamage heal)

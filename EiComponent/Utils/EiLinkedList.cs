@@ -287,6 +287,22 @@ namespace Eitrum
 		}
 
 		#endregion
+
+		#region Destroying Current
+
+		public void DestroyCurrent ()
+		{
+			var cur = current;
+			if (first == current) {
+				first = current.Next;
+				current = null;
+			} else {
+				current = current.Prev;
+			}
+			cur.List.Remove (current);
+		}
+
+		#endregion
 	}
 
 	public class EiLLNode<T> where T : class

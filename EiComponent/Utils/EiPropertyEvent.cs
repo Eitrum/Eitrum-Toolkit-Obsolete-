@@ -12,8 +12,8 @@ namespace Eitrum
 		[UnityEngine.SerializeField]
 		protected T value = default(T);
 
-		protected Action<T> onChanged;
-		protected Action<T> onChangedThreaded;
+		protected Action<T> onChangedUnityThread;
+		protected Action<T> onChangedAnyThread;
 		protected bool hasChanged = false;
 
 		#endregion
@@ -24,17 +24,17 @@ namespace Eitrum
 			set {
 				lock (this) {
 					this.value = value;
-					if (onChanged != null) {
+					if (onChangedUnityThread != null) {
 						if (Thread.CurrentThread == EiUnityThreading.MainThread)
-							onChanged (value);
+							onChangedUnityThread (value);
 						else {
 							if (!hasChanged) {
 								hasChanged = EiUpdateSystem.AddUnityThreadCallbackToQueue (this);
 							}
 						}
 					}
-					if (onChangedThreaded != null)
-						onChangedThreaded (value);
+					if (onChangedAnyThread != null)
+						onChangedAnyThread (value);
 				}
 			}
 			get {
@@ -64,8 +64,8 @@ namespace Eitrum
 		{
 			lock (this) {
 				hasChanged = false;
-				if (onChanged != null)
-					onChanged (value);
+				if (onChangedUnityThread != null)
+					onChangedUnityThread (value);
 			}
 		}
 
@@ -98,54 +98,79 @@ namespace Eitrum
 		#region Subscribe / Unsubscribe
 
 		/// <summary>
-		/// Subscribe with the specified method.
+		/// Subscribes the method so it can only be called on Unity Main Thread.
+		/// </summary>
+		/// <returns>The thread safe.</returns>
+		/// <param name="method">Method.</param>
+		public EiPropertyEvent<T> SubscribeUnityThread (Action<T> method)
+		{
+			lock (this)
+				onChangedUnityThread += method;
+			return this;
+		}
+
+		/// <summary>
+		/// Subscribes the method so it can only be called on Unity Main Thread then runs it once.
+		/// </summary>
+		/// <returns>The thread safe.</returns>
+		/// <param name="method">Method.</param>
+		public EiPropertyEvent<T> SubscribeUnityThreadAndRun (Action<T> method)
+		{
+			lock (this) {
+				onChangedUnityThread += method;
+				method (value);
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// Unsubscribe the specified method from Unity Main Thread updates.
 		/// </summary>
 		/// <param name="method">Method.</param>
-		public EiPropertyEvent<T> Subscribe (Action<T> method)
+		public EiPropertyEvent<T> UnsubscribeUnityThread (Action<T> method)
 		{
 			lock (this)
-				onChanged += method;
+				if (onChangedUnityThread != null)
+					onChangedUnityThread -= method;
 			return this;
 		}
 
-		public EiPropertyEvent<T> SubscribeAndRun (Action<T> method)
+		/// <summary>
+		/// Subscribes the method so it can run on any thread.
+		/// </summary>
+		/// <returns>The thread safe.</returns>
+		/// <param name="method">Method.</param>
+		public EiPropertyEvent<T> SubscribeAnyThread (Action<T> method)
+		{
+			lock (this)
+				onChangedAnyThread += method;
+			return this;
+		}
+
+		/// <summary>
+		/// Subscribes the method so it can run on any thread and then runs it once.
+		/// </summary>
+		/// <returns>The thread safe.</returns>
+		/// <param name="method">Method.</param>
+		public EiPropertyEvent<T> SubscribeAnyThreadAndRun (Action<T> method)
 		{
 			lock (this) {
-				onChanged += method;
+				onChangedAnyThread += method;
 				method (value);
 			}
 			return this;
 		}
 
-		public EiPropertyEvent<T> Unsubscribe (Action<T> method)
+		/// <summary>
+		/// Unsubscribes the specified method from being called from any thread.
+		/// </summary>
+		/// <returns>The thread safe.</returns>
+		/// <param name="method">Method.</param>
+		public EiPropertyEvent<T> UnsubscribeAnyThread (Action<T> method)
 		{
 			lock (this)
-				if (onChanged != null)
-					onChanged -= method;
-			return this;
-		}
-
-		public EiPropertyEvent<T> SubscribeThreadSafe (Action<T> method)
-		{
-			lock (this)
-				onChangedThreaded += method;
-			return this;
-		}
-
-		public EiPropertyEvent<T> SubscribeThreadSafeAndRun (Action<T> method)
-		{
-			lock (this) {
-				onChangedThreaded += method;
-				method (value);
-			}
-			return this;
-		}
-
-		public EiPropertyEvent<T> UnsubscribeThreadSafe (Action<T> method)
-		{
-			lock (this)
-				if (onChanged != null)
-					onChangedThreaded -= method;
+				if (onChangedUnityThread != null)
+					onChangedAnyThread -= method;
 			return this;
 		}
 
