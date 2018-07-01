@@ -9,10 +9,10 @@ namespace Eitrum
 
 		public void Trigger ()
 		{
-			EiTask.Run (Nothing, ThreadTrigger, UnityThreadTrigger);
+			EiTask.Run (Nothing, AnyThreadTrigger, UnityThreadTrigger);
 		}
 
-		public void AddAction (Action action)
+		public void AddActionAnyThread (Action action)
 		{
 			onTrigger += action;
 		}
@@ -22,7 +22,7 @@ namespace Eitrum
 			onUnityThreadTrigger += action;
 		}
 
-		public void RemoveAction (Action action)
+		public void RemoveActionAnyThread (Action action)
 		{
 			if (onTrigger != null)
 				onTrigger -= action;
@@ -45,7 +45,7 @@ namespace Eitrum
 
 		}
 
-		void ThreadTrigger ()
+		void AnyThreadTrigger ()
 		{
 			if (onTrigger != null)
 				onTrigger ();
@@ -67,10 +67,10 @@ namespace Eitrum
 		public void Trigger (T value)
 		{
 			this.value = value;
-			EiTask.Run (Nothing, ThreadTrigger, UnityThreadTrigger);
+			EiTask.Run (Nothing, AnyThreadTrigger, UnityThreadTrigger);
 		}
 
-		public void AddAction (Action<T> action)
+		public void AddActionAnyThread (Action<T> action)
 		{
 			onTrigger += action;
 		}
@@ -80,7 +80,7 @@ namespace Eitrum
 			onUnityThreadTrigger += action;
 		}
 
-		public void RemoveAction (Action<T> action)
+		public void RemoveActionAnyThread (Action<T> action)
 		{
 			if (onTrigger != null)
 				onTrigger -= action;
@@ -103,7 +103,7 @@ namespace Eitrum
 
 		}
 
-		void ThreadTrigger ()
+		void AnyThreadTrigger ()
 		{
 			if (onTrigger != null)
 				onTrigger (value);
@@ -127,10 +127,10 @@ namespace Eitrum
 		{
 			this.value1 = value1;
 			this.value2 = value2;
-			EiTask.Run (Nothing, ThreadTrigger, UnityThreadTrigger);
+			EiTask.Run (Nothing, AnyThreadTrigger, UnityThreadTrigger);
 		}
 
-		public void AddAction (Action<T1, T2> action)
+		public void AddActionAnyThread (Action<T1, T2> action)
 		{
 			onTrigger += action;
 		}
@@ -140,7 +140,7 @@ namespace Eitrum
 			onUnityThreadTrigger += action;
 		}
 
-		public void RemoveAction (Action<T1, T2> action)
+		public void RemoveActionAnyThread (Action<T1, T2> action)
 		{
 			if (onTrigger != null)
 				onTrigger -= action;
@@ -163,7 +163,7 @@ namespace Eitrum
 
 		}
 
-		void ThreadTrigger ()
+		void AnyThreadTrigger ()
 		{
 			if (onTrigger != null)
 				onTrigger (value1, value2);
@@ -189,10 +189,10 @@ namespace Eitrum
 			this.value1 = value1;
 			this.value2 = value2;
 			this.value3 = value3;
-			EiTask.Run (Nothing, ThreadTrigger, UnityThreadTrigger);
+			EiTask.Run (Nothing, AnyThreadTrigger, UnityThreadTrigger);
 		}
 
-		public void AddAction (Action<T1, T2, T3> action)
+		public void AddActionAnyThread (Action<T1, T2, T3> action)
 		{
 			onTrigger += action;
 		}
@@ -202,7 +202,7 @@ namespace Eitrum
 			onUnityThreadTrigger += action;
 		}
 
-		public void RemoveAction (Action<T1, T2, T3> action)
+		public void RemoveActionAnyThread (Action<T1, T2, T3> action)
 		{
 			if (onTrigger != null)
 				onTrigger -= action;
@@ -225,7 +225,7 @@ namespace Eitrum
 
 		}
 
-		void ThreadTrigger ()
+		void AnyThreadTrigger ()
 		{
 			if (onTrigger != null)
 				onTrigger (value1, value2, value3);
@@ -253,10 +253,10 @@ namespace Eitrum
 			this.value2 = value2;
 			this.value3 = value3;
 			this.value4 = value4;
-			EiTask.Run (Nothing, ThreadTrigger, UnityThreadTrigger);
+			EiTask.Run (Nothing, AnyThreadTrigger, UnityThreadTrigger);
 		}
 
-		public void AddAction (Action<T1, T2, T3, T4> action)
+		public void AddActionAnyThread (Action<T1, T2, T3, T4> action)
 		{
 			onTrigger += action;
 		}
@@ -266,7 +266,7 @@ namespace Eitrum
 			onUnityThreadTrigger += action;
 		}
 
-		public void RemoveAction (Action<T1, T2, T3, T4> action)
+		public void RemoveActionAnyThread (Action<T1, T2, T3, T4> action)
 		{
 			if (onTrigger != null)
 				onTrigger -= action;
@@ -289,7 +289,7 @@ namespace Eitrum
 
 		}
 
-		void ThreadTrigger ()
+		void AnyThreadTrigger ()
 		{
 			if (onTrigger != null)
 				onTrigger (value1, value2, value3, value4);
