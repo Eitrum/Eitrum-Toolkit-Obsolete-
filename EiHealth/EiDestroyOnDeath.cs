@@ -22,7 +22,7 @@ namespace Eitrum.Health
 
 		void Awake ()
 		{
-			healthComponent.GetOnDeathTrigger ().AddActionUnityThread (OnDeathCallback);
+			healthComponent.GetOnDeathTrigger ().AddAction (OnDeathCallback);
 		}
 
 		void OnDeathCallback ()

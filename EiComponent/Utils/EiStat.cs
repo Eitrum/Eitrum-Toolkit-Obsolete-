@@ -95,22 +95,17 @@ namespace Eitrum
 
 		public void Subscribe (Action<float> method)
 		{
-			trigger.AddActionAnyThread (method);
+			trigger.AddAction (method);
 		}
 
-		public void SubscribeUnityThread (Action<float> method)
+		public void Subscribe (Action<float> method, bool anyThread)
 		{
-			trigger.AddActionUnityThread (method);
+			trigger.AddAction (method, anyThread);
 		}
 
 		public void Unsubscribe (Action<float> method)
 		{
-			trigger.RemoveActionAnyThread (method);
-		}
-
-		public void UnsubscribeUnithThread (Action<float> method)
-		{
-			trigger.RemoveActionUnityThread (method);
+			trigger.RemoveAction (method);
 		}
 
 		#endregion

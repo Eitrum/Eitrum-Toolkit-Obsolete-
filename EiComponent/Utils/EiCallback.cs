@@ -25,48 +25,44 @@ namespace Eitrum
 
 		#region Subscribe
 
-		public void AddOnSuccessAnyThread (Action method)
+		public EiCallback AddOnSuccess (Action method)
 		{
-			onSuccess.AddActionAnyThread (method);
+			onSuccess.AddAction (method);
+			return this;
 		}
 
-		public void AddOnSuccessUnityThread (Action method)
+		public EiCallback AddOnSuccess (Action method, bool anyThread)
 		{
-			onSuccess.AddActionUnityThread (method);
+			onSuccess.AddAction (method, anyThread);
+			return this;
 		}
 
-		public void AddOnFailedAnyThread (Action method)
+		public EiCallback AddOnFailed (Action method)
 		{
-			onFailed.AddActionAnyThread (method);
+			onFailed.AddAction (method);
+			return this;
 		}
 
-		public void AddOnFailedUnityThread (Action method)
+		public EiCallback AddOnFailed (Action method, bool anyThread)
 		{
-			onFailed.AddActionUnityThread (method);
+			onFailed.AddAction (method, anyThread);
+			return this;
 		}
 
 		#endregion
 
 		#region Unsubscribe
 
-		public void RemoveOnSuccessAnyThread (Action method)
+		public EiCallback RemoveOnSuccess (Action method)
 		{
-			onSuccess.RemoveActionAnyThread (method);
+			onSuccess.RemoveAction (method);
+			return this;
 		}
 
-		public void RemoveOnSuccessUnityThread (Action method)
+		public EiCallback RemoveOnFailed (Action method)
 		{
-			onSuccess.RemoveActionUnityThread (method);
-		}
-
-		public void RemoveOnFailedAnyThread (Action method)
-		{
-			onFailed.RemoveActionAnyThread (method);
-		}
-
-		public void RemoveOnFailedUnityThread (Action method)
-		{
-			onFailed.RemoveActionUnityThread (method);
+			onFailed.RemoveAction (method);
+			return this;
 		}
 
 		#endregion
@@ -128,28 +124,26 @@ namespace Eitrum
 
 		#region Subscribe
 
-		public void AddOnSuccessAnyThread (Action<T> method)
+		public EiCallback<T> AddOnSuccess (Action<T> method)
 		{
-			onSuccess.AddActionAnyThread (method);
+			onSuccess.AddAction (method);
+			return this;
 		}
 
-		public void AddOnSuccessUnityThread (Action<T> method)
+		public EiCallback<T> AddOnSuccess (Action<T> method, bool anyThread)
 		{
-			onSuccess.AddActionUnityThread (method);
+			onSuccess.AddAction (method, anyThread);
+			return this;
 		}
 
 		#endregion
 
 		#region Unsubscribe
 
-		public void RemoveOnSuccessAnyThread (Action<T> method)
+		public EiCallback<T> RemoveOnSuccess (Action<T> method)
 		{
-			onSuccess.RemoveActionAnyThread (method);
-		}
-
-		public void RemoveOnSuccessUnityThread (Action<T> method)
-		{
-			onSuccess.RemoveActionUnityThread (method);
+			onSuccess.RemoveAction (method);
+			return this;
 		}
 
 		#endregion
