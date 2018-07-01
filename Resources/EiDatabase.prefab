@@ -51,3 +51,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0270610b2a03f164f834a3150274445f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entity: {fileID: 0}
+  networkView: {fileID: 0}
+  uniqueIdGeneration: 2
+  categories:
+  - categoryName: Tools
+    entries:
+    - itemName: EiEmptyGameObject
+      item: {fileID: 1517579156540444, guid: 7e2cbb1afac32b84eaab26c4e2d6c452, type: 2}
+      uniqueId: 0
+    - itemName: TestScene
+      item: {fileID: 102900000, guid: fbacc5d5c0367af4b8c954850c0c6ba8, type: 3}
+      uniqueId: 1

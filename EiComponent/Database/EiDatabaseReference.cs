@@ -1,50 +1,225 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Eitrum {
-    [Serializable]
-    public class EiDatabaseReference {
+namespace Eitrum
+{
+	[Serializable]
+	public class EiDatabaseReference
+	{
+		#region Variables
 
-        #region Variables
+		[SerializeField]
+		private int uniqueIdReference = -1;
+		private EiEntry cached;
 
-        [SerializeField]
-        private int uniqueIdReference = -1;
+		#endregion
 
-        #endregion
+		#region Properties
 
-        #region Properties
+		public EiEntry Entry {
+			get {
+				if (cached == null && uniqueIdReference != -1) {
+					cached = EiDatabase.GetEntry (uniqueIdReference);
+				}
+				return cached;
+			}
+		}
 
-        public int UniqueIdReference {
-            get {
-                return uniqueIdReference;
-            }
-        }
+		public string ItemName {
+			get {
+				if (Entry != null)
+					return Entry.ItemName;
+				return "";
+			}
+		}
 
-        public UnityEngine.Object Object {
-            get {
-                return EiDatabase.Instance.GetObject(uniqueIdReference);
-            }
-        }
+		public int UniqueIdReference {
+			get {
+				return uniqueIdReference;
+			}
+		}
 
-        #endregion
+		public UnityEngine.Object Object {
+			get {
+				if (Entry != null)
+					return Entry.Object;
+				return null;
+			}
+		}
 
-        #region Instantiate
+		public GameObject GameObject {
+			get {
+				if (Entry != null)
+					return Entry.GameObject;
+				return null;
+			}
+		}
 
-        public UnityEngine.Object Instantiate() {
-            if(uniqueIdReference == -1) {
-                return null;
-            }
-            var obj = EiDatabase.Instance.GetObject(uniqueIdReference);
-            if(obj) {
-                return MonoBehaviour.Instantiate(obj);
-            }
-            return null;
-        }
+		public AudioClip AudioClip {
+			get {
+				if (Entry != null)
+					return Entry.AudioClip;
+				return null;
+			}
+		}
 
-        public GameObject InstantiateAsGameObject() {
-            return Instantiate() as GameObject;
-        }
+		public Animation Animation {
+			get {
+				if (Entry != null)
+					return Entry.AnimationClip;
+				return null;
+			}
+		}
 
-        #endregion
-    }
+		public string SceneName {
+			get {
+				if (Entry != null)
+					return Entry.SceneName;
+				return "";
+			}
+		}
+
+		#endregion
+
+		#region Scene
+
+		public void LoadScene ()
+		{
+			EiDatabase.LoadScene (uniqueIdReference);
+		}
+
+		#endregion
+
+		#region Instantiate
+
+		#region Normal Instantiate
+
+		public UnityEngine.Object Instantiate ()
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.Object;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj);
+			}
+			return null;
+		}
+
+		public UnityEngine.Object Instantiate (Transform parent)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.Object;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, parent);
+			}
+			return null;
+		}
+
+		public UnityEngine.Object Instantiate (Vector3 position)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.Object;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, position, Quaternion.identity);
+			}
+			return null;
+		}
+
+		public UnityEngine.Object Instantiate (Vector3 position, Quaternion rotation)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.Object;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, position, rotation);
+			}
+			return null;
+		}
+
+		public UnityEngine.Object Instantiate (Vector3 position, Quaternion rotation, Transform parent)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.Object;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, position, rotation, parent);
+			}
+			return null;
+		}
+
+		#endregion
+
+		#region GameObject Instantiate
+
+		public GameObject InstantiateAsGameObject ()
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.GameObject;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj);
+			}
+			return null;
+		}
+
+		public GameObject InstantiateAsGameObject (Transform parent)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.GameObject;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, parent);
+			}
+			return null;
+		}
+
+		public GameObject InstantiateAsGameObject (Vector3 position)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.GameObject;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, position, Quaternion.identity);
+			}
+			return null;
+		}
+
+		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.GameObject;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, position, rotation);
+			}
+			return null;
+		}
+
+		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation, Transform parent)
+		{
+			if (uniqueIdReference == -1) {
+				return null;
+			}
+			var obj = Entry.GameObject;
+			if (obj) {
+				return MonoBehaviour.Instantiate (obj, position, rotation, parent);
+			}
+			return null;
+		}
+
+		#endregion
+
+		#endregion
+	}
 }

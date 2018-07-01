@@ -82,6 +82,80 @@ namespace Eitrum
 			return UnityEngine.Object.Instantiate<T> (prefab);
 		}
 
+		public static GameObject Instantiate (EiDatabaseReference item)
+		{
+			return item.InstantiateAsGameObject ();
+		}
+
+		public static GameObject Instantiate (EiDatabaseReference item, Transform parent)
+		{
+			return item.InstantiateAsGameObject (parent);
+		}
+
+		public static GameObject Instantiate (EiDatabaseReference item, Vector3 position)
+		{
+			return item.InstantiateAsGameObject (position);
+		}
+
+		public static GameObject Instantiate (EiDatabaseReference item, Vector3 position, Quaternion rotation)
+		{
+			return item.InstantiateAsGameObject (position, rotation);
+		}
+
+		public static GameObject Instantiate (EiDatabaseReference item, Vector3 position, Quaternion rotation, Transform parent)
+		{
+			return item.InstantiateAsGameObject (position, rotation, parent);
+		}
+
+		public static T Instantiate<T> (EiDatabaseReference item) where T : UnityEngine.Object
+		{
+			return item.Instantiate () as T;
+		}
+
+		public static T Instantiate<T> (EiDatabaseReference item, Transform parent) where T : UnityEngine.Object
+		{
+			return item.Instantiate (parent) as T;
+		}
+
+		public static T Instantiate<T> (EiDatabaseReference item, Vector3 position) where T : UnityEngine.Object
+		{
+			return item.Instantiate (position) as T;
+		}
+
+		public static T Instantiate<T> (EiDatabaseReference item, Vector3 position, Quaternion rotation) where T : UnityEngine.Object
+		{
+			return item.Instantiate (position, rotation) as T;
+		}
+
+		public static T Instantiate<T> (EiDatabaseReference item, Vector3 position, Quaternion rotation, Transform parent) where T : UnityEngine.Object
+		{
+			return item.Instantiate (position, rotation, parent) as T;
+		}
+
+		#endregion
+
+		#region Network Instantiate
+
+		public static T NetworkInstantiate<T> (string resourcePath) where T : UnityEngine.Object
+		{
+			var obj = Resources.Load (resourcePath);
+			return Instantiate (obj) as T;
+		}
+
+		public static GameObject NetworkInstantiate (EiDatabaseReference item)
+		{
+			var go = item.GameObject;
+			if (!go) {
+				if ((item.UniqueIdReference == -1))
+					Debug.LogError ("Item has a id reference of -1, it is not valid");
+				else
+					Debug.LogErrorFormat ("Item {0} is not of type GameObject", item.ItemName);
+				return null;
+			}
+			return null;
+			//Do network shenangians to instantiate
+		}
+
 		#endregion
 
 		#region Virtual Update Calls
