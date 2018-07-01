@@ -79,6 +79,16 @@ namespace Eitrum
 			return item as T;
 		}
 
+		public bool Is<T> ()
+		{
+			return item is T;
+		}
+
+		public bool Is (Type type)
+		{
+			return item.GetType () == type;
+		}
+
 		#endregion
 	}
 }
