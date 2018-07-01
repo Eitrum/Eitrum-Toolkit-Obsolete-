@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Eitrum
 {
-	public static class EiDataConversionExtension
+	public static class DataConversionExtension
 	{
 		#region Primitive Data Type Size
 

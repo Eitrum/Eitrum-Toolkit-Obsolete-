@@ -318,7 +318,7 @@ namespace Eitrum
 
 		public T Read<T> ()
 		{
-			var size = EiDataConversionExtension.GetSizeOfType (typeof(T));
+			var size = DataConversionExtension.GetSizeOfType (typeof(T));
 			T value = bytes.To<T> (index);
 			index += size;
 			return value;
