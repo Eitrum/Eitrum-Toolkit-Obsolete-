@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using Eitrum.EiNet;
+using Eitrum.Networking;
 
 namespace Eitrum.Movement
 {

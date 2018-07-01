@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Eitrum.EiNet
+namespace Eitrum.Networking
 {
 	public class EiNetworkPlayer : EiCore, EiBufferInterface
 	{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Eitrum.EiNet;
+using Eitrum.Networking;
 
 namespace Eitrum.Movement
 {
