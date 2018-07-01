@@ -79,6 +79,12 @@ namespace Eitrum
 			}
 		}
 
+		public Type Type {
+			get {
+				return Entry.Type;
+			}
+		}
+
 		#endregion
 
 		#region Scene
@@ -219,6 +225,20 @@ namespace Eitrum
 		}
 
 		#endregion
+
+		#endregion
+
+		#region Helpers
+
+		public bool Is<T> ()
+		{
+			return Entry.Is<T> ();
+		}
+
+		public bool Is (Type type)
+		{
+			return Entry.Is (type);
+		}
 
 		#endregion
 	}

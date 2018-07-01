@@ -70,6 +70,14 @@ namespace Eitrum
 			}
 		}
 
+		public Type Type {
+			get {
+				if (item)
+					return item.GetType ();
+				return null;
+			}
+		}
+
 		#endregion
 
 		#region Core
