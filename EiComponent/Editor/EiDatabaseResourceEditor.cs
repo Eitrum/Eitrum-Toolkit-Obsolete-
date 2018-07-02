@@ -21,6 +21,8 @@ namespace Eitrum
 		public override void OnInspectorGUI ()
 		{
 			var database = (EiDatabaseResource)target;
+
+			Undo.RecordObject (database, "Database Changes");
 			if (categoryList == null) {
 				categoryList = typeof(EiDatabaseResource).GetField ("categories", BindingFlags.NonPublic | BindingFlags.Instance);
 				if (categoryList == null)
@@ -32,6 +34,7 @@ namespace Eitrum
 					return;
 			}
 			DrawDatabase (database);
+			EditorUtility.SetDirty (database);
 		}
 
 		private void DrawDatabase (EiDatabaseResource db)
@@ -92,15 +95,19 @@ namespace Eitrum
 
 				if (GUILayout.Button ("Add Item", GUILayout.Width (100f))) {
 					var entryToAdd = EiDatabaseItem.CreateAsset (simplePath);
+					Undo.RecordObject (entryToAdd, "Entry Change");
 					ApplyDatabase (entryToAdd, database);
 					GetEntries (category).Add (entryToAdd);
+					EditorUtility.SetDirty (entryToAdd);
 				}
 				var obj = EditorGUILayout.ObjectField (null, typeof(UnityEngine.Object), false, GUILayout.Width (100f));
 				if (obj) {
 					var entryToAdd = EiDatabaseItem.CreateAsset (simplePath);
+					Undo.RecordObject (entryToAdd, "Entry Change");
 					ApplyDatabase (entryToAdd, database);
 					SetEntryObject (entryToAdd, obj);
 					GetEntries (category).Add (entryToAdd);
+					EditorUtility.SetDirty (entryToAdd);
 				}
 
 				EditorGUILayout.EndHorizontal ();
@@ -113,6 +120,7 @@ namespace Eitrum
 		private bool DrawEntry (EiDatabaseItem entry, int index)
 		{
 			EditorGUILayout.BeginHorizontal ();
+			Undo.RecordObject (entry, "Entry Change");
 			SetEntryName (entry, entry.Item ? entry.Item.name : "empty");
 			SetEntryObject (entry, EditorGUILayout.ObjectField (entry.Item, typeof(UnityEngine.Object), false)); 
 			if (GUILayout.Button ("X", GUILayout.Width (24f))) {
@@ -121,6 +129,7 @@ namespace Eitrum
 				return false;
 			}
 			EditorGUILayout.EndHorizontal ();
+			EditorUtility.SetDirty (entry);
 			return true;
 		}
 

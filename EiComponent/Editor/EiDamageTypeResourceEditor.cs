@@ -16,10 +16,12 @@ namespace Eitrum.Health
 		public override void OnInspectorGUI ()
 		{
 			var damageTypes = (EiDamageTypeResource)target;
+			Undo.RecordObject (damageTypes, "Damage Types Resource");
 			if (defaultValues == null || defaultValues.Count == 0) {
 				LoadDefaultValues ();
 			}
 			DrawDamageType (damageTypes);
+			EditorUtility.SetDirty (damageTypes);
 		}
 
 		public static void LoadDefaultValues ()

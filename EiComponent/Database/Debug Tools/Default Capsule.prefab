@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23087065870377448}
   - component: {fileID: 136088280764457314}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Default Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

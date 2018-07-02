@@ -220,6 +220,20 @@ namespace Eitrum
 			}
 		}
 
+		public void ShiftNext ()
+		{
+			lock (this) {
+				node = node.Next;
+			}
+		}
+
+		public void ShiftBack ()
+		{
+			lock (this) {
+				node = node.Prev;
+			}
+		}
+
 		public int Count ()
 		{
 			lock (this) {

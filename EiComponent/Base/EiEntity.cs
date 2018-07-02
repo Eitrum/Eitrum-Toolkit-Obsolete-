@@ -107,7 +107,7 @@ namespace Eitrum
 			}
 		}
 
-		public override EiInput Input {
+		public EiInput Input {
 			get {
 				return input;
 			}

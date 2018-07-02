@@ -198,6 +198,7 @@ namespace Eitrum
 
 		public EiLLNode<EiUpdateInterface> Subscribe (EiUpdateInterface component)
 		{
+			threads.ShiftNext ();
 			return threads.First ().Subscribe (component);
 		}
 

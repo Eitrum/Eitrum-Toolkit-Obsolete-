@@ -34,19 +34,22 @@ namespace Eitrum
 				var entries = category.Length;
 				for (int e = 0; e < entries; e++) {
 					var entry = category [e];
-					if (entry.Item && entry.Item.name != entry.ItemName) {
-						entry.GetType ().GetField ("itemName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue (entry, entry.Item.name);
+					if (entry) {
+						if (entry.Item && entry.Item.name != entry.ItemName) {
+							Undo.RecordObject (entry, "Database Item Name Change");
+							entry.GetType ().GetField ("itemName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue (entry, entry.Item.name);
+						}
+						string path = string.Format ("{0} / {1}", category.CategoryName, entry.ItemName);
+						if (entry == currentSelectedObject) {
+							index = items.Count;
+						}
+						int iterations = 0;
+						while (items.Contains (path)) {
+							path = string.Format ("{0} / {1} ({2})", category.CategoryName, entry.ItemName, iterations++);
+						}
+						items.Add (path);
+						references.Add (entry);
 					}
-					string path = string.Format ("{0} / {1}", category.CategoryName, entry.ItemName);
-					if (entry == currentSelectedObject) {
-						index = items.Count;
-					}
-					int iterations = 0;
-					while (items.Contains (path)) {
-						path = string.Format ("{0} / {1} ({2})", category.CategoryName, entry.ItemName, iterations++);
-					}
-					items.Add (path);
-					references.Add (entry);
 				}
 			}
 

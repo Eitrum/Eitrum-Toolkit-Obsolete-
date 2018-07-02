@@ -49,12 +49,6 @@ namespace Eitrum
 			}
 		}
 
-		public virtual EiInput Input {
-			get {
-				return Entity.Input;
-			}
-		}
-
 		public EiComponent Component {
 			get {
 				return this;
