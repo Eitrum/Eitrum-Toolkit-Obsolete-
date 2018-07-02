@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Eitrum.Networking
 {
+	[AddComponentMenu ("Eitrum/Networking/Network View")]
 	public class EiNetworkView : EiComponent
 	{
 		#region Variables

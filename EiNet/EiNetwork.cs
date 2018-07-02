@@ -36,7 +36,6 @@ namespace Eitrum.Networking
 		{
 			EiCallback promise = new EiCallback ();
 
-
 			return promise;
 		}
 
