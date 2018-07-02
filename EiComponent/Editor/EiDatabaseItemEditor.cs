@@ -34,6 +34,9 @@ namespace Eitrum
 				var entries = category.Length;
 				for (int e = 0; e < entries; e++) {
 					var entry = category [e];
+					if (entry.Item && entry.Item.name != entry.ItemName) {
+						entry.GetType ().GetField ("itemName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue (entry, entry.Item.name);
+					}
 					string path = string.Format ("{0} / {1}", category.CategoryName, entry.ItemName);
 					if (entry == currentSelectedObject) {
 						index = items.Count;
