@@ -13,8 +13,6 @@ namespace Eitrum.Health
 		[SerializeField]
 		protected int priorityLevel = 10000;
 		[SerializeField]
-		protected bool calculateFlatProtectionFirst = false;
-		[SerializeField]
 		protected List<EiProtectionData> protection = new List<EiProtectionData> ();
 		[Space (12f)]
 		[SerializeField]
@@ -29,12 +27,15 @@ namespace Eitrum.Health
 			healthComponent.SubscribeDamagePipeline (priorityLevel, ApplyDamage);
 		}
 
-		void ApplyDamage (EiDamage damage)
+		void ApplyDamage (EiCombatData combatData)
 		{
 			for (int i = protection.Count - 1; i >= 0; i--) {
 				var protData = protection [i];
-				if (protData.damageType == damage.DamageType) {
-					damage.ReduceDamage (protData.flatReduction, protData.damageMultiplier, calculateFlatProtectionFirst);
+				if (protData.damageType == combatData.DamageType) {
+					var flat = combatData.FlatAmount;
+					combatData.FlatAmount -= protData.flatReduction - flat * protData.damageMultiplier;
+					combatData.CurrentHealthPercentage *= protData.damageMultiplier;
+					combatData.MaxHealthPercentage *= protData.damageMultiplier;
 				}
 			}
 		}
@@ -45,7 +46,7 @@ namespace Eitrum.Health
 
 		public void AddProtectionLayer (EiProtectionData data)
 		{
-			
+			protection.Add (data);
 		}
 
 		#endregion

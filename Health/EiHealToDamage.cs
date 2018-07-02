@@ -23,13 +23,7 @@ namespace Eitrum.Health
 
 		#region Properties
 
-		public virtual string TargetDamageTypeString {
-			get {
-				return "Not defined";
-			}
-		}
-
-		public virtual int TargetDamageType {
+		public int TargetDamageType {
 			get {
 				return targetDamageType;
 			}
@@ -47,10 +41,12 @@ namespace Eitrum.Health
 			healthComponent.SubscribeHealingPipeline (-priorityLevel, ApplyHeal);
 		}
 
-		void ApplyHeal (EiDamage damage)
+		void ApplyHeal (EiCombatData combatData)
 		{
-			if (damage.DamageType == targetDamageType) {
-				damage.Convert ();
+			if (targetDamageType == -1 || combatData.DamageType == targetDamageType) {
+				var copy = combatData.Copy;
+				combatData.Clear ();
+				copy.Target.Damage (copy);
 				onHealChange.Trigger ();
 			}
 		}

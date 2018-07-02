@@ -32,8 +32,6 @@ namespace Eitrum.Health
 		[SerializeField]
 		protected EiShieldData shieldData;
 		[SerializeField]
-		protected bool calculateFlatReductionFirst = true;
-		[SerializeField]
 		protected bool treatAllDamageTypesAsNormal = true;
 
 		[Header ("Components")]
@@ -82,43 +80,43 @@ namespace Eitrum.Health
 		{
 			healthComponent.SubscribeDamagePipeline (damagePriorityLevel, ApplyDamage);
 			healthComponent.SubscribeHealingPipeline (-damagePriorityLevel, ApplyHeal);
-			currentShield.SubscribeUnityThread (ShieldClamp);
+			currentShield.Subscribe (ShieldClamp);
 		}
 
-		void ApplyHeal (EiDamage heal)
+		void ApplyHeal (EiCombatData heal)
 		{
 			if (!canRegenShieldByHealthRegen)
 				return;
 			if (!HasShieldType (heal.DamageType))
 				return;
 
-			var amountToHeal = Math.Min (MissingShield, heal.Heal);
+			var amountToHeal = Math.Min (MissingShield, heal.TotalAmount);
 			if (amountToHeal < 0f)
 				amountToHeal = 0f;
 			
 			currentShield.Value += amountToHeal;
 
-			heal.RemoveHeal (amountToHeal);
+			heal.Reduce (amountToHeal);
 		}
 
-		void ApplyDamage (EiDamage damage)
+		void ApplyDamage (EiCombatData damage)
 		{
 			if (HasShieldType (damage.DamageType)) {
 				if (HasShield) {
 					// calculate armor Loss
-					var shieldLoss = shieldData.flatShieldLoss + shieldData.shieldLossByTotalDamagePercentage * damage.Damage;
-					var preCalcDamage = damage.Damage;
+					var shieldLoss = shieldData.flatShieldLoss + shieldData.shieldLossByTotalDamagePercentage * damage.TotalRemainingAmount;
+					var preCalcDamage = damage.TotalRemainingAmount;
 					// Reduce damage
-					damage.ReduceDamage (shieldData.flatReduction, shieldData.damageMultiplier, calculateFlatReductionFirst);
+					damage.Reduce (shieldData.flatReduction + damage.TotalRemainingAmount * shieldData.damageMultiplier);
 					//fix after reduction armor loss
-					shieldLoss += (preCalcDamage - damage.Damage) * shieldData.shieldLossByDamagePercentage;
+					shieldLoss += (preCalcDamage - damage.TotalRemainingAmount) * shieldData.shieldLossByDamagePercentage;
 					//Check if needed further damage adjustments
 					var tempArmor = CurrentShield;
 					if (shieldLoss > tempArmor) {
 						var percentage = 1f - (tempArmor / shieldLoss);
 						currentShield.Value = 0f;
 						//do some magic stuff for doing more accurate damage reduction based on armor
-						damage.SetDamage (UnityEngine.Mathf.Lerp (damage.Damage, preCalcDamage, percentage));
+						damage.Reduce (UnityEngine.Mathf.Lerp (damage.TotalRemainingAmount, preCalcDamage, percentage));
 					} else {
 						currentShield.Value -= shieldLoss;
 					}
@@ -135,17 +133,17 @@ namespace Eitrum.Health
 
 		#region Add
 
-		public virtual void AddCurrentShield (float amount)
+		public void AddCurrentShield (float amount)
 		{
 			currentShield.Value += amount;
 		}
 
-		public virtual void AddMaxBaseShield (float amount)
+		public void AddMaxBaseShield (float amount)
 		{
 			baseMaxShield.Value += amount;
 		}
 
-		public virtual void AddMaxShieldMultiplier (float amount)
+		public void AddMaxShieldMultiplier (float amount)
 		{
 			maxShieldMultiplier.Value += amount;
 		}
@@ -154,22 +152,22 @@ namespace Eitrum.Health
 
 		#region Remove
 
-		public virtual void RemoveCurrentShield ()
+		public void RemoveCurrentShield ()
 		{
 			currentShield.Value = 0f;
 		}
 
-		public virtual void RemoveCurrentShield (float amount)
+		public void RemoveCurrentShield (float amount)
 		{
 			currentShield.Value -= amount;
 		}
 
-		public virtual void RemoveMaxBaseShield (float amount)
+		public void RemoveMaxBaseShield (float amount)
 		{
 			baseMaxShield.Value -= amount;
 		}
 
-		public virtual void RemoveMaxShieldMultiplier (float amount)
+		public void RemoveMaxShieldMultiplier (float amount)
 		{
 			maxShieldMultiplier.Value -= amount;
 		}
@@ -178,17 +176,17 @@ namespace Eitrum.Health
 
 		#region Set
 
-		public virtual void SetCurrentShield (float value)
+		public void SetCurrentShield (float value)
 		{
 			currentShield.Value = value;
 		}
 
-		public virtual void SetMaxBaseShield (float value)
+		public void SetMaxBaseShield (float value)
 		{
 			baseMaxShield.Value = value;
 		}
 
-		public virtual void SetMaxShieldMultiplier (float value)
+		public void SetMaxShieldMultiplier (float value)
 		{
 			maxShieldMultiplier.Value = value;
 		}
@@ -201,7 +199,7 @@ namespace Eitrum.Health
 		/// Gets the base max shield value, should only be used for subscribe on changes.
 		/// </summary>
 		/// <returns>The base max shield.</returns>
-		public virtual EiPropertyEventFloat GetBaseMaxShield ()
+		public EiPropertyEventFloat GetBaseMaxShield ()
 		{
 			return baseMaxShield;
 		}
@@ -210,7 +208,7 @@ namespace Eitrum.Health
 		/// Gets the max shield multiplier value, should only be used for subscribe on changes.
 		/// </summary>
 		/// <returns>The max shield multiplier.</returns>
-		public virtual EiPropertyEventFloat GetMaxShieldMultiplier ()
+		public EiPropertyEventFloat GetMaxShieldMultiplier ()
 		{
 			return maxShieldMultiplier;
 		}
@@ -219,7 +217,7 @@ namespace Eitrum.Health
 		/// Gets the current shield value, should only be used for subscribe on changes.
 		/// </summary>
 		/// <returns>The current shield.</returns>
-		public virtual EiPropertyEventFloat GetCurrentShield ()
+		public EiPropertyEventFloat GetCurrentShield ()
 		{
 			return currentShield;
 		}

@@ -3,39 +3,37 @@ using UnityEngine;
 
 namespace Eitrum.Health
 {
-	[AddComponentMenu ("Eitrum/Health/Health")]
 	public class EiHealth : EiComponent, EiDamageInterface, EiHealingInterface
 	{
 		#region Variables
 
-		[Header ("Max Health Settings")]
+		[Header ("Settings")]
 		[SerializeField]
-		protected EiStat maxHealth = new EiStat (100f);
-
+		private EiStat maxHealth = new EiStat (100f, 1f, 1f);
 		[SerializeField]
-		protected EiPropertyEventFloat currentHealth = new EiPropertyEventFloat (100f);
-
+		private EiPropertyEventFloat currentHealth = new EiPropertyEventFloat (100f);
 		[SerializeField]
-		protected bool triggerDeathAtZeroLife = true;
+		private bool triggerDeathAtZeroLife = true;
 
-		protected EiPriorityList<Action<EiDamage>> subscribedDamagePipeline = new EiPriorityList<Action< EiDamage>> ();
-		protected EiPriorityList<Action<EiDamage>> subscribedHealingPipeline = new EiPriorityList<Action< EiDamage>> ();
-		protected EiTrigger onDeath = new EiTrigger ();
-		protected EiTrigger<EiEntity> onDeathEntity = new EiTrigger<EiEntity> ();
+		private EiTrigger onDeath = new EiTrigger ();
+		private EiTrigger<EiEntity> onDeathEntity = new EiTrigger<EiEntity> ();
 
-		protected bool isDead = false;
+		private EiPriorityList<Action<EiCombatData>> subscribedDamagePipeline = new EiPriorityList<Action<EiCombatData>> ();
+		private EiPriorityList<Action<EiCombatData>> subscribedHealingPipeline = new EiPriorityList<Action<EiCombatData>> ();
+
+		private bool isDead = false;
 
 		#endregion
 
 		#region Properties
 
-		public virtual float MaxHealth {
+		public float MaxHealth {
 			get {
 				return maxHealth.TotalStat;
 			}
 		}
 
-		public virtual float CurrentHealth {
+		public float CurrentHealth {
 			get {
 				return currentHealth.Value;
 			}
@@ -47,167 +45,50 @@ namespace Eitrum.Health
 			}
 		}
 
+		public bool IsDead {
+			get {
+				return isDead;
+			}
+		}
+
+		public EiHealth HealthComponent {
+			get {
+				return this;
+			}
+		}
+
 		#endregion
 
 		#region Core
 
-		void Awake ()
+		public void ResetHealth ()
 		{
-			var ent = Entity;
-			subscribedDamagePipeline.Add (0, ApplyDamage);
-			subscribedHealingPipeline.Add (0, ApplyHeal);
-			currentHealth.SubscribeUnityThread (OnHealthChange);
+			currentHealth.Value = MaxHealth;
+			isDead = false;
 		}
 
-		public virtual void Damage (EiCombatData damageData)
+		public void SetHealth (float health)
 		{
-			Damage (EiDamage.NewInstance.ConfigDamage (damageData, this));
-		}
-
-		public virtual void Damage (EiDamage damage)
-		{
-			for (int i = subscribedDamagePipeline.Count - 1; i >= 0; i--) {
-				if (damage.Break)
-					break;
-				if (damage.HasHealing ()) {
-					damage.Iteration++;
-					Heal (damage);
-					return;
-				}
-				subscribedDamagePipeline [i].Target (damage);
-			}
-			damage.Dispose ();
-		}
-
-		public virtual void Heal (EiCombatData healData)
-		{
-			Heal (EiDamage.NewInstance.ConfigHealing (healData, this));
-		}
-
-		public virtual void Heal (EiDamage heal)
-		{
-			for (int i = subscribedHealingPipeline.Count - 1; i >= 0; i--) {
-				if (heal.Break)
-					break;
-				if (heal.HasDamage ()) {
-					heal.Iteration++;
-					Damage (heal);
-					return;
-				}
-				subscribedHealingPipeline [i].Target (heal);
-			}
-			heal.Dispose ();
-		}
-
-		public virtual void Kill ()
-		{
-			currentHealth.Value = 0f;
-			if (triggerDeathAtZeroLife) {
-				if (!isDead) {
-					onDeath.Trigger ();
-					onDeathEntity.Trigger (Entity);
-					isDead = true;
-				}
+			var prevHealth = currentHealth.Value;
+			if (prevHealth != health)
+				currentHealth.Value = Mathf.Clamp (health, 0f, MaxHealth);
+			
+			if (triggerDeathAtZeroLife && !isDead && prevHealth > 0f && currentHealth.Value <= 0f) {
+				onDeath.Trigger ();
+				onDeathEntity.Trigger (Entity);
 			}
 		}
 
-		void OnHealthChange (float value)
+		public void Kill ()
 		{
-			if (triggerDeathAtZeroLife) {
-				if (value <= 0f && !isDead) {
-					onDeath.Trigger ();
-					onDeathEntity.Trigger (Entity);
-					isDead = true;
-				}
+			if (!isDead) {
+				SetHealth (0f);
 			}
 		}
 
-		#endregion
-
-		#region Apply Damage/Healing Implementation
-
-		void ApplyDamage (EiDamage damage)
-		{
-			if (damage.HasDamage ()) {
-				var damageToBeDealt = Math.Min (CurrentHealth, damage.Damage);
-				currentHealth.Value -= damageToBeDealt;
-				damage.RemoveDamage (damageToBeDealt);
-			}
-		}
-
-		void ApplyHeal (EiDamage heal)
-		{
-			if (heal.HasHealing ()) {
-				var healToBeAdded = Math.Min (MissingHealth, heal.Heal);
-				currentHealth.Value += healToBeAdded;
-				heal.RemoveHeal (healToBeAdded);
-			}
-		}
-
-		#endregion
-
-		#region Add
-
-		public void AddBaseMaxHealth (float amount)
-		{
-			maxHealth.AddBaseValue (amount);
-		}
-
-		public void AddMaxHealthMultiplier (float amount)
-		{
-			maxHealth.AddStatMultiplier (amount);
-		}
-
-		public void MultiplierMaxHealth (float amount)
-		{
-			maxHealth.MultiplyMultiplier (amount);
-		}
-
-		#endregion
-
-		#region Remove
-
-		public void RemoveBaseMaxHealth (float amount)
-		{
-			maxHealth.RemoveBaseValue (amount);
-		}
-
-		public void RemoveMaxHealthMultiplier (float amount)
-		{
-			maxHealth.RemoveStatMultiplier (amount);
-		}
-
-		#endregion
-
-		#region Set
-
-		public void SetBaseMaxHealth (float value)
-		{
-			maxHealth.SetBaseValue (value);
-		}
-
-		public void SetMaxHealthMultiplier (float value)
-		{
-			maxHealth.SetStatMultiplier (value);
-		}
-
-		public void SetMaxHealthMultiplierX (float value)
-		{
-			maxHealth.SetMultiplyMultiplier (value);
-		}
-
-		#endregion
-
-		#region Get Variable
-
-		public EiStat GetMaxHealthStat ()
+		public EiStat GetMaxHealth ()
 		{
 			return maxHealth;
-		}
-
-		public EiTrigger<float> GetMaxHealthChangedTrigger ()
-		{
-			return maxHealth.GetTrigger ();
 		}
 
 		public EiPropertyEventFloat GetCurrentHealth ()
@@ -217,26 +98,164 @@ namespace Eitrum.Health
 
 		#endregion
 
-		#region Subscribe / Unsubscribe
+		#region EiDamageInterface implementation
 
-		public virtual void SubscribeDamagePipeline (int priorityLevel, Action<EiDamage> target)
+		public void Damage (float flatDamage)
+		{
+			DamagePipeline (new EiCombatData (flatDamage));
+		}
+
+		public void Damage (int damageType, float flatDamage)
+		{
+			DamagePipeline (new EiCombatData (damageType, flatDamage));
+		}
+
+		public void Damage (int damageType, float flatDamage, float currentHealthPercentageDamage, float maxHealthPercentageDamage)
+		{
+			DamagePipeline (new EiCombatData (damageType, flatDamage, currentHealthPercentageDamage, maxHealthPercentageDamage));
+		}
+
+		public void Damage (int damageType, float flatDamage, float currentHealthPercentageDamage, float maxHealthPercentageDamage, EiEntity source)
+		{
+			DamagePipeline (new EiCombatData (damageType, flatDamage, currentHealthPercentageDamage, maxHealthPercentageDamage, source));
+		}
+
+		/// <summary>
+		/// Damage the target with specified combat data, should be a copy of original.
+		/// </summary>
+		/// <param name="combatData">Combat data.</param>
+		public void Damage (EiCombatData combatData)
+		{
+			DamagePipeline (combatData);
+		}
+
+		#endregion
+
+		#region EiHealingInterface implementation
+
+		public void Heal (float flatHeal)
+		{
+			HealPipeline (new EiCombatData (flatHeal));
+		}
+
+		public void Heal (int healType, float flatHeal)
+		{
+			HealPipeline (new EiCombatData (healType, flatHeal));
+		}
+
+		public void Heal (int healType, float flatHeal, float currentHealthPercentageHeal, float maxHealthPercentageHeal)
+		{
+			HealPipeline (new EiCombatData (healType, flatHeal, currentHealthPercentageHeal, maxHealthPercentageHeal));
+		}
+
+		public void Heal (int healType, float flatHeal, float currentHealthPercentageHeal, float maxHealthPercentageHeal, EiEntity source)
+		{
+			HealPipeline (new EiCombatData (healType, flatHeal, currentHealthPercentageHeal, maxHealthPercentageHeal, source));
+		}
+
+		/// <summary>
+		/// Heal the target with specified combat data, should be a copy of original.
+		/// </summary>
+		/// <param name="combatData">Combat data.</param>
+		public void Heal (EiCombatData combatData)
+		{
+			HealPipeline (combatData.Copy);
+		}
+
+		#endregion
+
+		#region Run Pipelines
+
+		private void DamagePipeline (EiCombatData combatData)
+		{
+			combatData.ApplyTarget (this);
+			for (int i = subscribedDamagePipeline.Count - 1; i >= 0; i--) {
+				if (!combatData.HasTarget)
+					break;
+				subscribedDamagePipeline [i].Target (combatData);
+			}
+		}
+
+		private void HealPipeline (EiCombatData combatData)
+		{
+			combatData.ApplyTarget (this);
+			for (int i = subscribedHealingPipeline.Count - 1; i >= 0; i--) {
+				if (!combatData.HasTarget)
+					break;
+				subscribedHealingPipeline [i].Target (combatData);
+			}
+		}
+
+		#endregion
+
+		#region Apply Damage/Healing Implementation
+
+		void ApplyDamage (EiCombatData damage)
+		{
+			SetHealth (CurrentHealth - damage.TotalAmount);
+		}
+
+		void ApplyHeal (EiCombatData heal)
+		{
+			SetHealth (CurrentHealth + heal.TotalAmount);
+		}
+
+		#endregion
+
+		#region Subscribe Pipelines
+
+		public void SubscribeDamagePipeline (int priorityLevel, Action<EiCombatData> target)
 		{
 			subscribedDamagePipeline.Add (priorityLevel, target);
 		}
 
-		public virtual void SubscribeHealingPipeline (int priorityLevel, Action<EiDamage> target)
+		public void SubscribeHealingPipeline (int priorityLevel, Action<EiCombatData> target)
 		{
 			subscribedHealingPipeline.Add (priorityLevel, target);
 		}
 
-		public virtual EiTrigger GetOnDeathTrigger ()
+		public void UnsubscribeDamagePipeline (Action<EiCombatData> target)
 		{
-			return onDeath;
+			subscribedDamagePipeline.Remove (target);
 		}
 
-		public virtual EiTrigger<EiEntity> GetOnDeathEntityTrigger ()
+		public void UnsubscribeHealingPipeline (Action<EiCombatData> target)
 		{
-			return onDeathEntity;
+			subscribedHealingPipeline.Remove (target);
+		}
+
+		#endregion
+
+		#region Subscribe On Death
+
+		public void SubscribeOnDeath (Action method)
+		{
+			onDeath.AddAction (method);
+		}
+
+		public void SubscribeOnDeath (Action method, bool anyThread)
+		{
+			onDeath.AddAction (method, anyThread);
+		}
+
+		public void SubscribeOnDeath (Action<EiEntity> method)
+		{
+			onDeathEntity.AddAction (method);
+		}
+
+		public void SubscribeOnDeath (Action<EiEntity> method, bool anyThread)
+		{
+			onDeathEntity.AddAction (method, anyThread);
+		}
+
+		public void UnsubscribeOnDeath (Action method)
+		{
+			onDeath.RemoveAction (method);
+		}
+
+		public void UnsubscribeOnDeath (Action<EiEntity> method)
+		{
+			onDeathEntity.RemoveAction (method);
 		}
 
 		#endregion

@@ -10,22 +10,22 @@ namespace Eitrum.Health
 
 		[Header ("Settings")]
 		[SerializeField]
-		protected EiCombatData healDataPerSecond;
+		private EiCombatData healDataPerSecond;
 
 		[Header ("Time Settings")]
 		[SerializeField]
-		protected EiPropertyEventFloat timeBeforeRegenAfterDamageTaken = new EiPropertyEventFloat (5f);
+		private EiPropertyEventFloat timeBeforeRegenAfterDamageTaken = new EiPropertyEventFloat (5f);
 		[SerializeField]
-		protected EiPropertyEventFloat timeBetweenEachHeal = new EiPropertyEventFloat (0f);
+		private EiPropertyEventFloat timeBetweenEachHeal = new EiPropertyEventFloat (0f);
 
 		[Header ("Components")]
 		[SerializeField]
-		protected EiHealth healthComponent;
+		private EiHealth healthComponent;
 
-		protected bool useTimeBetweenHealing = false;
-		protected float lastHealthChange = 0f;
-		protected float currentTimeToHeal = 0f;
-		protected float timeLeftToStartHeal = 0f;
+		private bool useTimeBetweenHealing = false;
+		private float lastHealthChange = 0f;
+		private float currentTimeToHeal = 0f;
+		private float timeLeftToStartHeal = 0f;
 
 		#endregion
 
@@ -39,9 +39,9 @@ namespace Eitrum.Health
 
 		public float HealAmountPerSecond {
 			get {
-				return healDataPerSecond.flatAmount +
-				healDataPerSecond.currentHealthPercentage * healthComponent.CurrentHealth +
-				healDataPerSecond.maxHealthPercentage * healthComponent.MaxHealth;
+				return healDataPerSecond.FlatAmount +
+				healDataPerSecond.CurrentHealthPercentage * healthComponent.CurrentHealth +
+				healDataPerSecond.MaxHealthPercentage * healthComponent.MaxHealth;
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Eitrum.Health
 
 		void Awake ()
 		{
-			timeBetweenEachHeal.SubscribeUnityThreadAndRun (TimeBetweenHealSetting);
+			timeBetweenEachHeal.SubscribeAndRun (TimeBetweenHealSetting);
 			SubscribeThreadedUpdate ();
 		}
 
@@ -79,14 +79,10 @@ namespace Eitrum.Health
 						currentTimeToHeal -= time;
 					while (currentTimeToHeal <= 0f) {
 						currentTimeToHeal += timeBetweenEachHeal.Value;
-						var heal = EiDamage.NewInstance.ConfigHealing (healDataPerSecond, healthComponent);
-						heal.Multiply (timeBetweenEachHeal.Value);
-						healthComponent.Heal (heal);
+						healthComponent.Heal (healDataPerSecond.TotalAmount * timeBetweenEachHeal.Value);
 					}
 				} else {
-					var heal = EiDamage.NewInstance.ConfigHealing (healDataPerSecond, healthComponent);
-					heal.Multiply (time);
-					healthComponent.Heal (heal);
+					healthComponent.Heal (healDataPerSecond.TotalAmount * time);
 				}
 			}
 		}

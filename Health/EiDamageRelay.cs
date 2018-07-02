@@ -13,22 +13,20 @@ namespace Eitrum.Health
 
 		[Header ("Settings")]
 		[SerializeField]
-		protected EiPropertyEventFloat flatDamageReduction = new EiPropertyEventFloat (0f);
+		private EiPropertyEventFloat flatDamageReduction = new EiPropertyEventFloat (0f);
 		[SerializeField]
-		protected EiPropertyEventFloat damageMultiplier = new EiPropertyEventFloat (1f);
-		[SerializeField]
-		protected bool calculateFlatReducationFirst = false;
+		private EiPropertyEventFloat damageMultiplier = new EiPropertyEventFloat (1f);
 		[Header ("Components")]
 		[SerializeField]
-		protected EiHealth damageTarget;
+		private EiHealth damageTarget;
 
-		protected EiTrigger<EiDamage> onHit = new EiTrigger<EiDamage> ();
+		private EiTrigger<EiCombatData> onHit = new EiTrigger<EiCombatData> ();
 
 		#endregion
 
 		#region Properties
 
-		public virtual float FlatDamageReduction {
+		public float FlatDamageReduction {
 			get {
 				return flatDamageReduction.Value;
 			}
@@ -37,20 +35,12 @@ namespace Eitrum.Health
 			}
 		}
 
-		public virtual float DamageMultiplier {
+		public float DamageMultiplier {
 			get {
 				return damageMultiplier.Value;
 			}
 			set {
 				damageMultiplier.Value = value;
-			}
-		}
-
-		public virtual bool CalculateFlatReductionFirst {
-			get {
-				return calculateFlatReducationFirst;
-			}set {
-				calculateFlatReducationFirst = value;
 			}
 		}
 
@@ -63,88 +53,125 @@ namespace Eitrum.Health
 			var ent = Entity;
 		}
 
-		public virtual EiTrigger<EiDamage> GetOnArmorHitTrigger ()
+		public EiTrigger<EiCombatData> GetOnHitTrigger ()
 		{
 			return onHit;
 		}
 
+		public EiPropertyEventFloat GetFlatDamageReduction ()
+		{
+			return flatDamageReduction;
+		}
+
+		public EiPropertyEventFloat GetDamageMultiplier ()
+		{
+			return damageMultiplier;
+		}
+
 		#endregion
 
-		#region Add
+		#region Flat Damage Reduction
 
-		public virtual void AddFlatDamageReduction (float amount)
+		public void AddFlatDamageReduction (float amount)
 		{
 			flatDamageReduction.Value += amount;
 		}
 
-		public virtual void AddDamageMultiplier (float amount)
-		{
-			damageMultiplier.Value += amount;
-		}
-
-		#endregion
-
-		#region Remove
-
-		public virtual void RemoveFlatDamageReduction (float amount)
+		public void RemoveFlatDamageReduction (float amount)
 		{
 			flatDamageReduction.Value -= amount;
 		}
 
-		public virtual void RemoveDamageMultiplier (float amount)
-		{
-			damageMultiplier.Value -= amount;
-		}
-
-		#endregion
-
-		#region Set
-
-		public virtual void SetFlatDamageReduction (float value)
+		public void SetFlatDamageReduction (float value)
 		{
 			flatDamageReduction.Value = value;
 		}
 
-		public virtual void SetDamageMultiplier (float value)
+
+		#endregion
+
+		#region Damage Multiplier
+
+		public void AddDamageMultiplier (float amount)
+		{
+			damageMultiplier.Value += amount;
+		}
+
+
+		public void RemoveDamageMultiplier (float amount)
+		{
+			damageMultiplier.Value -= amount;
+		}
+
+		public void SetDamageMultiplier (float value)
 		{
 			damageMultiplier.Value = value;
 		}
 
 		#endregion
 
-		#region Get
+		#region EiDamageInterface implementation
 
-		public virtual EiPropertyEventFloat GetFlatDamageReduction ()
+		public void Damage (float flatDamage)
 		{
-			return flatDamageReduction;
+			Damage (new EiCombatData (flatDamage));
 		}
 
-		public virtual EiPropertyEventFloat GetDamageMultiplier ()
+		public void Damage (int damageType, float flatDamage)
 		{
-			return damageMultiplier;
+			Damage (new EiCombatData (damageType, flatDamage));
 		}
 
-		public virtual EiTrigger<EiDamage> GetOnHitTrigger ()
+		public void Damage (int damageType, float flatDamage, float currentHealthPercentageDamage, float maxHealthPercentageDamage)
 		{
-			return onHit;
+			Damage (new EiCombatData (damageType, flatDamage, currentHealthPercentageDamage, maxHealthPercentageDamage));
+		}
+
+		public void Damage (int damageType, float flatDamage, float currentHealthPercentageDamage, float maxHealthPercentageDamage, EiEntity source)
+		{
+			Damage (new EiCombatData (damageType, flatDamage, currentHealthPercentageDamage, maxHealthPercentageDamage, source));
+		}
+
+		/// <summary>
+		/// Damage the target with specified combat data, should be a copy of original.
+		/// </summary>
+		/// <param name="combatData">Combat data.</param>
+		public void Damage (EiCombatData combatData)
+		{
+			combatData.ApplyTarget (damageTarget);
+			onHit.Trigger (combatData);
+
+			var flat = combatData.FlatAmount;
+			combatData.FlatAmount -= flatDamageReduction.Value - flat * damageMultiplier.Value;
+			combatData.CurrentHealthPercentage *= damageMultiplier.Value;
+			combatData.MaxHealthPercentage *= damageMultiplier.Value;
+
+			damageTarget.Damage (combatData);
+		}
+
+		public EiHealth HealthComponent {
+			get {
+				return damageTarget;
+			}
 		}
 
 		#endregion
 
-		#region EiDamageInterface implementation
+		#region Subscribe
 
-		public void Damage (EiDamage damage)
+		public void SubscribeOnHit (Action<EiCombatData> method)
 		{
-			if (damage.Target == null) {
-				damage.Target = damageTarget;
-			} else {
-				if ((damage.Target) != damageTarget) {
-					Debug.LogWarning ("The damage target is different to what it hit\n" + Entity.EntityName);
-				}
-			}
-			onHit.Trigger (damage);
-			damage.ReduceDamage (flatDamageReduction.Value, damageMultiplier.Value, calculateFlatReducationFirst);
-			damageTarget.Damage (damage);
+			onHit.AddAction (method);
+		}
+
+		public void SubscribeOnHit (Action<EiCombatData> method, bool anyThread)
+		{
+			onHit.AddAction (method, anyThread);
+		}
+
+		public void UnsubscribeOnHit (Action<EiCombatData> method)
+		{
+			onHit.RemoveAction (method);
 		}
 
 		#endregion
@@ -153,8 +180,8 @@ namespace Eitrum.Health
 
 		protected override void AttachComponents ()
 		{
-			damageTarget = GetComponentInParent<EiHealth> ();
 			base.AttachComponents ();
+			damageTarget = GetComponentInParent<EiHealth> ();
 		}
 
 		#endif

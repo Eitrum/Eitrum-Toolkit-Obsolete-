@@ -35,12 +35,12 @@ namespace Eitrum.Health
 
 		void Awake ()
 		{
-			healthComponent.GetOnDeathTrigger ().AddAction (OnDeath);
+			healthComponent.SubscribeOnDeath (OnDeath);
 		}
 
 		void OnDestroy ()
 		{
-			healthComponent.GetOnDeathTrigger ().RemoveAction (OnDeath);
+			healthComponent.UnsubscribeOnDeath (OnDeath);
 		}
 
 		void OnDeath ()
