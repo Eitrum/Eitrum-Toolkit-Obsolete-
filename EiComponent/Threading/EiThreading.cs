@@ -22,7 +22,7 @@ namespace Eitrum
 		{
 			try {
 				var utf = EiUnityThreading.Instance;
-				EiUnityThreading.CloseThreads.SubscribeUnityThread (SuspendWorkthread);
+				EiUnityThreading.CloseThreads.Subscribe (SuspendWorkthread);
 			} catch (Exception e) {
 				UnityEngine.Debug.LogException (e);
 			}

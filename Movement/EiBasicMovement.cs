@@ -666,12 +666,12 @@ namespace Eitrum.Movement
 
 		public virtual void SubscribeOnStateChange (Action<int> method)
 		{
-			currentState.SubscribeAnyThread (method);
+			currentState.Subscribe (method, true);
 		}
 
 		public virtual void UnsubscribeOnStateChange (Action<int> method)
 		{
-			currentState.UnsubscribeAnyThread (method);
+			currentState.Unsubscribe (method, true);
 		}
 
 		#endregion

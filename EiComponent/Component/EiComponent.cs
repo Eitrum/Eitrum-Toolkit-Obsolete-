@@ -342,7 +342,7 @@ namespace Eitrum
 
 		protected virtual void AttachComponents ()
 		{
-			entity = GetComponent<EiEntity> ();
+			entity = GetComponentInParent<EiEntity> ();
 			networkView = GetComponent<EiNetworkView> ();
 		}
 

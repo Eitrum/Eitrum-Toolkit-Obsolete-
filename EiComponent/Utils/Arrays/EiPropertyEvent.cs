@@ -102,7 +102,7 @@ namespace Eitrum
 		/// </summary>
 		/// <returns>The thread safe.</returns>
 		/// <param name="method">Method.</param>
-		public EiPropertyEvent<T> SubscribeUnityThread (Action<T> method)
+		public EiPropertyEvent<T> Subscribe (Action<T> method)
 		{
 			lock (this)
 				onChangedUnityThread += method;
@@ -114,7 +114,7 @@ namespace Eitrum
 		/// </summary>
 		/// <returns>The thread safe.</returns>
 		/// <param name="method">Method.</param>
-		public EiPropertyEvent<T> SubscribeUnityThreadAndRun (Action<T> method)
+		public EiPropertyEvent<T> SubscribeAndRun (Action<T> method)
 		{
 			lock (this) {
 				onChangedUnityThread += method;
@@ -124,14 +124,17 @@ namespace Eitrum
 		}
 
 		/// <summary>
-		/// Unsubscribe the specified method from Unity Main Thread updates.
+		/// Unsubscribe the specified method
 		/// </summary>
 		/// <param name="method">Method.</param>
-		public EiPropertyEvent<T> UnsubscribeUnityThread (Action<T> method)
+		public EiPropertyEvent<T> Unsubscribe (Action<T> method)
 		{
-			lock (this)
+			lock (this) {
 				if (onChangedUnityThread != null)
 					onChangedUnityThread -= method;
+				if (onChangedAnyThread != null)
+					onChangedAnyThread -= method;
+			}
 			return this;
 		}
 
@@ -140,10 +143,14 @@ namespace Eitrum
 		/// </summary>
 		/// <returns>The thread safe.</returns>
 		/// <param name="method">Method.</param>
-		public EiPropertyEvent<T> SubscribeAnyThread (Action<T> method)
+		public EiPropertyEvent<T> Subscribe (Action<T> method, bool anyThread)
 		{
-			lock (this)
-				onChangedAnyThread += method;
+			lock (this) {
+				if (anyThread)
+					onChangedAnyThread += method;
+				else
+					onChangedUnityThread += method;
+			}
 			return this;
 		}
 
@@ -152,25 +159,15 @@ namespace Eitrum
 		/// </summary>
 		/// <returns>The thread safe.</returns>
 		/// <param name="method">Method.</param>
-		public EiPropertyEvent<T> SubscribeAnyThreadAndRun (Action<T> method)
+		public EiPropertyEvent<T> SubscribeAndRun (Action<T> method, bool anyThread)
 		{
 			lock (this) {
-				onChangedAnyThread += method;
+				if (anyThread)
+					onChangedAnyThread += method;
+				else
+					onChangedUnityThread += method;
 				method (value);
 			}
-			return this;
-		}
-
-		/// <summary>
-		/// Unsubscribes the specified method from being called from any thread.
-		/// </summary>
-		/// <returns>The thread safe.</returns>
-		/// <param name="method">Method.</param>
-		public EiPropertyEvent<T> UnsubscribeAnyThread (Action<T> method)
-		{
-			lock (this)
-				if (onChangedUnityThread != null)
-					onChangedAnyThread -= method;
 			return this;
 		}
 

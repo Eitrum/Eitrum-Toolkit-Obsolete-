@@ -19,7 +19,7 @@ namespace Eitrum
 				thread.SetNode (node);
 			}
 			var inst = EiUnityThreading.Instance;
-			EiUnityThreading.CloseThreads.SubscribeAnyThread (CloseThreads);
+			EiUnityThreading.CloseThreads.Subscribe (CloseThreads, true);
 		}
 
 		#endregion

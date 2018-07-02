@@ -59,7 +59,7 @@ namespace Eitrum.Movement
 		void Awake ()
 		{
 			SubscribeFixedUpdate ();
-			Stamina.GetCurrentStaminaPercentage ().SubscribeUnityThreadAndRun (CurrentStaminaChanged);
+			Stamina.GetCurrentStaminaPercentage ().SubscribeAndRun (CurrentStaminaChanged);
 		}
 
 		void CurrentStaminaChanged (float f)
@@ -80,7 +80,7 @@ namespace Eitrum.Movement
 
 		void OnDestroy ()
 		{
-			Stamina.GetCurrentStaminaPercentage ().UnsubscribeUnityThread (CurrentStaminaChanged);
+			Stamina.GetCurrentStaminaPercentage ().Unsubscribe (CurrentStaminaChanged);
 		}
 
 		#endregion
