@@ -13,7 +13,9 @@ namespace Eitrum
 		[SerializeField]
 		private string itemName = "empty";
 		[SerializeField]
-		private UnityEngine.Object item;
+		private UnityEngine.Object item = null;
+		[SerializeField]
+		private EiDatabaseResource database = null;
 
 		#endregion
 
@@ -34,6 +36,12 @@ namespace Eitrum
 		public UnityEngine.Object Object {
 			get {
 				return item;
+			}
+		}
+
+		public EiDatabaseResource Database {
+			get {
+				return database;
 			}
 		}
 

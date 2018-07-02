@@ -11,6 +11,7 @@ namespace Eitrum
 	[CustomEditor (typeof(EiDatabaseResource))]
 	public class EiDatabaseResourceEditor : Editor
 	{
+		static string simplePath = "Eitrum/EiComponent/Database/Items";
 
 		static List<bool> categoriesFolded = new List<bool> ();
 
@@ -58,7 +59,7 @@ namespace Eitrum
 
 			if (GUILayout.Button ("Clear", GUILayout.Width (100f))) {
 				if (EditorUtility.DisplayDialog ("Clear Database", "Do you really wanna clear the database?", "Yes", "No")) {
-					ClearDatabase ();
+					ClearDatabase (db);
 					GetCategories (db).Clear ();
 				}
 			}
@@ -90,12 +91,14 @@ namespace Eitrum
 				EditorGUILayout.BeginHorizontal ();
 
 				if (GUILayout.Button ("Add Item", GUILayout.Width (100f))) {
-					var entryToAdd = EiDatabaseItem.CreateAsset ("Eitrum/DatabaseItems");
+					var entryToAdd = EiDatabaseItem.CreateAsset (simplePath);
+					ApplyDatabase (entryToAdd, database);
 					GetEntries (category).Add (entryToAdd);
 				}
 				var obj = EditorGUILayout.ObjectField (null, typeof(UnityEngine.Object), false, GUILayout.Width (100f));
 				if (obj) {
-					var entryToAdd = EiDatabaseItem.CreateAsset ("Eitrum/DatabaseItems");
+					var entryToAdd = EiDatabaseItem.CreateAsset (simplePath);
+					ApplyDatabase (entryToAdd, database);
 					SetEntryObject (entryToAdd, obj);
 					GetEntries (category).Add (entryToAdd);
 				}
@@ -136,7 +139,7 @@ namespace Eitrum
 
 		public void ClearDatabase (EiDatabaseResource resource)
 		{
-			for (int i = resource._Length; i >= 0; i--) {
+			for (int i = resource._Length - 1; i >= 0; i--) {
 				DeleteCategory (resource [i]);
 			}
 		}
@@ -147,6 +150,11 @@ namespace Eitrum
 			for (int i = 0; i < entries.Count; i++) {
 				entries [i].DestroyFile ();
 			}
+		}
+
+		public void ApplyDatabase (EiDatabaseItem item, EiDatabaseResource database)
+		{
+			typeof(EiDatabaseItem).GetField ("database", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (item, database);
 		}
 
 		public void SetCategoryName (EiDatabaseCategory category, string name)

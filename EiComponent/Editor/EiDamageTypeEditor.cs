@@ -2,12 +2,15 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Eitrum.Health
 {
 	[CustomPropertyDrawer (typeof(EiDamageType))]
 	public class EiDamageTypeEditor : PropertyDrawer
 	{
+		static string path = "Assets/Eitrum/Health/DamageTypes/EiDamageTypeResource.prefab";
+
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
 		{
 			if (property.propertyType == SerializedPropertyType.Integer) {
@@ -16,24 +19,38 @@ namespace Eitrum.Health
 				items.Add ("None");
 				ids.Add (-1);
 
-				EiDamageTypeResource resources = EiDamageTypeResource.Instance;
+				var go = AssetDatabase.LoadAssetAtPath<GameObject> (path);
+				if (!go) {
+					var tempObj = new GameObject ("EiDamageTypeResource", typeof(EiDamageTypeResource));
+					EiDamageTypeResourceEditor.LoadDefaultValues ();
+					var list = EiDamageTypeResourceEditor.defaultValues;
+					var tempResource = tempObj.GetComponent<EiDamageTypeResource> ();
+					tempResource.GetType ().GetField ("damageCategories", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (tempResource, list);
+					go = PrefabUtility.CreatePrefab (path, tempObj);
+					UnityEngine.MonoBehaviour.DestroyImmediate (tempObj);
+				}
+
+				EiDamageTypeResource resources = go.GetComponent<EiDamageTypeResource> ();
 				var currentSelectedId = property.intValue;
 				var index = 0;
 
-				var categories = resources._Length;
+				var categories = resources.Length;
+
 				for (int i = 0; i < categories; i++) {
-					var category = resources [i];
-					var entries = category.Length;
-					for (int e = 0; e < entries; e++) {
-						var entry = category [e];
-						string path = string.Format ("{0} / {1}", category.CategoryName, entry.DamageTypeName);
-						var uniqueId = entry.UniqueDamageTypeId;
-						if (uniqueId == currentSelectedId) {
-							index = items.Count;
+					var name = resources [i];
+					if (name.Length == 0) {
+						name = string.Format ("Empty / DamageType ({0})", i);
+					} else {
+						var tempName = name.Replace (" ", "");
+						if (tempName.Length == 0) {
+							name = string.Format ("Empty / DamageType ({0})", i);
 						}
-						items.Add (path);
-						ids.Add (uniqueId);
 					}
+					if (currentSelectedId == i) {
+						index = items.Count;
+					}
+					items.Add (name);
+					ids.Add (i);
 				}
 
 				property.intValue = ids [EditorGUI.Popup (position, property.displayName, index, items.ToArray ())];

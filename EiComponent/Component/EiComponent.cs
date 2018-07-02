@@ -77,10 +77,16 @@ namespace Eitrum
 
 		#region Instantiate
 
+		#region Normal
+
 		public new static T Instantiate<T> (T prefab) where T : UnityEngine.Object
 		{
 			return UnityEngine.Object.Instantiate<T> (prefab);
 		}
+
+		#endregion
+
+		#region DatabaseItem GameObject
 
 		public static GameObject Instantiate (EiDatabaseItem item)
 		{
@@ -107,6 +113,10 @@ namespace Eitrum
 			return item.InstantiateAsGameObject (position, rotation, parent);
 		}
 
+		#endregion
+
+		#region DatabaseItem T
+
 		public static T Instantiate<T> (EiDatabaseItem item) where T : UnityEngine.Object
 		{
 			return item.Instantiate () as T;
@@ -131,6 +141,8 @@ namespace Eitrum
 		{
 			return item.Instantiate (position, rotation, parent) as T;
 		}
+
+		#endregion
 
 		#endregion
 
