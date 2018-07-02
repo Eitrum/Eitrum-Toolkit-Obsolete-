@@ -671,7 +671,7 @@ namespace Eitrum.Movement
 
 		public virtual void UnsubscribeOnStateChange (Action<int> method)
 		{
-			currentState.Unsubscribe (method, true);
+			currentState.Unsubscribe (method);
 		}
 
 		#endregion
