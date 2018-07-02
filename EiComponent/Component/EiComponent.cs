@@ -82,52 +82,52 @@ namespace Eitrum
 			return UnityEngine.Object.Instantiate<T> (prefab);
 		}
 
-		public static GameObject Instantiate (EiDatabaseReference item)
+		public static GameObject Instantiate (EiDatabaseItem item)
 		{
 			return item.InstantiateAsGameObject ();
 		}
 
-		public static GameObject Instantiate (EiDatabaseReference item, Transform parent)
+		public static GameObject Instantiate (EiDatabaseItem item, Transform parent)
 		{
 			return item.InstantiateAsGameObject (parent);
 		}
 
-		public static GameObject Instantiate (EiDatabaseReference item, Vector3 position)
+		public static GameObject Instantiate (EiDatabaseItem item, Vector3 position)
 		{
 			return item.InstantiateAsGameObject (position);
 		}
 
-		public static GameObject Instantiate (EiDatabaseReference item, Vector3 position, Quaternion rotation)
+		public static GameObject Instantiate (EiDatabaseItem item, Vector3 position, Quaternion rotation)
 		{
 			return item.InstantiateAsGameObject (position, rotation);
 		}
 
-		public static GameObject Instantiate (EiDatabaseReference item, Vector3 position, Quaternion rotation, Transform parent)
+		public static GameObject Instantiate (EiDatabaseItem item, Vector3 position, Quaternion rotation, Transform parent)
 		{
 			return item.InstantiateAsGameObject (position, rotation, parent);
 		}
 
-		public static T Instantiate<T> (EiDatabaseReference item) where T : UnityEngine.Object
+		public static T Instantiate<T> (EiDatabaseItem item) where T : UnityEngine.Object
 		{
 			return item.Instantiate () as T;
 		}
 
-		public static T Instantiate<T> (EiDatabaseReference item, Transform parent) where T : UnityEngine.Object
+		public static T Instantiate<T> (EiDatabaseItem item, Transform parent) where T : UnityEngine.Object
 		{
 			return item.Instantiate (parent) as T;
 		}
 
-		public static T Instantiate<T> (EiDatabaseReference item, Vector3 position) where T : UnityEngine.Object
+		public static T Instantiate<T> (EiDatabaseItem item, Vector3 position) where T : UnityEngine.Object
 		{
 			return item.Instantiate (position) as T;
 		}
 
-		public static T Instantiate<T> (EiDatabaseReference item, Vector3 position, Quaternion rotation) where T : UnityEngine.Object
+		public static T Instantiate<T> (EiDatabaseItem item, Vector3 position, Quaternion rotation) where T : UnityEngine.Object
 		{
 			return item.Instantiate (position, rotation) as T;
 		}
 
-		public static T Instantiate<T> (EiDatabaseReference item, Vector3 position, Quaternion rotation, Transform parent) where T : UnityEngine.Object
+		public static T Instantiate<T> (EiDatabaseItem item, Vector3 position, Quaternion rotation, Transform parent) where T : UnityEngine.Object
 		{
 			return item.Instantiate (position, rotation, parent) as T;
 		}
@@ -142,14 +142,11 @@ namespace Eitrum
 			return Instantiate (obj) as T;
 		}
 
-		public static GameObject NetworkInstantiate (EiDatabaseReference item)
+		public static GameObject NetworkInstantiate (EiDatabaseItem item)
 		{
 			var go = item.GameObject;
 			if (!go) {
-				if ((item.UniqueIdReference == -1))
-					Debug.LogError ("Item has a id reference of -1, it is not valid");
-				else
-					Debug.LogErrorFormat ("Item {0} is not of type GameObject", item.ItemName);
+				Debug.LogErrorFormat ("Item {0} is not of type GameObject", item.ItemName);
 				return null;
 			}
 			return null;

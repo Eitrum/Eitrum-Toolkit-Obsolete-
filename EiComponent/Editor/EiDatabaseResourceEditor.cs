@@ -8,8 +8,8 @@ using System;
 
 namespace Eitrum
 {
-	[CustomEditor (typeof(EiDatabase))]
-	public class EiDatabaseEditor : Editor
+	[CustomEditor (typeof(EiDatabaseResource))]
+	public class EiDatabaseResourceEditor : Editor
 	{
 
 		static List<bool> categoriesFolded = new List<bool> ();
@@ -19,21 +19,21 @@ namespace Eitrum
 
 		public override void OnInspectorGUI ()
 		{
-			var database = (EiDatabase)target;
+			var database = (EiDatabaseResource)target;
 			if (categoryList == null) {
-				categoryList = typeof(EiDatabase).GetField ("categories", BindingFlags.NonPublic | BindingFlags.Instance);
+				categoryList = typeof(EiDatabaseResource).GetField ("categories", BindingFlags.NonPublic | BindingFlags.Instance);
 				if (categoryList == null)
 					return;
 			}
 			if (entryList == null) {
-				entryList = typeof(EiCategory).GetField ("entries", BindingFlags.NonPublic | BindingFlags.Instance);
+				entryList = typeof(EiDatabaseCategory).GetField ("entries", BindingFlags.NonPublic | BindingFlags.Instance);
 				if (entryList == null)
 					return;
 			}
 			DrawDatabase (database);
 		}
 
-		private void DrawDatabase (EiDatabase db)
+		private void DrawDatabase (EiDatabaseResource db)
 		{
 			var dbLength = db._Length;
 			EditorGUILayout.LabelField (string.Format ("Categories ({0})", dbLength));
@@ -44,6 +44,7 @@ namespace Eitrum
 			for (int i = 0; i < db._Length; i++) {
 				var cat = db [i];
 				if (!DrawCategory (db, cat, i)) {
+					DeleteCategory (cat);
 					GetCategories (db).RemoveAt (i);
 					i--;
 				}
@@ -52,20 +53,20 @@ namespace Eitrum
 			EditorGUILayout.BeginHorizontal ();
 
 			if (GUILayout.Button ("Add Category", GUILayout.Width (100f))) {
-				GetCategories (db).Add (new EiCategory ());
+				GetCategories (db).Add (new EiDatabaseCategory ());
 			}
 
 			if (GUILayout.Button ("Clear", GUILayout.Width (100f))) {
 				if (EditorUtility.DisplayDialog ("Clear Database", "Do you really wanna clear the database?", "Yes", "No")) {
+					ClearDatabase ();
 					GetCategories (db).Clear ();
-					db.GetType ().GetField ("uniqueIdGenerator", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (db, 0);
 				}
 			}
 
 			EditorGUILayout.EndHorizontal ();
 		}
 
-		private bool DrawCategory (EiDatabase database, EiCategory category, int index)
+		private bool DrawCategory (EiDatabaseResource database, EiDatabaseCategory category, int index)
 		{
 			EditorGUILayout.BeginHorizontal ();
 			categoriesFolded [index] = EditorGUILayout.Foldout (categoriesFolded [index], "Entries (" + category.Length + ")", true);
@@ -89,15 +90,13 @@ namespace Eitrum
 				EditorGUILayout.BeginHorizontal ();
 
 				if (GUILayout.Button ("Add Item", GUILayout.Width (100f))) {
-					var entryToAdd = new EiEntry ();
-					SetEntryUniqueId (entryToAdd, AllocateUniqueId (database));
+					var entryToAdd = EiDatabaseItem.CreateAsset ("Eitrum/DatabaseItems");
 					GetEntries (category).Add (entryToAdd);
 				}
 				var obj = EditorGUILayout.ObjectField (null, typeof(UnityEngine.Object), false, GUILayout.Width (100f));
 				if (obj) {
-					var entryToAdd = new EiEntry ();
+					var entryToAdd = EiDatabaseItem.CreateAsset ("Eitrum/DatabaseItems");
 					SetEntryObject (entryToAdd, obj);
-					SetEntryUniqueId (entryToAdd, AllocateUniqueId (database));
 					GetEntries (category).Add (entryToAdd);
 				}
 
@@ -108,13 +107,14 @@ namespace Eitrum
 			return true;
 		}
 
-		private bool DrawEntry (EiEntry entry, int index)
+		private bool DrawEntry (EiDatabaseItem entry, int index)
 		{
 			EditorGUILayout.BeginHorizontal ();
 			SetEntryName (entry, entry.Item ? entry.Item.name : "empty");
 			SetEntryObject (entry, EditorGUILayout.ObjectField (entry.Item, typeof(UnityEngine.Object), false)); 
 			if (GUILayout.Button ("X", GUILayout.Width (24f))) {
 				EditorGUILayout.EndHorizontal ();
+				entry.DestroyFile ();
 				return false;
 			}
 			EditorGUILayout.EndHorizontal ();
@@ -134,43 +134,45 @@ namespace Eitrum
 			EditorGUILayout.EndHorizontal ();
 		}
 
-		public int AllocateUniqueId (EiDatabase database)
+		public void ClearDatabase (EiDatabaseResource resource)
 		{
-			var field = database.GetType ().GetField ("uniqueIdGenerator", BindingFlags.NonPublic | BindingFlags.Instance);
-			var id = (int)field.GetValue (database);
-			field.SetValue (database, id + 1);
-			return id;
+			for (int i = resource._Length; i >= 0; i--) {
+				DeleteCategory (resource [i]);
+			}
 		}
 
-		public void SetCategoryName (EiCategory category, string name)
+		public void DeleteCategory (EiDatabaseCategory category)
 		{
-			var field = typeof(EiCategory).GetField ("categoryName", BindingFlags.NonPublic | BindingFlags.Instance);
+			var entries = GetEntries (category);
+			for (int i = 0; i < entries.Count; i++) {
+				entries [i].DestroyFile ();
+			}
+		}
+
+		public void SetCategoryName (EiDatabaseCategory category, string name)
+		{
+			var field = typeof(EiDatabaseCategory).GetField ("categoryName", BindingFlags.NonPublic | BindingFlags.Instance);
 			field.SetValue (category, name);
 		}
 
-		public void SetEntryUniqueId (EiEntry entry, int uniqueId)
-		{
-			entry.GetType ().GetField ("uniqueId", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (entry, uniqueId);
-		}
-
-		public void SetEntryName (EiEntry entry, string name)
+		public void SetEntryName (EiDatabaseItem entry, string name)
 		{
 			entry.GetType ().GetField ("itemName", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (entry, name);
 		}
 
-		public void SetEntryObject (EiEntry entry, UnityEngine.Object item)
+		public void SetEntryObject (EiDatabaseItem entry, UnityEngine.Object item)
 		{
 			entry.GetType ().GetField ("item", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (entry, item);
 		}
 
-		public List<EiCategory> GetCategories (EiDatabase database)
+		public List<EiDatabaseCategory> GetCategories (EiDatabaseResource database)
 		{
-			return categoryList.GetValue (database) as List<EiCategory>;
+			return categoryList.GetValue (database) as List<EiDatabaseCategory>;
 		}
 
-		public List<EiEntry> GetEntries (EiCategory category)
+		public List<EiDatabaseItem> GetEntries (EiDatabaseCategory category)
 		{
-			return entryList.GetValue (category) as List<EiEntry>;
+			return entryList.GetValue (category) as List<EiDatabaseItem>;
 		}
 	}
 }

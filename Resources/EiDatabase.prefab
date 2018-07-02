@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4188697288337766}
-  - component: {fileID: 114587101320265546}
+  - component: {fileID: 114713894366007894}
   m_Layer: 0
   m_Name: EiDatabase
   m_TagString: Untagged
@@ -40,7 +40,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114587101320265546
+--- !u!114 &114713894366007894
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -48,18 +48,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1884915779773502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0270610b2a03f164f834a3150274445f, type: 3}
+  m_Script: {fileID: 11500000, guid: b98c4083435c3e64c86353a200614a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
   networkView: {fileID: 0}
-  uniqueIdGeneration: 2
   categories:
-  - categoryName: Tools
-    entries:
-    - itemName: EiEmptyGameObject
-      item: {fileID: 1517579156540444, guid: 7e2cbb1afac32b84eaab26c4e2d6c452, type: 2}
-      uniqueId: 0
-    - itemName: TestScene
-      item: {fileID: 102900000, guid: fbacc5d5c0367af4b8c954850c0c6ba8, type: 3}
-      uniqueId: 1
+  - categoryName: DebugItems
+    entries: []

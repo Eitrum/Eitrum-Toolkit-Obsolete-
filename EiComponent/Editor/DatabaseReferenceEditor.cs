@@ -14,7 +14,7 @@ public class DatabaseReferenceEditor : PropertyDrawer
 		List<UnityEngine.Object> objs = new List<UnityEngine.Object> ();
 		items.Add ("None");
 		objs.Add (null);
-		EiDatabase database = EiDatabase.Instance;
+		EiDatabaseResource database = EiDatabaseResource.Instance;
 		var currentSelectedObject = property.objectReferenceValue;
 		var index = 0;
 		bool doTypeCheck = databaseAttribute.type != null;
@@ -27,7 +27,6 @@ public class DatabaseReferenceEditor : PropertyDrawer
 				var entry = category [e];
 				if (!doTypeCheck || entry.Is (databaseAttribute.type)) {
 					string path = string.Format ("{0} / {1}", category.CategoryName, entry.ItemName);
-					var uniqueId = entry.UniqueId;
 					if (entry.Item == currentSelectedObject) {
 						index = items.Count;
 					}

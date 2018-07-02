@@ -5,18 +5,18 @@ using UnityEditor;
 
 namespace Eitrum
 {
-	[CustomPropertyDrawer (typeof(EiDatabaseReference))]
-	public class EiDatabaseReferenceEditor : PropertyDrawer
+	[CustomPropertyDrawer (typeof(EiDatabaseItem))]
+	public class EiDatabaseItemEditor : PropertyDrawer
 	{
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
 		{
 			List<string> items = new List<string> ();
-			List<int> ids = new List<int> ();
+			List<EiDatabaseItem> references = new List<EiDatabaseItem> ();
 			items.Add ("None");
-			ids.Add (-1);
-			EiDatabase database = EiDatabase.Instance;
-			var currentSelectedId = property.FindPropertyRelative ("uniqueIdReference").intValue;
+			references.Add (null);
+			EiDatabaseResource database = EiDatabaseResource.Instance;
+			var currentSelectedObject = property.FindPropertyRelative ("item").objectReferenceValue;
 			var index = 0;
 
 			var categories = database._Length;
@@ -26,16 +26,15 @@ namespace Eitrum
 				for (int e = 0; e < entries; e++) {
 					var entry = category [e];
 					string path = string.Format ("{0} / {1}", category.CategoryName, entry.ItemName);
-					var uniqueId = entry.UniqueId;
-					if (uniqueId == currentSelectedId) {
+					if (entry.Item == currentSelectedObject) {
 						index = items.Count;
 					}
 					items.Add (path);
-					ids.Add (uniqueId);
+					references.Add (entry);
 				}
 			}
 
-			property.FindPropertyRelative ("uniqueIdReference").intValue = ids [EditorGUI.Popup (position, property.displayName, index, items.ToArray ())];
+			property.objectReferenceValue = references [EditorGUI.Popup (position, property.displayName, index, items.ToArray ())];
 		}
 	}
 }

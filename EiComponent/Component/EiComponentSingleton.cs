@@ -29,8 +29,6 @@ namespace Eitrum
 			}
 		}
 
-		
-
 		protected void KeepAlive ()
 		{
 			DontDestroyOnLoad (this.gameObject);

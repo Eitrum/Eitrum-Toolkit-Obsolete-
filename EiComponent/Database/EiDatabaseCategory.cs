@@ -5,14 +5,14 @@ using UnityEngine;
 namespace Eitrum
 {
 	[Serializable]
-	public class EiCategory
+	public class EiDatabaseCategory
 	{
 		#region Variables
 
 		[SerializeField]
 		private string categoryName = "";
 		[SerializeField]
-		private List<EiEntry> entries = new List<EiEntry> ();
+		private List<EiDatabaseItem> entries = new List<EiDatabaseItem> ();
 
 		#endregion
 
@@ -30,7 +30,7 @@ namespace Eitrum
 			}
 		}
 
-		public EiEntry this [int index] {
+		public EiDatabaseItem this [int index] {
 			get {
 				return entries [index];
 			}
@@ -45,7 +45,7 @@ namespace Eitrum
 			return entries.Count;
 		}
 
-		public EiEntry GetEntry (int index)
+		public EiDatabaseItem GetEntry (int index)
 		{
 			return entries [index];
 		}
