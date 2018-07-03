@@ -9,7 +9,7 @@ namespace Eitrum
 	public class EiDatabaseItemEditor : PropertyDrawer
 	{
 
-		static string path = "Assets/Eitrum/EiComponent/Database/EiDatabase.prefab";
+		static string path = "Assets/Eitrum/Configuration/EiDatabase.prefab";
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
 		{

@@ -9,7 +9,7 @@ namespace Eitrum.Health
 	[CustomPropertyDrawer (typeof(EiDamageType))]
 	public class EiDamageTypeEditor : PropertyDrawer
 	{
-		static string path = "Assets/Eitrum/Health/DamageTypes/EiDamageTypeResource.prefab";
+		static string path = "Assets/Eitrum/Configuration/EiDamageTypeResource.prefab";
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
 		{

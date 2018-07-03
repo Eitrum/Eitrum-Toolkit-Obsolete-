@@ -10,7 +10,7 @@ namespace Eitrum.Health
 
 		[SerializeField]
 		[EiDamageType]
-		private int damageType;
+		private int damageType = -1;
 
 		[SerializeField]
 		private float flatAmount;
