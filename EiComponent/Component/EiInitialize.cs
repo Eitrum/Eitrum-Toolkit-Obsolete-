@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Eitrum
 {
-	[AddComponentMenu ("Eitrum/Initialize Fix")]
-	public class EiInitialize
+	[AddComponentMenu ("Eitrum/Core/Initialize")]
+	public class EiInitialize : EiComponent
 	{
 		void Awake ()
 		{
