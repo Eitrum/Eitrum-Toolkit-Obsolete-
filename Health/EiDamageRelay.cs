@@ -138,6 +138,9 @@ namespace Eitrum.Health
 		/// <param name="combatData">Combat data.</param>
 		public void Damage (EiCombatData combatData)
 		{
+			if (!combatData.IsCopy) {
+				combatData = combatData.Copy;
+			}
 			combatData.ApplyTarget (damageTarget);
 			onHit.Trigger (combatData);
 

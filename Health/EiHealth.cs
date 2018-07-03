@@ -168,6 +168,9 @@ namespace Eitrum.Health
 
 		private void DamagePipeline (EiCombatData combatData)
 		{
+			if (!combatData.IsCopy) {
+				combatData = combatData.Copy;
+			}
 			combatData.ApplyTarget (this);
 			for (int i = subscribedDamagePipeline.Count - 1; i >= 0; i--) {
 				if (!combatData.HasTarget)
@@ -178,6 +181,9 @@ namespace Eitrum.Health
 
 		private void HealPipeline (EiCombatData combatData)
 		{
+			if (!combatData.IsCopy) {
+				combatData = combatData.Copy;
+			}
 			combatData.ApplyTarget (this);
 			for (int i = subscribedHealingPipeline.Count - 1; i >= 0; i--) {
 				if (!combatData.HasTarget)

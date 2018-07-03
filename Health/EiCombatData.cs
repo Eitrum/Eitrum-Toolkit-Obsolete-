@@ -25,6 +25,7 @@ namespace Eitrum.Health
 		private EiHealth target;
 
 		private float reducedAmount;
+		private bool isCopy = false;
 
 		#endregion
 
@@ -111,7 +112,13 @@ namespace Eitrum.Health
 
 		public EiCombatData Copy {
 			get {
-				return new EiCombatData (this);
+				return new EiCombatData (this, isCopy);
+			}
+		}
+
+		public bool IsCopy {
+			get {
+				return isCopy;
 			}
 		}
 
@@ -195,6 +202,12 @@ namespace Eitrum.Health
 			this.comment = data.comment;
 			this.source = data.source;
 			this.target = data.target;
+		}
+
+		public EiCombatData (EiCombatData data, bool isCopy)
+		{
+			this (data);
+			this.isCopy = isCopy;
 		}
 
 		#endregion
