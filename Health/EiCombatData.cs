@@ -204,9 +204,8 @@ namespace Eitrum.Health
 			this.target = data.target;
 		}
 
-		public EiCombatData (EiCombatData data, bool isCopy)
+		public EiCombatData (EiCombatData data, bool isCopy) : this (data)
 		{
-			this (data);
 			this.isCopy = isCopy;
 		}
 
