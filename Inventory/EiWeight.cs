@@ -5,24 +5,44 @@ namespace Eitrum.Inventory
 {
 	public class EiWeight : EiComponent
 	{
+		#region Variables
+
 		[Header ("Settings")]
-		public EiStat weight = new EiStat (1f);
+		[SerializeField]
+		private EiStat weight = new EiStat (1f);
 
-		public bool multiplyWeightWithScale = false;
-		public bool setBodyWeightOnStartup = true;
+		[SerializeField]
+		private bool multiplyWeightWithScale = false;
+		[SerializeField]
+		private bool setBodyWeightOnStartup = true;
 
-		void Awake ()
-		{
-			var scale = transform.localScale;
-			var result = scale.x * scale.y * scale.z;
+		#endregion
 
-			weight.SetMultiplyMultiplier (result);
-		}
+		#region Properties
 
-		public virtual float TotalWeight {
+		public float TotalWeight {
 			get {
 				return weight.TotalStat;
 			}
 		}
+
+		#endregion
+
+		#region Core
+
+		void Awake ()
+		{
+			if (multiplyWeightWithScale) {
+				var scale = transform.localScale;
+				var result = scale.x * scale.y * scale.z;
+
+				weight.AddStatMultiplier (result);
+			}
+
+			if (setBodyWeightOnStartup)
+				Entity.Body.mass = weight.TotalStat;
+		}
+
+		#endregion
 	}
 }
