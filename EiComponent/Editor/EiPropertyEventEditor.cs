@@ -95,4 +95,19 @@ namespace Eitrum
 			field.intValue = EditorGUI.IntField (position, property.displayName, field.intValue);
 		}
 	}
+
+	[CustomPropertyDrawer (typeof(EiPropertyEventBool))]
+	public class EiPropertyEventEditorBool : PropertyDrawer
+	{
+		public override float GetPropertyHeight (SerializedProperty property, GUIContent label)
+		{
+			return 16f;
+		}
+
+		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
+		{
+			var propEvent = fieldInfo.GetValue (property.serializedObject.targetObject) as EiPropertyEventBool;
+			propEvent.Value = EditorGUI.Toggle (position, property.displayName, propEvent.Value);
+		}
+	}
 }

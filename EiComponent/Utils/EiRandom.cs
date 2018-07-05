@@ -231,19 +231,24 @@ namespace Eitrum
 			return Instance.random.Next (min, max);
 		}
 
-		public static float Range (float min, float max)
+		public float _Range (float min, float max)
 		{
 			if (min > max) {
 				var temp = min;
 				min = max;
 				max = temp;
 			}
-			var val = (float)Double;
+			var val = (float)_Double;
 			var range = max - min;
 			return min + val * range;
 		}
 
-		public static double Range (double min, double max)
+		public static float Range (float min, float max)
+		{
+			return Instance._Range (min, max);
+		}
+
+		public double _Range (double min, double max)
 		{
 			if (min > max) {
 				var temp = min;
@@ -251,7 +256,12 @@ namespace Eitrum
 				max = temp;
 			}
 			var range = max - min;
-			return min + Double * range;
+			return min + _Double * range;
+		}
+
+		public static double Range (double min, double max)
+		{
+			return Instance._Range (min, max);
 		}
 
 		#endregion

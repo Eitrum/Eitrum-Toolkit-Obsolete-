@@ -165,6 +165,24 @@ namespace Eitrum
 			return MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
 		}
 
+		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation, Vector3 scale)
+		{
+			var go = MonoBehaviour.Instantiate (GameObject, position, rotation);
+			var goScale = go.transform.localScale;
+			goScale.Scale (scale);
+			go.transform.localScale = goScale;
+			return go;
+		}
+
+		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
+		{
+			var go = MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
+			var goScale = go.transform.localScale;
+			goScale.Scale (scale);
+			go.transform.localScale = goScale;
+			return go;
+		}
+
 		#endregion
 
 		#endregion

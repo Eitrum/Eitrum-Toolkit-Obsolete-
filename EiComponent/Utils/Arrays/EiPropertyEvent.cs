@@ -240,4 +240,18 @@ namespace Eitrum
 			base.value = value;
 		}
 	}
+
+	[Serializable]
+	public class EiPropertyEventBool : EiPropertyEvent<bool>
+	{
+		public EiPropertyEventBool ()
+		{
+			value = false;
+		}
+
+		public EiPropertyEventBool (bool value)
+		{
+			base.value = value;
+		}
+	}
 }

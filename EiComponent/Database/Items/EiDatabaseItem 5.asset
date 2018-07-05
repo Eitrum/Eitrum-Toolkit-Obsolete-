@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a158602f03946574c8678def25e9537d, type: 3}
+  m_Name: EiDatabaseItem 5
+  m_EditorClassIdentifier: 
+  itemName: Default Plane
+  item: {fileID: 1808897172809134, guid: d8df0fc2350a7f24db599404a34367d6, type: 2}
+  database: {fileID: 114744472263383950, guid: 1eb5830dacd267248bfe988c9e9f7981, type: 2}
