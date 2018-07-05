@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Eitrum.Networking
 {
@@ -6,12 +7,26 @@ namespace Eitrum.Networking
 	{
 		#region Variables
 
-		public string playerName = "";
-		public int playerId = -1;
+		[SerializeField]
+		private string playerName = "";
+		[SerializeField]
+		private int playerId = -1;
 
 		#endregion
 
 		#region Properties
+
+		public string PlayerName {
+			get {
+				return playerName;
+			}
+		}
+
+		public int PlayerID {
+			get {
+				return playerId;
+			}
+		}
 
 		public bool IsMine {
 			get {
