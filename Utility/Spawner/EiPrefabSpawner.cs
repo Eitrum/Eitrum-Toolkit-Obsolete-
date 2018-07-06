@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Eitrum.Utility.Spawner
 {
-	public class EiTriggeredPrefabSpawner : EiComponent
+	public class EiPrefabSpawner : EiComponent
 	{
 		#region Variables
 
@@ -43,6 +43,12 @@ namespace Eitrum.Utility.Spawner
 		#endregion
 
 		#region Properties
+
+		public bool UsesCooldown {
+			get {
+				return useCooldown.Value;
+			}
+		}
 
 		public float MinCooldown {
 			get {
