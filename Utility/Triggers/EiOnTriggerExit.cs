@@ -4,16 +4,16 @@ using UnityEngine.Events;
 
 namespace Eitrum.Utility.Trigger
 {
-	[AddComponentMenu ("Eitrum/Utility/Trigger/On Trigger Enter")]
-	public class EiOnTriggerEnter : EiComponent
+	[AddComponentMenu ("Eitrum/Utility/Trigger/On Trigger Exit")]
+	public class EiOnTriggerExit : EiComponent
 	{
-		public UnityEventEiEntity onTriggerEnter;
+		public UnityEventEiEntity onTriggerExit;
 
 		void OnTriggerEnter (Collider collider)
 		{
 			var entity = collider.GetComponent<EiEntity> ();
 			if (entity) {
-				onTriggerEnter.Invoke (entity);
+				onTriggerExit.Invoke (entity);
 			}
 		}
 	}

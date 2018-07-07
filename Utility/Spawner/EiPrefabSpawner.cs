@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Eitrum.Utility.Spawner
 {
+	[AddComponentMenu ("Eitrum/Utility/Spawner/Prefab Spawner")]
 	public class EiPrefabSpawner : EiComponent
 	{
 		#region Variables

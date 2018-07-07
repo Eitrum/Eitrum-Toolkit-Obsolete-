@@ -13,10 +13,14 @@ namespace Eitrum
 			var typeFilter = attribute as TypeFilter;
 
 			if (property.objectReferenceValue != null) {
-				var typeOfObject = property.objectReferenceValue.GetType ();
-				var interfaces = typeOfObject.FindInterfaces (new System.Reflection.TypeFilter (MyInterfaceFilter), typeFilter.type.FullName);
-				if (interfaces.Length == 0) {
-					property.objectReferenceValue = null;
+				if (property.objectReferenceValue is GameObject) {
+					property.objectReferenceValue = (property.objectReferenceValue as GameObject).GetComponent (typeFilter.type);
+				} else {
+					var typeOfObject = property.objectReferenceValue.GetType ();
+					var interfaces = typeOfObject.FindInterfaces (new System.Reflection.TypeFilter (MyInterfaceFilter), typeFilter.type.FullName);
+					if (interfaces.Length == 0) {
+						property.objectReferenceValue = null;
+					}
 				}
 			}
 
