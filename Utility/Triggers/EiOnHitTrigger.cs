@@ -10,9 +10,9 @@ namespace Eitrum.Utility.Trigger
 	{
 		public UnityEventEiEntity onHitTrigger;
 
-		void OnHit (EiEntity entity)
+		void OnHit (EiEntity source)
 		{
-			onHitTrigger.Invoke (entity);
+			onHitTrigger.Invoke (source);
 		}
 
 		#region EiDamageInterface implementation

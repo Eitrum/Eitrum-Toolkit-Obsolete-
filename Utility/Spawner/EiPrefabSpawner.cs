@@ -159,6 +159,22 @@ namespace Eitrum.Utility.Spawner
 			onSpawnedObject.Trigger (spawnedReference);
 		}
 
+		[ContextMenu ("Force Spawn")]
+		public void ForceSpawn ()
+		{
+			if (useCooldown.Value)
+				currentCooldown.Value = EiRandom.Range (MinCooldown, MaxCooldown);
+			
+			if (scalePrefab && prefabToSpawn.Is (typeof(GameObject))) {
+				spawnedReference = prefabToSpawn.InstantiateAsGameObject (SpawnPosition, SpawnRotation, SpawnScale);
+			} else {
+				spawnedReference = prefabToSpawn.Instantiate (SpawnPosition, SpawnRotation);
+			}
+
+			onSpawned.Trigger ();
+			onSpawnedObject.Trigger (spawnedReference);
+		}
+
 		#endregion
 
 		#if UNITY_EDITOR
