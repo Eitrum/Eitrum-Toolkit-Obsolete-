@@ -9,6 +9,22 @@ namespace Eitrum.Utility.Spawner
 	{
 		#region Variables
 
+		[Header ("Spawn Settings")]
+		[SerializeField]
+		private EiDatabaseItem prefabToSpawn;
+		[SerializeField]
+		private Transform spawnTarget;
+		[SerializeField]
+		private bool spawnOnAwake = false;
+		[SerializeField]
+		private bool waitUntilReferenceIsGone = false;
+		[SerializeField]
+		private bool destroyOldObject = false;
+		[SerializeField]
+		private bool respawnIfReferenceIsGone = false;
+		[SerializeField]
+		private bool scalePrefab = true;
+
 		[Header ("Time Settings")]
 		[SerializeField]
 		private EiPropertyEventBool useCooldown = new EiPropertyEventBool (false);
@@ -18,16 +34,6 @@ namespace Eitrum.Utility.Spawner
 		private EiPropertyEventFloat maxCooldown = new EiPropertyEventFloat (30f);
 		[SerializeField]
 		private EiPropertyEventFloat currentCooldown = new EiPropertyEventFloat (30f);
-
-		[Header ("Spawn Settings")]
-		[SerializeField]
-		private EiPrefabSpawnMode spawnMode = EiPrefabSpawnMode.None;
-		[SerializeField]
-		private EiDatabaseItem prefabToSpawn;
-		[SerializeField]
-		private Transform spawnTarget;
-		[SerializeField]
-		private bool scalePrefab = true;
 
 		[Header ("Reference")]
 		[SerializeField]
@@ -99,31 +105,26 @@ namespace Eitrum.Utility.Spawner
 
 		void Awake ()
 		{
-			useCooldown.SubscribeAndRun (OnUseCooldownChanged);
-		}
-
-		void OnUseCooldownChanged (bool value)
-		{
-			if (value) {
-				SubscribeUpdate ();
-			} else {
-				UnsubscribeUpdate ();
-			}
+			SubscribeUpdate ();
+			if (spawnOnAwake)
+				ForceSpawn ();
 		}
 
 		public override void UpdateComponent (float time)
 		{
-			if (spawnMode == EiPrefabSpawnMode.None)
-				return;
-			if (spawnMode == EiPrefabSpawnMode.WaitUntilReferenceGone && spawnedReference != null) {
-				if (loseReferenceByDistance && (spawnedReference is GameObject) && distanceToLoseReference < Vector3.Distance (SpawnPosition, (spawnedReference as GameObject).transform.position)) {
-					spawnedReference = null;
-				} else {
-					return;
+			if (waitUntilReferenceIsGone) {
+				if (spawnedReference != null) {
+					if (loseReferenceByDistance && (spawnedReference is GameObject) && distanceToLoseReference < Vector3.Distance (SpawnPosition, (spawnedReference as GameObject).transform.position)) {
+						spawnedReference = null;
+					} else {
+						return;
+					}
 				}
 			}
+			if (respawnIfReferenceIsGone && spawnedReference == null)
+				ForceSpawn ();
 
-			if (currentCooldown.Value > 0f)
+			if (useCooldown.Value && currentCooldown.Value > 0f)
 				currentCooldown.Value -= time;
 		}
 
@@ -133,38 +134,31 @@ namespace Eitrum.Utility.Spawner
 			if (useCooldown.Value && currentCooldown.Value > 0f) {
 				return;
 			}
-			if (spawnMode == EiPrefabSpawnMode.None)
-				return;
-			if (spawnMode == EiPrefabSpawnMode.WaitUntilReferenceGone && spawnedReference != null) {
+			if (waitUntilReferenceIsGone && spawnedReference != null) {
 				if (loseReferenceByDistance && (spawnedReference is GameObject) && distanceToLoseReference < Vector3.Distance (SpawnPosition, (spawnedReference as GameObject).transform.position)) {
 					spawnedReference = null;
 				} else {
 					return;
 				}
 			}
-			if (spawnMode == EiPrefabSpawnMode.DestroyOldObject && spawnedReference != null) {
-				Destroy (spawnedReference);
-			}
-
-			if (useCooldown.Value)
-				currentCooldown.Value = EiRandom.Range (MinCooldown, MaxCooldown);
-
-			if (scalePrefab && prefabToSpawn.Is (typeof(GameObject))) {
-				spawnedReference = prefabToSpawn.InstantiateAsGameObject (SpawnPosition, SpawnRotation, SpawnScale);
-			} else {
-				spawnedReference = prefabToSpawn.Instantiate (SpawnPosition, SpawnRotation);
-			}
-
-			onSpawned.Trigger ();
-			onSpawnedObject.Trigger (spawnedReference);
+			InternalSpawn ();
 		}
 
 		[ContextMenu ("Force Spawn")]
 		public void ForceSpawn ()
 		{
+			InternalSpawn ();
+		}
+
+		private void InternalSpawn ()
+		{
 			if (useCooldown.Value)
 				currentCooldown.Value = EiRandom.Range (MinCooldown, MaxCooldown);
-			
+
+			if (destroyOldObject && spawnedReference != null) {
+				Destroy (spawnedReference);
+			}
+
 			if (scalePrefab && prefabToSpawn.Is (typeof(GameObject))) {
 				spawnedReference = prefabToSpawn.InstantiateAsGameObject (SpawnPosition, SpawnRotation, SpawnScale);
 			} else {

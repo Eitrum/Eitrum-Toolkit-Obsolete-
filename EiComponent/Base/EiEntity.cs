@@ -19,9 +19,6 @@ namespace Eitrum
 		protected bool subscribeToEntityList = false;
 
 		[SerializeField]
-		protected bool spawnAsChildOfEntityTypeParent = true;
-
-		[SerializeField]
 		[Readonly]
 		protected int entityTypeId = 0;
 

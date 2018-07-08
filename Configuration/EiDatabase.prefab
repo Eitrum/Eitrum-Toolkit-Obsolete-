@@ -62,3 +62,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1503d60102ddaf842b235cd28b5256b1, type: 2}
     - {fileID: 11400000, guid: e02b28339e3f5c849a6e5828730897e0, type: 2}
     - {fileID: 11400000, guid: 81507dfe5ede47044beeeebefb70a05a, type: 2}
+  - categoryName: PressurePlateCube
+    entries:
+    - {fileID: 11400000, guid: 0bc05bbde75c42e43a9975366301451e, type: 2}
