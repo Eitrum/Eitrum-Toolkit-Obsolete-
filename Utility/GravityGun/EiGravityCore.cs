@@ -28,6 +28,11 @@ namespace Eitrum.Utility.GravityGun
 		private bool isGrabbing = false;
 		private bool didHaveGravity = false;
 
+		private EiTrigger<EiEntity> onGrabEntity = new EiTrigger<EiEntity> ();
+		private EiTrigger<EiEntity> onBreakConnection = new EiTrigger<EiEntity> ();
+		private EiTrigger<EiEntity> onReleaseEntity = new EiTrigger<EiEntity> ();
+
+
 		#endregion
 
 		#region Properties
@@ -74,10 +79,12 @@ namespace Eitrum.Utility.GravityGun
 			targetRigidbody.useGravity = false;
 			forceCalculation = targetObject.AddComponent<EiGravityGunForceCalculation> ();
 			isGrabbing = true;
+			onGrabEntity.Trigger (entity);
 		}
 
 		public void ReleaseEntity ()
 		{
+			onReleaseEntity.Trigger (targetObject);
 			isGrabbing = false;
 			if (targetObject) {
 				targetObject.UnfreezePhysics ();
@@ -113,6 +120,7 @@ namespace Eitrum.Utility.GravityGun
 					Debug.Log ("Break object connection at force: " + forceCalculation.force / time);
 				}
 				#endif
+				onBreakConnection.Trigger (targetObject);
 				ReleaseEntity ();
 				return;
 			}

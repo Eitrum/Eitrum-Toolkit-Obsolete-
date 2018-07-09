@@ -18,11 +18,14 @@ namespace Eitrum.Utility.GravityGun
 		[Header ("Weight Settings")]
 		[SerializeField]
 		private float maxWeight = 50f;
+
 		[Header ("Release Settings")]
 		[SerializeField]
 		private float releaseForce = 50f;
 		[SerializeField]
 		private bool relativeToMass = true;
+		[SerializeField]
+		private float randomRotation = 0f;
 
 		[Header ("Components")]
 		[SerializeField]
@@ -97,6 +100,8 @@ namespace Eitrum.Utility.GravityGun
 					Release ();
 
 					body.AddForce (transform.forward * (releaseForce * (relativeToMass ? body.mass : 1f)), ForceMode.Impulse);
+					if (randomRotation > 0f)
+						body.angularVelocity = UnityEngine.Random.onUnitSphere * randomRotation;
 				}
 			}
 		}
