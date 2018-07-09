@@ -1,45 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 namespace Eitrum.Utility.GravityGun
 {
+	[AddComponentMenu ("Eitrum/Utility/Gravity Gun/Gravity Gun")]
 	public class EiGravityGun : EiComponent
 	{
+
 		#region Variables
 
-		[Header ("Object Settings")]
+		[Header ("Distance Settings")]
 		[SerializeField]
-		private Vector3 anchor;
+		private float minDistance = 1f;
 		[SerializeField]
-		private EiEntity targetObject;
-		[SerializeField]
-		private Vector3 targetRotation = Vector3.zero;
+		private float maxDistance = 5f;
 
-		[Header ("Speed + Break Settings")]
+		[Header ("Weight Settings")]
 		[SerializeField]
-		private float velocityMultiplier = 4f;
+		private float maxWeight = 50f;
+		[Header ("Release Settings")]
 		[SerializeField]
-		private float breakForceMultiplier = 4f;
+		private float releaseForce = 50f;
+		[SerializeField]
+		private bool relativeToMass = true;
 
-		private Rigidbody targetRigidbody;
-		private EiGravityGunForceCalculation forceCalculation;
-		private bool isGrabbing = false;
-		private bool didHaveGravity = false;
+		[Header ("Components")]
+		[SerializeField]
+		private EiGravityCore gravityCore;
 
 		#endregion
 
 		#region Properties
 
+		public float MinDistance {
+			get {
+				return minDistance;
+			}
+		}
+
+		public float MaxDistance {
+			get {
+				return maxDistance;
+			}
+		}
+
+		public float MaxWeight {
+			get {
+				return maxWeight;
+			}
+		}
+
 		public Vector3 AnchorPosition {
 			get {
-				return this.transform.position + this.transform.rotation * anchor;
+				return gravityCore.AnchorPosition;
 			}
 		}
 
 		public Quaternion AnchorRotation {
 			get {
-				return this.transform.rotation * Quaternion.Euler (targetRotation);
+				return gravityCore.AnchorRotation;
+			}
+		}
+
+		public bool HasTarget {
+			get {
+				return gravityCore.Target != null;
+			}
+		}
+
+		public Vector3 TargetPosition {
+			get {
+				return HasTarget ? gravityCore.Target.transform.position : this.transform.position;
 			}
 		}
 
@@ -49,107 +80,58 @@ namespace Eitrum.Utility.GravityGun
 
 		void Awake ()
 		{
-			SubscribeFixedUpdate ();
-			GrabEntity (targetObject);
+			SubscribeUpdate ();
 		}
 
-		public void GrabEntity (EiEntity entity)
+		public override void UpdateComponent (float time)
 		{
-			if (!entity || !entity.Body)
-				return;
-			
-			if (targetObject)
-				ReleaseEntity ();
-
-			targetObject = entity;
-			targetRigidbody = entity.Body;
-			didHaveGravity = targetRigidbody.useGravity;
-			targetRigidbody.useGravity = false;
-			forceCalculation = targetObject.AddComponent<EiGravityGunForceCalculation> ();
-			isGrabbing = true;
-		}
-
-		public void ReleaseEntity ()
-		{
-			isGrabbing = false;
-			if (targetObject) {
-				targetObject.UnfreezePhysics ();
-				targetObject = null;
+			if (Input.GetKeyDown (KeyCode.Mouse0)) {
+				if (HasTarget)
+					Release ();
+				else
+					Fire ();
 			}
-			if (targetRigidbody) {
-				targetRigidbody.useGravity = didHaveGravity;
-				targetRigidbody = null;
-			}
-			if (forceCalculation) {
-				Destroy (forceCalculation);
-			}
-		}
+			if (Input.GetKeyDown (KeyCode.Mouse1)) {
+				if (HasTarget) {
+					var body = gravityCore.Target.Body;
+					Release ();
 
-		public override void FixedUpdateComponent (float time)
-		{
-			if (!isGrabbing)
-				return;
-			if (!targetObject) {
-				isGrabbing = false;
-				return;
-			}
-
-			// Force Calculation
-			Vector3 difference = AnchorPosition - targetRigidbody.transform.position;
-			float distance = difference.magnitude;
-			var mass = targetRigidbody.mass;
-			float forceAmount = distance * mass * velocityMultiplier;
-
-			if (forceCalculation.force / time > mass * 10f * breakForceMultiplier) {
-				#if UNITY_EDITOR
-				if (debug) {
-					Debug.Log ("Break object connection at force: " + forceCalculation.force / time);
+					body.AddForce (transform.forward * (releaseForce * (relativeToMass ? body.mass : 1f)), ForceMode.Impulse);
 				}
-				#endif
-				ReleaseEntity ();
-				return;
 			}
-			var targetForce = difference * (forceAmount / time);
-			var currentVelocity = targetRigidbody.velocity / time;
-			targetRigidbody.AddForce (targetForce - currentVelocity);
+		}
 
-			targetRigidbody.angularVelocity = Vector3.Slerp (targetRigidbody.angularVelocity, Vector3.zero, time * velocityMultiplier);
-			targetRigidbody.transform.rotation = Quaternion.Slerp (targetRigidbody.transform.rotation, AnchorRotation, time * velocityMultiplier);
+		public void Fire ()
+		{
+			RaycastHit hit;
+			if (transform.ToRay ().Hit (out hit, maxDistance)) {
+				var entity = hit.collider.GetComponent<EiEntity> ();
+				if (entity && entity.Body) {
+					if (entity.Body.mass > maxWeight)
+						return;
+					gravityCore.GrabEntity (entity);
+					gravityCore.SetAnchorPosition (new Vector3 (0, 0, Mathf.Clamp (hit.distance, minDistance, maxDistance)));
+					gravityCore.SetAnchorRotationRelative (entity.transform.rotation);
+				}
+			}
+		}
+
+		public void Release ()
+		{
+			gravityCore.ReleaseEntity ();
 		}
 
 		#endregion
 
 		#if UNITY_EDITOR
-		[Header ("Editor Only")]
-		public bool debug = false;
 
-		void OnDrawGizmos ()
+		protected override void AttachComponents ()
 		{
-			if (!debug)
-				return;
-			Gizmos.DrawWireSphere (AnchorPosition, 0.02f);
-			if (targetObject) {
-				targetRigidbody = targetObject.Body;
-			}
-			if (targetRigidbody)
-				Gizmos.DrawWireMesh (targetRigidbody.GetComponentInChildren<MeshFilter> ().sharedMesh, AnchorPosition, AnchorRotation, targetRigidbody.transform.lossyScale);
+			base.AttachComponents ();
+			gravityCore = this.GetOrAddComponent<EiGravityCore> ();
 		}
 
 		#endif
 	}
-
-	#region Other Component
-
-	public class EiGravityGunForceCalculation : EiComponent
-	{
-		[Readonly]
-		public float force = 0f;
-
-		void OnCollisionStay (Collision collision)
-		{
-			force = collision.impulse.magnitude;
-		}
-	}
-
-	#endregion
 }
+
