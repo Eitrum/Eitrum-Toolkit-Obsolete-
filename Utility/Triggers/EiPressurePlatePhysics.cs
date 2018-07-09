@@ -5,8 +5,8 @@ using UnityEngine.Events;
 
 namespace Eitrum.Utility.Trigger
 {
-	[AddComponentMenu ("Eitrum/Utility/Triggers/Pressure Plate (Physics)")]
-	public class EiPressurePlate : EiComponent
+	[AddComponentMenu ("Eitrum/Utility/Trigger/Pressure Plate (Physics)")]
+	public class EiPressurePlatePhysics : EiComponent
 	{
 		#region Variables
 
