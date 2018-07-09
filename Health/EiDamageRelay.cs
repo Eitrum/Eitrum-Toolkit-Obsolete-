@@ -145,7 +145,7 @@ namespace Eitrum.Health
 			onHit.Trigger (combatData);
 
 			var flat = combatData.FlatAmount;
-			combatData.FlatAmount -= flatDamageReduction.Value - flat * damageMultiplier.Value;
+			combatData.FlatAmount = flat * damageMultiplier.Value - flatDamageReduction.Value;
 			combatData.CurrentHealthPercentage *= damageMultiplier.Value;
 			combatData.MaxHealthPercentage *= damageMultiplier.Value;
 

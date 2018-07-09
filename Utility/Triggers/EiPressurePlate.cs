@@ -24,6 +24,7 @@ namespace Eitrum.Utility.Trigger
 		private EiPropertyEventFloat percentage = new EiPropertyEventFloat (0f);
 
 		private float totalImpulseMagnitude = 0;
+		private float internalPercentage = 0f;
 
 		private float pressureSpeed = 10f;
 		private Vector3 noPressurePosition;
@@ -103,23 +104,33 @@ namespace Eitrum.Utility.Trigger
 
 				var targetPercentage = 0f;
 				if (minForce >= maxForce) {
-					percentage.Value = currentForce >= maxForce - 5f ? 1f : 0f;
+					internalPercentage = currentForce >= maxForce - 5f ? 1f : 0f;
 				} else {
 					targetPercentage = Mathf.Lerp (0f, 1f, (currentForce - minForce) / (maxForce - minForce));
 				
-					if (targetPercentage > percentage.Value) {
-						percentage.Value = Mathf.Min (targetPercentage, percentage.Value + time * pressureSpeed);
-					} else if (targetPercentage < percentage.Value) {
-						percentage.Value = Mathf.Max (targetPercentage, percentage.Value - time * pressureSpeed);
+					if (targetPercentage > internalPercentage) {
+						internalPercentage = Mathf.Min (targetPercentage, internalPercentage + time * pressureSpeed);
+					} else if (targetPercentage < internalPercentage) {
+						internalPercentage = Mathf.Max (targetPercentage, internalPercentage - time * pressureSpeed);
 					}
 				}
-
-				this.transform.localPosition = Vector3.Lerp (this.transform.localPosition, Vector3.Lerp (noPressurePosition, fullPressurePosition, percentage.Value), time * pressureSpeed);
+				percentage.Value = Mathf.Lerp (percentage.Value, internalPercentage, time * pressureSpeed);
+				this.transform.localPosition = Vector3.Lerp (this.transform.localPosition, Vector3.Lerp (noPressurePosition, fullPressurePosition, percentage.Value), percentage.Value);
 				totalImpulseMagnitude = 0f;
 			} else {
-				if (percentage.Value > 0f)
-					percentage.Value = Mathf.Clamp01 (percentage.Value - time * pressureSpeed);
-				this.transform.localPosition = Vector3.Lerp (this.transform.localPosition, Vector3.Lerp (noPressurePosition, fullPressurePosition, percentage.Value), time * pressureSpeed);
+				if (percentage.Value > 0f) {
+					internalPercentage = Mathf.Clamp01 (internalPercentage - time * pressureSpeed);
+					percentage.Value = Mathf.Lerp (percentage.Value, internalPercentage, time * pressureSpeed);
+					this.transform.localPosition = Vector3.Lerp (this.transform.localPosition, Vector3.Lerp (noPressurePosition, fullPressurePosition, percentage.Value), percentage.Value);
+				}
+			}
+		}
+
+		private void ClearDestroyedObjects ()
+		{
+			for (int i = bodies.Count - 1; i >= 0; i--) {
+				if (!bodies [i])
+					bodies.RemoveAt (i);
 			}
 		}
 
@@ -130,6 +141,7 @@ namespace Eitrum.Utility.Trigger
 		void OnCollisionEnter (Collision collision)
 		{
 			collision.rigidbody.sleepThreshold = 0f;
+			ClearDestroyedObjects ();
 			if (!bodies.Contains (collision.rigidbody))
 				bodies.Add (collision.rigidbody);
 		}

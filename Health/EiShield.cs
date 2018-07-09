@@ -32,7 +32,7 @@ namespace Eitrum.Health
 		[SerializeField]
 		protected EiShieldData shieldData;
 		[SerializeField]
-		protected bool treatAllDamageTypesAsNormal = true;
+		protected bool treatAllDamageTypesAsNone = true;
 
 		[Header ("Components")]
 		[SerializeField]
@@ -107,7 +107,7 @@ namespace Eitrum.Health
 					var shieldLoss = shieldData.flatShieldLoss + shieldData.shieldLossByTotalDamagePercentage * damage.TotalRemainingAmount;
 					var preCalcDamage = damage.TotalRemainingAmount;
 					// Reduce damage
-					damage.Reduce (shieldData.flatReduction + damage.TotalRemainingAmount * shieldData.damageMultiplier);
+					damage.Reduce (shieldData.flatReduction + (preCalcDamage - preCalcDamage * shieldData.damageMultiplier));
 					//fix after reduction armor loss
 					shieldLoss += (preCalcDamage - damage.TotalRemainingAmount) * shieldData.shieldLossByDamagePercentage;
 					//Check if needed further damage adjustments
@@ -228,7 +228,7 @@ namespace Eitrum.Health
 
 		public bool HasShieldType (int damageType)
 		{
-			return treatAllDamageTypesAsNormal || shieldData.damageType == damageType;
+			return treatAllDamageTypesAsNone || shieldData.damageType == damageType;
 		}
 
 		#endregion

@@ -33,7 +33,7 @@ namespace Eitrum.Health
 				var protData = protection [i];
 				if (protData.damageType == combatData.DamageType) {
 					var flat = combatData.FlatAmount;
-					combatData.FlatAmount -= protData.flatReduction - flat * protData.damageMultiplier;
+					combatData.FlatAmount = flat * protData.damageMultiplier - protData.flatReduction;
 					combatData.CurrentHealthPercentage *= protData.damageMultiplier;
 					combatData.MaxHealthPercentage *= protData.damageMultiplier;
 				}
