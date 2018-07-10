@@ -41,9 +41,9 @@ namespace Eitrum
 			}
 		}
 
-		public float _Int {
+		public int _Int {
 			get {
-				return (float)random.Next ();
+				return random.Next ();
 			}
 		}
 

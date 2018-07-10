@@ -89,41 +89,47 @@ namespace Eitrum.Utility.GravityGun
 		public override void UpdateComponent (float time)
 		{
 			if (Input.GetKeyDown (KeyCode.Mouse0)) {
-				if (HasTarget)
-					Release ();
-				else
-					Fire ();
+				Grab ();
 			}
 			if (Input.GetKeyDown (KeyCode.Mouse1)) {
-				if (HasTarget) {
-					var body = gravityCore.Target.Body;
-					Release ();
+				Release ();
+			}
+		}
 
-					body.AddForce (transform.forward * (releaseForce * (relativeToMass ? body.mass : 1f)), ForceMode.Impulse);
-					if (randomRotation > 0f)
-						body.angularVelocity = UnityEngine.Random.onUnitSphere * randomRotation;
+		public void Grab ()
+		{
+			if (HasTarget)
+				gravityCore.ReleaseEntity ();
+			else {
+				RaycastHit hit;
+				if (transform.ToRay ().Hit (out hit, maxDistance)) {
+					var entity = hit.collider.GetComponent<EiEntity> ();
+					if (entity && entity.Body) {
+						if (entity.Body.mass > maxWeight)
+							return;
+						gravityCore.GrabEntity (entity);
+						gravityCore.SetAnchorPosition (new Vector3 (0, 0, Mathf.Clamp (hit.distance, minDistance, maxDistance)));
+						gravityCore.SetAnchorRotationRelative (entity.transform.rotation);
+					}
 				}
 			}
 		}
 
-		public void Fire ()
+		public void Drop ()
 		{
-			RaycastHit hit;
-			if (transform.ToRay ().Hit (out hit, maxDistance)) {
-				var entity = hit.collider.GetComponent<EiEntity> ();
-				if (entity && entity.Body) {
-					if (entity.Body.mass > maxWeight)
-						return;
-					gravityCore.GrabEntity (entity);
-					gravityCore.SetAnchorPosition (new Vector3 (0, 0, Mathf.Clamp (hit.distance, minDistance, maxDistance)));
-					gravityCore.SetAnchorRotationRelative (entity.transform.rotation);
-				}
-			}
+			if (HasTarget)
+				gravityCore.ReleaseEntity ();
 		}
 
 		public void Release ()
 		{
+			if (!HasTarget)
+				return;
+			var body = gravityCore.Target.Body;
 			gravityCore.ReleaseEntity ();
+			body.AddForce (transform.forward * (releaseForce * (relativeToMass ? body.mass : 1f)), ForceMode.Impulse);
+			if (randomRotation > 0f)
+				body.angularVelocity = UnityEngine.Random.onUnitSphere * randomRotation;
 		}
 
 		#endregion

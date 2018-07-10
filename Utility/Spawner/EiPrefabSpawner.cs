@@ -112,15 +112,10 @@ namespace Eitrum.Utility.Spawner
 
 		public override void UpdateComponent (float time)
 		{
-			if (waitUntilReferenceIsGone) {
-				if (spawnedReference != null) {
-					if (loseReferenceByDistance && (spawnedReference is GameObject) && distanceToLoseReference < Vector3.Distance (SpawnPosition, (spawnedReference as GameObject).transform.position)) {
-						spawnedReference = null;
-					} else {
-						return;
-					}
-				}
-			}
+			if (loseReferenceByDistance && (spawnedReference is GameObject) && distanceToLoseReference < Vector3.Distance (SpawnPosition, (spawnedReference as GameObject).transform.position))
+				spawnedReference = null;
+			if (waitUntilReferenceIsGone && spawnedReference != null)
+				return;
 			if (respawnIfReferenceIsGone && spawnedReference == null)
 				ForceSpawn ();
 
