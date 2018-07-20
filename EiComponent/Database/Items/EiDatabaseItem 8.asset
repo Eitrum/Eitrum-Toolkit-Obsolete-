@@ -9,8 +9,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a158602f03946574c8678def25e9537d, type: 3}
-  m_Name: EiDatabaseItem 1
+  m_Name: EiDatabaseItem 8
   m_EditorClassIdentifier: 
-  itemName: Default Cube
-  item: {fileID: 1304091876587508, guid: 08eaa9dea15777b439279ffd59bb539d, type: 2}
-  database: {fileID: 0}
+  itemName: WeightedCube
+  item: {fileID: 1270190458696452, guid: 7d55c0c54233479439878b51fde7476a, type: 2}
+  database: {fileID: 114744472263383950, guid: 1eb5830dacd267248bfe988c9e9f7981, type: 2}

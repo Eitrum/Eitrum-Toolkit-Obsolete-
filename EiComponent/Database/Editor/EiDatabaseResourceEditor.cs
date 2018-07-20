@@ -12,23 +12,29 @@ namespace Eitrum
 	public class EiDatabaseResourceEditor : Editor
 	{
 		static string simplePath = "Eitrum/EiComponent/Database/Items";
-
-		static List<bool> categoriesFolded = new List<bool> ();
-
-		private FieldInfo categoryList = null;
-		private FieldInfo entryList = null;
+        
+        private FieldInfo categoryList = null;
+        private FieldInfo subCategoryList = null;
+        private FieldInfo entryList = null;
 
 		public override void OnInspectorGUI ()
 		{
 			var database = (EiDatabaseResource)target;
 
 			Undo.RecordObject (database, "Database Changes");
-			if (categoryList == null) {
-				categoryList = typeof(EiDatabaseResource).GetField ("categories", BindingFlags.NonPublic | BindingFlags.Instance);
-				if (categoryList == null)
-					return;
-			}
-			if (entryList == null) {
+            if (categoryList == null)
+            {
+                categoryList = typeof(EiDatabaseResource).GetField("categories", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (categoryList == null)
+                    return;
+            }
+            if (subCategoryList == null)
+            {
+                subCategoryList = typeof(EiDatabaseCategory).GetField("subCategories", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (subCategoryList == null)
+                    return;
+            }
+            if (entryList == null) {
 				entryList = typeof(EiDatabaseCategory).GetField ("entries", BindingFlags.NonPublic | BindingFlags.Instance);
 				if (entryList == null)
 					return;
@@ -41,9 +47,6 @@ namespace Eitrum
 		{
 			var dbLength = db._Length;
 			EditorGUILayout.LabelField (string.Format ("Categories ({0})", dbLength));
-			while (dbLength > categoriesFolded.Count) {
-				categoriesFolded.Add (false);
-			}
 
 			for (int i = 0; i < db._Length; i++) {
 				var cat = db [i];
@@ -73,7 +76,7 @@ namespace Eitrum
 		private bool DrawCategory (EiDatabaseResource database, EiDatabaseCategory category, int index)
 		{
 			EditorGUILayout.BeginHorizontal ();
-			categoriesFolded [index] = EditorGUILayout.Foldout (categoriesFolded [index], "Entries (" + category.Length + ")", true);
+			category.isFolded= EditorGUILayout.Foldout (category.isFolded, "Entries (" + category.GetEntriesLength() + ")", true);
 			SetCategoryName (category, EditorGUILayout.TextField (category.CategoryName));
 			if (GUILayout.Button ("X", GUILayout.Width (24f))) {
 				EditorGUILayout.EndHorizontal ();
@@ -81,10 +84,23 @@ namespace Eitrum
 			}
 			EditorGUILayout.EndHorizontal ();
 
-			if (categoriesFolded [index]) {
+			if (category.isFolded) {
 				BeginSubCategory ();
-				for (int i = 0; i < category.Length; i++) {
-					var ent = category [i];
+
+                var subCategories = GetSubCategories(category);
+                for (int i = 0; i < subCategories.Count; i++)
+                {
+                    var cat = subCategories[i];
+                    if (!DrawCategory(database, cat, i))
+                    {
+                        DeleteCategory(cat);
+                        GetSubCategories(category).RemoveAt(i);
+                        i--;
+                    }
+                }
+
+				for (int i = 0; i < category.GetEntriesLength(); i++) {
+					var ent = category.GetEntry(i);
 					if (!DrawEntry (ent, i)) {
 						GetEntries (category).RemoveAt (i);
 						i--;
@@ -93,14 +109,19 @@ namespace Eitrum
 
 				EditorGUILayout.BeginHorizontal ();
 
-				if (GUILayout.Button ("Add Item", GUILayout.Width (100f))) {
-					var entryToAdd = EiDatabaseItem.CreateAsset (simplePath);
-					Undo.RecordObject (entryToAdd, "Entry Change");
-					ApplyDatabase (entryToAdd, database);
-					GetEntries (category).Add (entryToAdd);
-					EditorUtility.SetDirty (entryToAdd);
-				}
-				var obj = EditorGUILayout.ObjectField (null, typeof(UnityEngine.Object), false, GUILayout.Width (100f));
+                if (GUILayout.Button("Add Item", GUILayout.Width(100f)))
+                {
+                    var entryToAdd = EiDatabaseItem.CreateAsset(simplePath);
+                    Undo.RecordObject(entryToAdd, "Entry Change");
+                    ApplyDatabase(entryToAdd, database);
+                    GetEntries(category).Add(entryToAdd);
+                    EditorUtility.SetDirty(entryToAdd);
+                }
+                if (GUILayout.Button("Add Sub Category", GUILayout.Width(160f)))
+                {
+                    subCategories.Add(new EiDatabaseCategory());
+                }
+                var obj = EditorGUILayout.ObjectField (null, typeof(UnityEngine.Object), false, GUILayout.Width (100f));
 				if (obj) {
 					var entryToAdd = EiDatabaseItem.CreateAsset (simplePath);
 					Undo.RecordObject (entryToAdd, "Entry Change");
@@ -181,6 +202,11 @@ namespace Eitrum
 		{
 			entry.GetType ().GetField ("item", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (entry, item);
 		}
+
+        public List<EiDatabaseCategory> GetSubCategories(EiDatabaseCategory category)
+        {
+            return subCategoryList.GetValue(category) as List<EiDatabaseCategory>;
+        }
 
 		public List<EiDatabaseCategory> GetCategories (EiDatabaseResource database)
 		{

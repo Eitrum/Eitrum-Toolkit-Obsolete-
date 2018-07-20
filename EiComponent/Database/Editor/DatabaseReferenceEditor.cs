@@ -22,18 +22,7 @@ public class DatabaseReferenceEditor : PropertyDrawer
 		var categories = database._Length;
 		for (int i = 0; i < categories; i++) {
 			var category = database [i];
-			var entries = category.Length;
-			for (int e = 0; e < entries; e++) {
-				var entry = category [e];
-				if (!doTypeCheck || entry.Is (databaseAttribute.type)) {
-					string path = string.Format ("{0} / {1}", category.CategoryName, entry.ItemName);
-					if (entry.Item == currentSelectedObject) {
-						index = items.Count;
-					}
-					items.Add (path);
-					objs.Add (entry.Item);
-				}
-			}
+            LoadCategory("", category, items, objs, currentSelectedObject, doTypeCheck, databaseAttribute.type, ref index);
 		}
 
 		if (index == 0) {
@@ -46,4 +35,35 @@ public class DatabaseReferenceEditor : PropertyDrawer
 
 		property.objectReferenceValue = objs [EditorGUI.Popup (position, property.displayName, index, items.ToArray ())];
 	}
+
+    void LoadCategory(string path, EiDatabaseCategory category, List<string> items, List<UnityEngine.Object> objs,UnityEngine.Object currentSelectedObject, bool doTypeCheck, Type type, ref int index)
+    {
+        var subCategoriesLength = category.GetSubCategoriesLength();
+        var subPath = "";
+        if(path == "")
+            subPath = category.CategoryName;
+        else
+            subPath = string.Format("{0} / {1}",path, category.CategoryName);
+        for (int i = 0; i < subCategoriesLength; i++)
+        {
+            var subCategory = category.GetSubCategory(i);
+            LoadCategory(subPath, subCategory, items, objs, currentSelectedObject, doTypeCheck, type, ref index);
+        }
+
+        var entries = category.GetEntriesLength();
+        for (int e = 0; e < entries; e++)
+        {
+            var entry = category.GetEntry(e);
+            if (!doTypeCheck || entry.Is(type))
+            {
+                string itemPath = string.Format("{0} / {1}", subPath, entry.ItemName);
+                if (entry.Item == currentSelectedObject)
+                {
+                    index = items.Count;
+                }
+                items.Add(itemPath);
+                objs.Add(entry.Item);
+            }
+        }
+    }
 }

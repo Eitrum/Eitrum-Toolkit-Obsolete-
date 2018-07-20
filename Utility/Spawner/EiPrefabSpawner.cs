@@ -11,6 +11,7 @@ namespace Eitrum.Utility.Spawner
 
 		[Header ("Spawn Settings")]
 		[SerializeField]
+        [EiDatabaseFilter(typeof(GameObject))]
 		private EiDatabaseItem prefabToSpawn;
 		[SerializeField]
 		private Transform spawnTarget;

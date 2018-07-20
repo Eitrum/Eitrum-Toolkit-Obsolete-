@@ -3,11 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum
-{
+namespace Eitrum {
 	[AddComponentMenu ("Eitrum/Core/Entity")]
-	public class EiEntity : EiComponent
-	{
+	public class EiEntity : EiComponent {
 		#region Variables
 
 		[Header ("Entity Settings")]
@@ -30,13 +28,13 @@ namespace Eitrum
 
 		[Header ("Components")]
 		[SerializeField]
-		protected Rigidbody body;
+		protected Rigidbody rigidbodyComponent;
 
 		[SerializeField]
-		protected new Collider collider;
+		protected Collider colliderComponent;
 
 		[SerializeField]
-		protected new AudioSource audio;
+		protected AudioSource audioComponent;
 
 		[SerializeField]
 		protected EiInput input;
@@ -48,7 +46,8 @@ namespace Eitrum
 		public virtual string EntityName {
 			get {
 				return entityName;
-			}set {
+			}
+			set {
 				entityName = value;
 			}
 		}
@@ -79,28 +78,28 @@ namespace Eitrum
 
 		public virtual Rigidbody Body {
 			get {
-				return body;
+				return rigidbodyComponent;
 			}
 			set {
-				body = value;
+				rigidbodyComponent = value;
 			}
 		}
 
 		public virtual Collider Collider {
 			get {
-				return collider;
+				return colliderComponent;
 			}
 			set {
-				collider = value;
+				colliderComponent = value;
 			}
 		}
 
 		public virtual AudioSource Audio {
 			get {
-				return audio;
+				return audioComponent;
 			}
 			set {
-				audio = value;
+				audioComponent = value;
 			}
 		}
 
@@ -114,34 +113,31 @@ namespace Eitrum
 
 		#region Core
 
-		void Awake ()
-		{
+		void Awake () {
 
 		}
 
-		public void FreezePhysics ()
-		{
-			if (body) {
-				body.isKinematic = true;
+		public void FreezePhysics () {
+			if (rigidbodyComponent) {
+				rigidbodyComponent.velocity = Vector3.zero;
+				rigidbodyComponent.isKinematic = true;
 			}
 		}
 
-		public void UnfreezePhysics ()
-		{
-			if (body) {
-				body.isKinematic = false;
+		public void UnfreezePhysics () {
+			if (rigidbodyComponent) {
+				rigidbodyComponent.isKinematic = false;
 			}
 		}
 
 		[ContextMenu ("Add Missing Components")]
-		public virtual void AddMissingComponents ()
-		{
-			if (!body)
-				body = this.GetOrAddComponent<Rigidbody> ();
-			if (!collider)
+		public virtual void AddMissingComponents () {
+			if (!rigidbodyComponent)
+				rigidbodyComponent = this.GetOrAddComponent<Rigidbody> ();
+			if (!colliderComponent)
 				Debug.LogWarning ("Can't add 'collider'. Manually add collider if you want it");
-			if (!audio)
-				audio = this.GetOrAddComponent<AudioSource> ();
+			if (!audioComponent)
+				audioComponent = this.GetOrAddComponent<AudioSource> ();
 			if (!input) {
 				input = this.GetComponent<EiInput> ();
 				if (!input)
@@ -151,15 +147,16 @@ namespace Eitrum
 
 		#endregion
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		protected override void AttachComponents ()
-		{
-			AddMissingComponents ();
+		protected override void AttachComponents () {
 			base.AttachComponents ();
+			rigidbodyComponent = GetComponent<Rigidbody> ();
+			colliderComponent = GetComponent<Collider> ();
+			audioComponent = GetComponent<AudioSource> ();
+			input = GetComponent<EiInput> ();
 		}
 
-		#endif
+#endif
 	}
 }
-

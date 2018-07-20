@@ -4,52 +4,60 @@ using UnityEngine;
 
 namespace Eitrum
 {
-	[Serializable]
-	public class EiDatabaseCategory
-	{
-		#region Variables
+    [Serializable]
+    public class EiDatabaseCategory
+    {
+        #region Variables
 
-		[SerializeField]
-		private string categoryName = "";
-		[SerializeField]
-		private List<EiDatabaseItem> entries = new List<EiDatabaseItem> ();
+        [SerializeField]
+        private string categoryName = "";
+        [SerializeField]
+        #pragma warning disable
+        private List<EiDatabaseCategory> subCategories = new List<EiDatabaseCategory>();
+        [SerializeField]
+        private List<EiDatabaseItem> entries = new List<EiDatabaseItem>();
 
-		#endregion
+#if UNITY_EDITOR
+        public bool isFolded = false;
+#endif
 
-		#region Properties
 
-		public string CategoryName {
-			get {
-				return categoryName;
-			}
-		}
+        #endregion
 
-		public int Length {
-			get {
-				return entries.Count;
-			}
-		}
+        #region Properties
 
-		public EiDatabaseItem this [int index] {
-			get {
-				return entries [index];
-			}
-		}
+        public string CategoryName
+        {
+            get
+            {
+                return categoryName;
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region Core
+        #region Core
 
-		public int EntriesLength ()
-		{
-			return entries.Count;
-		}
+        public int GetSubCategoriesLength()
+        {
+            return subCategories.Count;
+        }
 
-		public EiDatabaseItem GetEntry (int index)
-		{
-			return entries [index];
-		}
+        public EiDatabaseCategory GetSubCategory(int index)
+        {
+            return subCategories[index];
+        }
 
-		#endregion
-	}
+        public int GetEntriesLength()
+        {
+            return entries.Count;
+        }
+
+        public EiDatabaseItem GetEntry(int index)
+        {
+            return entries[index];
+        }
+
+        #endregion
+    }
 }
