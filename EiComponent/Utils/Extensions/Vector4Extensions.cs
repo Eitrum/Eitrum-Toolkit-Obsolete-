@@ -9,6 +9,11 @@ namespace Eitrum
 		{
 			return new Quaternion (vec.x, vec.y, vec.z, vec.w);
 		}
+
+        public static Vector3 ToVector3(this Vector4 vec)
+        {
+            return new Vector3(vec.x, vec.y, vec.z);
+        }
 	}
 }
 
