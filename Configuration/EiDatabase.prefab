@@ -56,4 +56,4 @@ MonoBehaviour:
   categories:
   - {fileID: 11400000, guid: b89444452f6ae32408ccaf5fcafcec34, type: 2}
   - {fileID: 11400000, guid: 22db2634d22268e40b374f9df758f6ed, type: 2}
-  uniqueIdGenerator: 7
+  uniqueIdGenerator: 8

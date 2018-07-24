@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a158602f03946574c8678def25e9537d, type: 3}
-  m_Name: EiDatabaseItem 7
+  m_Name: EiDatabaseItem 8
   m_EditorClassIdentifier: 
-  itemName: TestScene
-  item: {fileID: 102900000, guid: fbacc5d5c0367af4b8c954850c0c6ba8, type: 3}
-  uniqueId: 8
+  itemName: CubeEitrumComponent
+  item: {fileID: 102900000, guid: 5835414657f8c4a48b60f2fbf9097935, type: 3}
+  uniqueId: 9
   database: {fileID: 114744472263383950, guid: 1eb5830dacd267248bfe988c9e9f7981, type: 2}
