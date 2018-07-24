@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -22,36 +21,52 @@ namespace Eitrum
         private List<EiDatabaseCategory> categories = new List<EiDatabaseCategory>();
         [SerializeField]
         private int uniqueIdGenerator = 0;
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		public int _Length {
-			get {
-				return categories.Count;
-			}
-		}
+        public int _Length
+        {
+            get
+            {
+                return categories.Count;
+            }
+        }
 
-		public EiDatabaseCategory this [int index] {
-			get {
-				return categories [index];
-			}
-		}
+        public EiDatabaseCategory this[int index]
+        {
+            get
+            {
+                return categories[index];
+            }
+        }
 
-		#endregion
+        public int AllocateUniqueId
+        {
+            get
+            {
+                return ++uniqueIdGenerator;
+            }
+            set
+            {
+                uniqueIdGenerator = value;
+            }
+        }
 
-		#region Categories
+        #endregion
 
-		public EiDatabaseCategory _GetCategory (int index)
-		{
-			return categories [index];
-		}
+        #region Categories
 
-		public int _CategoriesLength ()
-		{
-			return categories.Count;
-		}
+        public EiDatabaseCategory _GetCategory(int index)
+        {
+            return categories[index];
+        }
 
-		#endregion
-	}
+        public int _CategoriesLength()
+        {
+            return categories.Count;
+        }
+
+        #endregion
+    }
 }

@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Reflection;
-using System.Linq;
-using System;
 
 namespace Eitrum
 {
     [CustomEditor(typeof(EiDatabaseResource))]
     public class EiDatabaseResourceEditor : Editor
     {
+        #region Variables
+
         static string simplePath = "Eitrum/EiComponent/Database/Items";
 
         private FieldInfo categoryList = null;
@@ -18,6 +17,11 @@ namespace Eitrum
         private FieldInfo entryList = null;
         private FieldInfo allocateId = null;
         private FieldInfo itemUniqueId = null;
+
+
+        #endregion
+
+        #region OnInspectorGUI
 
         public override void OnInspectorGUI()
         {
@@ -46,6 +50,8 @@ namespace Eitrum
             CheckUniqueId(database);
             EditorUtility.SetDirty(database);
         }
+
+        #endregion
 
         #region Unique Id Generator
 
@@ -97,6 +103,8 @@ namespace Eitrum
         }
 
         #endregion
+
+        #region Draw
 
         private void DrawDatabase(EiDatabaseResource db)
         {
@@ -223,6 +231,10 @@ namespace Eitrum
             return true;
         }
 
+        #endregion
+
+        #region Offset Fixes
+
         private void BeginSubCategory()
         {
             EditorGUILayout.BeginHorizontal();
@@ -235,6 +247,10 @@ namespace Eitrum
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
         }
+
+        #endregion
+
+        #region Helpers
 
         public void ClearDatabase(EiDatabaseResource resource)
         {
@@ -289,5 +305,7 @@ namespace Eitrum
         {
             return entryList.GetValue(category) as List<EiDatabaseItem>;
         }
+
+        #endregion
     }
 }
