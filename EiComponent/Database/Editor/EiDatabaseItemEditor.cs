@@ -5,52 +5,54 @@ using UnityEditor;
 
 namespace Eitrum
 {
-	[CustomPropertyDrawer (typeof(EiDatabaseItem))]
-	public class EiDatabaseItemEditor : PropertyDrawer
-	{
+    [CustomPropertyDrawer(typeof(EiDatabaseItem))]
+    public class EiDatabaseItemEditor : PropertyDrawer
+    {
 
-		static string path = "Assets/Eitrum/Configuration/EiDatabase.prefab";
+        static string path = "Assets/Eitrum/Configuration/EiDatabase.prefab";
 
-		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
-		{
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
             var attributes = property.GetType().GetCustomAttributes(true);
             for (int i = 0; i < attributes.Length; i++)
             {
                 Debug.Log(attributes[i].ToString());
             }
-			List<string> items = new List<string> ();
-			List<EiDatabaseItem> references = new List<EiDatabaseItem> ();
-			items.Add ("None");
-			references.Add (null);
+            List<string> items = new List<string>();
+            List<EiDatabaseItem> references = new List<EiDatabaseItem>();
+            items.Add("None");
+            references.Add(null);
 
-			var go = AssetDatabase.LoadAssetAtPath<GameObject> (path);
-			if (!go) {
-				var tempObj = new GameObject ("EiDatabase", typeof(EiDatabaseResource));
-				go = PrefabUtility.CreatePrefab (path, tempObj);
-				UnityEngine.MonoBehaviour.DestroyImmediate (tempObj);
-			}
-			EiDatabaseResource database = go.GetComponent<EiDatabaseResource> ();
-			var currentSelectedObject = property.objectReferenceValue;
-			var index = 0;
+            var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (!go)
+            {
+                var tempObj = new GameObject("EiDatabase", typeof(EiDatabaseResource));
+                go = PrefabUtility.CreatePrefab(path, tempObj);
+                UnityEngine.MonoBehaviour.DestroyImmediate(tempObj);
+            }
+            EiDatabaseResource database = go.GetComponent<EiDatabaseResource>();
+            var currentSelectedObject = property.objectReferenceValue;
+            var index = 0;
 
-			var categories = database._Length;
-			for (int i = 0; i < categories; i++) {
-				var category = database [i];
+            var categories = database._Length;
+            for (int i = 0; i < categories; i++)
+            {
+                var category = database[i];
                 LoadCategory("", category, items, references, currentSelectedObject, ref index);
-			}
+            }
 
             Rect popupPosition = new Rect(position);
             popupPosition.width -= 20f;
-			property.objectReferenceValue = references [EditorGUI.Popup (popupPosition, property.displayName, index, items.ToArray ())];
+            property.objectReferenceValue = references[EditorGUI.Popup(popupPosition, property.displayName, index, items.ToArray())];
 
             Rect databaseReferencePosition = new Rect(position);
             databaseReferencePosition.x += position.width - 20f;
             databaseReferencePosition.width = 20f;
-            if(GUI.Button(databaseReferencePosition, "~"))
+            if (GUI.Button(databaseReferencePosition, "~"))
             {
                 Selection.activeObject = database.gameObject;
             }
-		}
+        }
 
         void LoadCategory(string path, EiDatabaseCategory category, List<string> items, List<EiDatabaseItem> references, UnityEngine.Object currentSelectedObject, ref int index)
         {

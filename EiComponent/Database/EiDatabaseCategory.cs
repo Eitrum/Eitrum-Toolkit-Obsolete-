@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Eitrum
 {
     [Serializable]
-    public class EiDatabaseCategory
+    public class EiDatabaseCategory : EiScriptableObject<EiDatabaseCategory>
     {
         #region Variables
 
@@ -20,7 +20,6 @@ namespace Eitrum
 #if UNITY_EDITOR
         public bool isFolded = false;
 #endif
-
 
         #endregion
 

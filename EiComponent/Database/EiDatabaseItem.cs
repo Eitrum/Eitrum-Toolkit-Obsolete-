@@ -14,6 +14,9 @@ namespace Eitrum
 		private string itemName = "empty";
 		[SerializeField]
 		private UnityEngine.Object item = null;
+        [SerializeField]
+        [Readonly]
+        private int uniqueId = 0;
 		[SerializeField]
 		private EiDatabaseResource database = null;
 
@@ -26,6 +29,14 @@ namespace Eitrum
 				return itemName;
 			}
 		}
+
+        public int UniqueId
+        {
+            get
+            {
+                return uniqueId;
+            }
+        }
 
 		public UnityEngine.Object Item {
 			get {

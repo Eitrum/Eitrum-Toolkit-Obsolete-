@@ -41,6 +41,8 @@ namespace Eitrum
 		{
 			#if UNITY_EDITOR
 			string path = AssetDatabase.GetAssetPath (asset);
+            if (path == "")
+                return;
 			AssetDatabase.DeleteAsset (path);
 			AssetDatabase.SaveAssets ();
 			#endif

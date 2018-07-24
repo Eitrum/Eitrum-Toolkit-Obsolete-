@@ -9,6 +9,11 @@ namespace Eitrum
 		{
 			return new Vector4 (quat.x, quat.y, quat.z, quat.w);
 		}
+
+        public static float GetAngle(this Quaternion quaternion)
+        {
+            return Quaternion.Angle(Quaternion.identity, quaternion);
+        }
 	}
 }
 

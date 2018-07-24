@@ -13,4 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Default Cube
   item: {fileID: 1304091876587508, guid: 08eaa9dea15777b439279ffd59bb539d, type: 2}
+  uniqueId: 2
   database: {fileID: 0}

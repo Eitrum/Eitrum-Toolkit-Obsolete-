@@ -5,22 +5,23 @@ using UnityEngine.SceneManagement;
 
 namespace Eitrum
 {
-	public class EiDatabaseResource : EiComponentSingleton<EiDatabaseResource>
-	{
-		#region Singleton
+    public class EiDatabaseResource : EiComponentSingleton<EiDatabaseResource>
+    {
+        #region Singleton
 
-		public override bool KeepInResources ()
-		{
-			return true;
-		}
+        public override bool KeepInResources()
+        {
+            return true;
+        }
 
-		#endregion
+        #endregion
 
-		#region Variables
+        #region Variables
 
-		[SerializeField]
-		private List<EiDatabaseCategory> categories = new List<EiDatabaseCategory> ();
-
+        [SerializeField]
+        private List<EiDatabaseCategory> categories = new List<EiDatabaseCategory>();
+        [SerializeField]
+        private int uniqueIdGenerator = 0;
 		#endregion
 
 		#region Properties

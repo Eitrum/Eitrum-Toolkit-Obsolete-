@@ -54,37 +54,6 @@ MonoBehaviour:
   entity: {fileID: 0}
   networkView: {fileID: 0}
   categories:
-  - categoryName: Debug Tools
-    subCategories: []
-    entries:
-    - {fileID: 11400000, guid: 58ee5df00250a2a4ba16efd7b5d29e0e, type: 2}
-    - {fileID: 11400000, guid: b121003845ae4fa4c99312438ce6fdd4, type: 2}
-    - {fileID: 11400000, guid: e698071bf0ef68d46be8854d9c354733, type: 2}
-    - {fileID: 11400000, guid: 1503d60102ddaf842b235cd28b5256b1, type: 2}
-    - {fileID: 11400000, guid: e02b28339e3f5c849a6e5828730897e0, type: 2}
-    - {fileID: 11400000, guid: 81507dfe5ede47044beeeebefb70a05a, type: 2}
-    isFolded: 0
-  - categoryName: Environment
-    subCategories:
-    - categoryName: Trees
-      subCategories: []
-      entries:
-      - {fileID: 11400000, guid: 20991c5c7cd1fea45a68cfe9b386f229, type: 2}
-      - {fileID: 11400000, guid: 130e300bb4a2e364e85a31d2aa811a01, type: 2}
-      isFolded: 0
-    - categoryName: Bushes
-      subCategories: []
-      entries:
-      - {fileID: 11400000, guid: a149a8068bd2915469de3ce8bf5bc2d8, type: 2}
-      isFolded: 0
-    entries:
-    - {fileID: 11400000, guid: 0bc05bbde75c42e43a9975366301451e, type: 2}
-    isFolded: 0
-  - categoryName: Physics Material
-    subCategories:
-    - categoryName: Metal
-      subCategories: []
-      entries: []
-      isFolded: 0
-    entries: []
-    isFolded: 1
+  - {fileID: 11400000, guid: b89444452f6ae32408ccaf5fcafcec34, type: 2}
+  - {fileID: 11400000, guid: 22db2634d22268e40b374f9df758f6ed, type: 2}
+  uniqueIdGenerator: 7

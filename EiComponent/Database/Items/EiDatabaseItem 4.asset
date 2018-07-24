@@ -13,4 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Default Cylinder
   item: {fileID: 1623917101845012, guid: f6b854d92d8d4d546a9cffa602a7f588, type: 2}
+  uniqueId: 5
   database: {fileID: 114744472263383950, guid: 1eb5830dacd267248bfe988c9e9f7981, type: 2}
