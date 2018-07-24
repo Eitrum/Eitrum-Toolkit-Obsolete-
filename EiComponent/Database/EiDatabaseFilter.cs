@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
+using UnityEditor;
 
 namespace Eitrum
 {
@@ -25,5 +27,26 @@ namespace Eitrum
             this.typeFilter = type;
             this.pathFilter = pathFilter;
         }
+
+		public bool IsCorrect(EiDatabaseItem item, string path)
+		{
+			if (pathFilter != null && !path.Contains(pathFilter))
+				return false;
+
+			if (typeFilter == typeof(UnityEngine.SceneManagement.Scene))
+			{
+				var assetPath = AssetDatabase.GetAssetPath(item.Object);
+				if (assetPath.EndsWith(".unity"))
+				{
+					return true;
+				}
+				return false;
+			}
+
+			if (typeFilter == null)
+				return true;
+
+			return typeFilter == item.Object.GetType();
+		}
     }
 }

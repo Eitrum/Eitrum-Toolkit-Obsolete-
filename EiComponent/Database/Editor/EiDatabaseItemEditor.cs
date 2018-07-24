@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 namespace Eitrum
 {
@@ -13,11 +14,19 @@ namespace Eitrum
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var attributes = property.GetType().GetCustomAttributes(true);
-            for (int i = 0; i < attributes.Length; i++)
+			var attributes = fieldInfo.GetCustomAttributes(false);
+
+			EiDatabaseFilter filter = null;
+
+			for (int i = 0; i < attributes.Length; i++)
             {
-                Debug.Log(attributes[i].ToString());
+				if (attributes[i] is EiDatabaseFilter)
+				{
+					filter = attributes[i] as EiDatabaseFilter;
+					break;
+				}
             }
+
             List<string> items = new List<string>();
             List<EiDatabaseItem> references = new List<EiDatabaseItem>();
             items.Add("None");
@@ -38,7 +47,7 @@ namespace Eitrum
             for (int i = 0; i < categories; i++)
             {
                 var category = database[i];
-                LoadCategory("", category, items, references, currentSelectedObject, ref index);
+                LoadCategory("", category, items, references, currentSelectedObject, ref index, filter);
             }
 
             Rect popupPosition = new Rect(position);
@@ -54,7 +63,7 @@ namespace Eitrum
             }
         }
 
-        void LoadCategory(string path, EiDatabaseCategory category, List<string> items, List<EiDatabaseItem> references, UnityEngine.Object currentSelectedObject, ref int index)
+        void LoadCategory(string path, EiDatabaseCategory category, List<string> items, List<EiDatabaseItem> references, UnityEngine.Object currentSelectedObject, ref int index, EiDatabaseFilter filter)
         {
             var subCategoriesLength = category.GetSubCategoriesLength();
             var subPath = "";
@@ -65,7 +74,7 @@ namespace Eitrum
             for (int i = 0; i < subCategoriesLength; i++)
             {
                 var subCategory = category.GetSubCategory(i);
-                LoadCategory(subPath, subCategory, items, references, currentSelectedObject, ref index);
+                LoadCategory(subPath, subCategory, items, references, currentSelectedObject, ref index, filter);
             }
 
             var entries = category.GetEntriesLength();
@@ -80,7 +89,11 @@ namespace Eitrum
                         entry.GetType().GetField("itemName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(entry, entry.Item.name);
                     }
                     string itemPath = string.Format("{0} / {1}", subPath, entry.ItemName);
-                    if (entry == currentSelectedObject)
+
+					if (filter != null && !filter.IsCorrect(entry, itemPath))
+						continue;
+
+					if (entry == currentSelectedObject)
                     {
                         index = items.Count;
                     }
