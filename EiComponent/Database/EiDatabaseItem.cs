@@ -109,6 +109,14 @@ namespace Eitrum
 			}
 		}
 
+		public EiPoolData PoolData
+		{
+			get
+			{
+				return poolData;
+			}
+		}
+
 		#endregion
 
 		#region Scene
