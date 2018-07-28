@@ -2,7 +2,7 @@
 
 namespace Eitrum
 {
-	public class EiPoolableObject : EiCore
+	public class EiPoolableCoreObject : EiCore
 	{
 		protected virtual void OnDispose ()
 		{
@@ -10,7 +10,7 @@ namespace Eitrum
 		}
 	}
 
-	public class EiPoolableObject<T> : EiPoolableObject where T : EiPoolableObject
+	public class EiPoolableCoreObject<T> : EiPoolableCoreObject where T : EiPoolableCoreObject
 	{
 
 		static EiSyncronizedQueue<T> pooled = new EiSyncronizedQueue<T> ();

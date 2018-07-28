@@ -21,6 +21,7 @@ namespace Eitrum
         private List<EiDatabaseCategory> categories = new List<EiDatabaseCategory>();
         [SerializeField]
         private int uniqueIdGenerator = 0;
+
         #endregion
 
         #region Properties

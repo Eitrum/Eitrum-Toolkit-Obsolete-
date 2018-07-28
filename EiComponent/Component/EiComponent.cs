@@ -80,31 +80,40 @@ namespace Eitrum
 
 		#endregion
 
+		#region Prefab Item
+
+		public static GameObject Instantiate(EiPrefab item)
+		{
+			return item.Instantiate();
+		}
+
+		#endregion
+
 		#region DatabaseItem GameObject
 
-		public static GameObject Instantiate (EiDatabaseItem item)
+		public static UnityEngine.Object Instantiate (EiDatabaseItem item)
 		{
-			return item.InstantiateAsGameObject ();
+			return item.Instantiate();
 		}
 
-		public static GameObject Instantiate (EiDatabaseItem item, Transform parent)
+		public static UnityEngine.Object Instantiate (EiDatabaseItem item, Transform parent)
 		{
-			return item.InstantiateAsGameObject (parent);
+			return item.Instantiate(parent);
 		}
 
-		public static GameObject Instantiate (EiDatabaseItem item, Vector3 position)
+		public static UnityEngine.Object Instantiate (EiDatabaseItem item, Vector3 position)
 		{
-			return item.InstantiateAsGameObject (position);
+			return item.Instantiate(position);
 		}
 
-		public static GameObject Instantiate (EiDatabaseItem item, Vector3 position, Quaternion rotation)
+		public static UnityEngine.Object Instantiate (EiDatabaseItem item, Vector3 position, Quaternion rotation)
 		{
-			return item.InstantiateAsGameObject (position, rotation);
+			return item.Instantiate(position, rotation);
 		}
 
-		public static GameObject Instantiate (EiDatabaseItem item, Vector3 position, Quaternion rotation, Transform parent)
+		public static UnityEngine.Object Instantiate (EiDatabaseItem item, Vector3 position, Quaternion rotation, Transform parent)
 		{
-			return item.InstantiateAsGameObject (position, rotation, parent);
+			return item.Instantiate (position, rotation, parent);
 		}
 
 		#endregion

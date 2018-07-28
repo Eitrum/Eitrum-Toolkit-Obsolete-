@@ -15,3 +15,5 @@ MonoBehaviour:
   item: {fileID: 1203756857445842, guid: 05c3a35fa99a8ab4e903706f5d7c96c2, type: 2}
   uniqueId: 4
   database: {fileID: 114744472263383950, guid: 1eb5830dacd267248bfe988c9e9f7981, type: 2}
+  poolData:
+    poolSize: 0

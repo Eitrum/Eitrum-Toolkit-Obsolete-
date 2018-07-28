@@ -3,17 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum {
-	[AddComponentMenu ("Eitrum/Core/Entity")]
-	public class EiEntity : EiComponent {
+namespace Eitrum
+{
+	[AddComponentMenu("Eitrum/Core/Entity")]
+	public class EiEntity : EiComponent
+	{
 		#region Variables
 
-		[Header ("Entity Settings")]
+		[Header("Entity Settings")]
 		[SerializeField]
 		protected string entityName = "default-entity";
 
 		[SerializeField]
-		[Tooltip ("Will Generate a bit of overhead but makes it possible to search for any entity")]
+		[Tooltip("Will Generate a bit of overhead but makes it possible to search for any entity")]
 		protected bool subscribeToEntityList = false;
 
 		[SerializeField]
@@ -26,7 +28,7 @@ namespace Eitrum {
 
 		private static int uniqueIdGenerator = 1;
 
-		[Header ("Components")]
+		[Header("Components")]
 		[SerializeField]
 		protected Rigidbody rigidbodyComponent;
 
@@ -39,73 +41,116 @@ namespace Eitrum {
 		[SerializeField]
 		protected EiInput input;
 
+		[Header("Pool Settings")]
+		[SerializeField]
+		private EiPoolableInterface[] poolableInterfaces;
+		private EiPoolData poolTarget;
+
 		#endregion
 
 		#region Properties
 
-		public virtual string EntityName {
-			get {
+		public virtual string EntityName
+		{
+			get
+			{
 				return entityName;
 			}
-			set {
+			set
+			{
 				entityName = value;
 			}
 		}
 
-		public virtual int EntityTypeId {
-			get {
-				if (entityTypeId == 0) {
-					entityTypeId = entityName.GetHashCode ();
+		public virtual int EntityTypeId
+		{
+			get
+			{
+				if (entityTypeId == 0)
+				{
+					entityTypeId = entityName.GetHashCode();
 				}
 				return entityTypeId;
 			}
 		}
 
-		public virtual int EntityId {
-			get {
-				if (entityId == 0) {
+		public virtual int EntityId
+		{
+			get
+			{
+				if (entityId == 0)
+				{
 					entityId = AllocateEntityId;
 				}
 				return entityId;
 			}
 		}
 
-		public static int AllocateEntityId {
-			get {
+		public static int AllocateEntityId
+		{
+			get
+			{
 				return uniqueIdGenerator++;
 			}
 		}
 
-		public virtual Rigidbody Body {
-			get {
+		public virtual Rigidbody Body
+		{
+			get
+			{
 				return rigidbodyComponent;
 			}
-			set {
+			set
+			{
 				rigidbodyComponent = value;
 			}
 		}
 
-		public virtual Collider Collider {
-			get {
+		public virtual Collider Collider
+		{
+			get
+			{
 				return colliderComponent;
 			}
-			set {
+			set
+			{
 				colliderComponent = value;
 			}
 		}
 
-		public virtual AudioSource Audio {
-			get {
+		public virtual AudioSource Audio
+		{
+			get
+			{
 				return audioComponent;
 			}
-			set {
+			set
+			{
 				audioComponent = value;
 			}
 		}
 
-		public EiInput Input {
-			get {
+		public EiInput Input
+		{
+			get
+			{
 				return input;
+			}
+		}
+
+		public EiPoolableInterface[] PoolableInterfaces
+		{
+			get
+			{
+				return poolableInterfaces;
+			}
+		}
+
+		public EiPoolData PoolTarget
+		{
+			get
+			{
+				return poolTarget;
 			}
 		}
 
@@ -113,48 +158,60 @@ namespace Eitrum {
 
 		#region Core
 
-		void Awake () {
+		void Awake()
+		{
 
 		}
 
-		public void FreezePhysics () {
-			if (rigidbodyComponent) {
+		public void FreezePhysics()
+		{
+			if (rigidbodyComponent)
+			{
 				rigidbodyComponent.velocity = Vector3.zero;
 				rigidbodyComponent.isKinematic = true;
 			}
 		}
 
-		public void UnfreezePhysics () {
-			if (rigidbodyComponent) {
+		public void UnfreezePhysics()
+		{
+			if (rigidbodyComponent)
+			{
 				rigidbodyComponent.isKinematic = false;
 			}
 		}
 
-		[ContextMenu ("Add Missing Components")]
-		public virtual void AddMissingComponents () {
-			if (!rigidbodyComponent)
-				rigidbodyComponent = this.GetOrAddComponent<Rigidbody> ();
-			if (!colliderComponent)
-				Debug.LogWarning ("Can't add 'collider'. Manually add collider if you want it");
-			if (!audioComponent)
-				audioComponent = this.GetOrAddComponent<AudioSource> ();
-			if (!input) {
-				input = this.GetComponent<EiInput> ();
-				if (!input)
-					Debug.LogWarning ("Input Component Will not be created, make sure you do not need it or add it manually");
-			}
+		public void AssignPoolTarget(EiPoolData item)
+		{
+			poolTarget = item;
 		}
-
+		
 		#endregion
 
 #if UNITY_EDITOR
-
-		protected override void AttachComponents () {
-			base.AttachComponents ();
-			rigidbodyComponent = GetComponent<Rigidbody> ();
-			colliderComponent = GetComponent<Collider> ();
-			audioComponent = GetComponent<AudioSource> ();
-			input = GetComponent<EiInput> ();
+		[ContextMenu("Add Missing Components")]
+		public virtual void AddMissingComponents()
+		{
+			if (!rigidbodyComponent)
+				rigidbodyComponent = this.GetOrAddComponent<Rigidbody>();
+			if (!colliderComponent)
+				Debug.LogWarning("Can't add 'collider'. Manually add collider if you want it");
+			if (!audioComponent)
+				audioComponent = this.GetOrAddComponent<AudioSource>();
+			if (!input)
+			{
+				input = this.GetComponent<EiInput>();
+				if (!input)
+					Debug.LogWarning("Input Component Will not be created, make sure you do not need it or add it manually");
+			}
+		}
+		protected override void AttachComponents()
+		{
+			base.AttachComponents();
+			rigidbodyComponent = GetComponentInChildren<Rigidbody>();
+			colliderComponent = GetComponentInChildren<Collider>();
+			audioComponent = GetComponentInChildren<AudioSource>();
+			input = GetComponentInChildren<EiInput>();
+			poolableInterfaces = GetComponentsInChildren<EiPoolableInterface>();
 		}
 
 #endif

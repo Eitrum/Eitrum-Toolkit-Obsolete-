@@ -14,76 +14,97 @@ namespace Eitrum
 		private string itemName = "empty";
 		[SerializeField]
 		private UnityEngine.Object item = null;
-        [SerializeField]
-        [Readonly]
-        private int uniqueId = 0;
+		[SerializeField]
+		[Readonly]
+		private int uniqueId = 0;
 		[SerializeField]
 		private EiDatabaseResource database = null;
+
+		[SerializeField]
+		private EiPoolData poolData = new EiPoolData();
 
 		#endregion
 
 		#region Properties
 
-		public string ItemName {
-			get {
+		public string ItemName
+		{
+			get
+			{
 				return itemName;
 			}
 		}
 
-        public int UniqueId
-        {
-            get
-            {
-                return uniqueId;
-            }
-        }
+		public int UniqueId
+		{
+			get
+			{
+				return uniqueId;
+			}
+		}
 
-		public UnityEngine.Object Item {
-			get {
+		public UnityEngine.Object Item
+		{
+			get
+			{
 				return item;
 			}
 		}
 
-		public UnityEngine.Object Object {
-			get {
+		public UnityEngine.Object Object
+		{
+			get
+			{
 				return item;
 			}
 		}
 
-		public EiDatabaseResource Database {
-			get {
+		public EiDatabaseResource Database
+		{
+			get
+			{
 				return database;
 			}
 		}
 
-		public GameObject GameObject {
-			get {
+		public GameObject GameObject
+		{
+			get
+			{
 				return item as GameObject;
 			}
 		}
 
-		public AudioClip AudioClip {
-			get {
+		public AudioClip AudioClip
+		{
+			get
+			{
 				return item as AudioClip;
 			}
 		}
 
-		public Animation AnimationClip {
-			get {
+		public Animation AnimationClip
+		{
+			get
+			{
 				return item as Animation;
 			}
 		}
 
-		public string SceneName {
-			get {
+		public string SceneName
+		{
+			get
+			{
 				return itemName;
 			}
 		}
 
-		public Type Type {
-			get {
+		public Type Type
+		{
+			get
+			{
 				if (item)
-					return item.GetType ();
+					return item.GetType();
 				return null;
 			}
 		}
@@ -92,28 +113,28 @@ namespace Eitrum
 
 		#region Scene
 
-		public void LoadScene ()
+		public void LoadScene()
 		{
-			SceneManager.LoadScene (SceneName);
+			SceneManager.LoadScene(SceneName);
 		}
 
 		#endregion
 
 		#region Core
 
-		public T GetObjectAs<T> () where T : UnityEngine.Object
+		public T GetObjectAs<T>() where T : UnityEngine.Object
 		{
 			return item as T;
 		}
 
-		public bool Is<T> ()
+		public bool Is<T>()
 		{
 			return item is T;
 		}
 
-		public bool Is (Type type)
+		public bool Is(Type type)
 		{
-			return item.GetType () == type;
+			return item.GetType() == type;
 		}
 
 		#endregion
@@ -122,76 +143,29 @@ namespace Eitrum
 
 		#region Normal Instantiate
 
-		public UnityEngine.Object Instantiate ()
+		public UnityEngine.Object Instantiate()
 		{
-			return MonoBehaviour.Instantiate (Object);
+			return MonoBehaviour.Instantiate(Object);
 		}
 
-		public UnityEngine.Object Instantiate (Transform parent)
+		public UnityEngine.Object Instantiate(Transform parent)
 		{
-			return MonoBehaviour.Instantiate (Object, parent);
+			return MonoBehaviour.Instantiate(Object, parent);
 		}
 
-		public UnityEngine.Object Instantiate (Vector3 position)
+		public UnityEngine.Object Instantiate(Vector3 position)
 		{
-			return MonoBehaviour.Instantiate (Object, position, Quaternion.identity);
+			return MonoBehaviour.Instantiate(Object, position, Quaternion.identity);
 		}
 
-		public UnityEngine.Object Instantiate (Vector3 position, Quaternion rotation)
+		public UnityEngine.Object Instantiate(Vector3 position, Quaternion rotation)
 		{
-			return MonoBehaviour.Instantiate (Object, position, rotation);
+			return MonoBehaviour.Instantiate(Object, position, rotation);
 		}
 
-		public UnityEngine.Object Instantiate (Vector3 position, Quaternion rotation, Transform parent)
+		public UnityEngine.Object Instantiate(Vector3 position, Quaternion rotation, Transform parent)
 		{
-			return MonoBehaviour.Instantiate (Object, position, rotation, parent);
-		}
-
-		#endregion
-
-		#region GameObject Instantiate
-
-		public GameObject InstantiateAsGameObject ()
-		{
-			return MonoBehaviour.Instantiate (GameObject);
-		}
-
-		public GameObject InstantiateAsGameObject (Transform parent)
-		{
-			return MonoBehaviour.Instantiate (GameObject, parent);
-		}
-
-		public GameObject InstantiateAsGameObject (Vector3 position)
-		{
-			return MonoBehaviour.Instantiate (GameObject, position, Quaternion.identity);
-		}
-
-		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation)
-		{
-			return MonoBehaviour.Instantiate (GameObject, position, rotation);
-		}
-
-		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation, Transform parent)
-		{
-			return MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
-		}
-
-		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation, Vector3 scale)
-		{
-			var go = MonoBehaviour.Instantiate (GameObject, position, rotation);
-			var goScale = go.transform.localScale;
-			goScale.Scale (scale);
-			go.transform.localScale = goScale;
-			return go;
-		}
-
-		public GameObject InstantiateAsGameObject (Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
-		{
-			var go = MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
-			var goScale = go.transform.localScale;
-			goScale.Scale (scale);
-			go.transform.localScale = goScale;
-			return go;
+			return MonoBehaviour.Instantiate(Object, position, rotation, parent);
 		}
 
 		#endregion

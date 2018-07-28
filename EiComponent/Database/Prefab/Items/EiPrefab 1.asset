@@ -8,12 +8,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a158602f03946574c8678def25e9537d, type: 3}
-  m_Name: EiDatabaseItem 6
+  m_Script: {fileID: 11500000, guid: adc917a3db335bc47b8cbbddf7ded4af, type: 3}
+  m_Name: EiPrefab 1
   m_EditorClassIdentifier: 
   itemName: WeightedCube
   item: {fileID: 1270190458696452, guid: 7d55c0c54233479439878b51fde7476a, type: 2}
-  uniqueId: 7
-  database: {fileID: 114744472263383950, guid: 1eb5830dacd267248bfe988c9e9f7981, type: 2}
+  uniqueId: 2
+  database: {fileID: 114053056546841476, guid: 1898f6a03563a574d80fddca61a5f193, type: 2}
   poolData:
-    poolSize: 0
+    poolSize: 8
