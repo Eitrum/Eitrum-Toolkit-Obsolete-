@@ -3,26 +3,110 @@ using UnityEngine;
 
 namespace Eitrum.Networking
 {
-	public class EiNetwork : EiCoreSingleton<EiNetwork>
+	public class EiNetwork
 	{
+		#region Singleton
+
+		private static EiNetwork instance;
+
+		private static EiNetwork Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
+					instance = new EiNetwork();
+				}
+				return instance;
+			}
+		}
+
+		#endregion
+
 		#region Variables
 
-		private EiNetworkRoom currentRoom;
-		private EiNetworkLobby currentLobby;
+		private EiNetworkRegion currentRegion = EiNetworkRegion.None;
+		private EiNetworkRoom currentRoom = null;
+		private EiNetworkLobby currentLobby = null;
+		private EiNetworkPlayer localPlayer = new EiNetworkPlayer();
+		private EiNetworkRoom[] roomsInLobby = new EiNetworkRoom[0];
+		private float serverTime = 0f;
+
+		private EiCallback onMasterServerCallback = new EiCallback();
+		private EiCallback<EiNetworkRegion> onConnectedToRegion = new EiCallback<EiNetworkRegion>();
+		private EiCallback<EiNetworkLobby> onJoinLobby = new EiCallback<EiNetworkLobby>();
+		private EiCallback<EiNetworkRoom> onJoinRoom = new EiCallback<EiNetworkRoom>();
+		private EiCallback<EiNetworkRoom> onCreatRoom = new EiCallback<EiNetworkRoom>();
+		private EiCallback<EiNetworkRoom[]> onRoomListUpdated = new EiCallback<EiNetworkRoom[]>();
+		private EiCallback onDisconnect = new EiCallback();
 
 		#endregion
 
 		#region Properties
 
-		public EiNetworkRoom CurrentRoom {
-			get {
-				return currentRoom;
+		public static EiNetworkRegion CurrentRegion
+		{
+			get
+			{
+				return Instance.currentRegion;
 			}
 		}
 
-		public EiNetworkLobby CurrentLobby {
-			get {
-				return currentLobby;
+		public static EiNetworkRoom CurrentRoom
+		{
+			get
+			{
+				return Instance.currentRoom;
+			}
+		}
+
+		public static EiNetworkLobby CurrentLobby
+		{
+			get
+			{
+				return Instance.currentLobby;
+			}
+		}
+
+		public static EiNetworkRoom[] RoomList
+		{
+			get
+			{
+				return Instance.roomsInLobby;
+			}
+		}
+
+		public static EiNetworkPlayer LocalPlayer
+		{
+			get
+			{
+				return Instance.localPlayer;
+			}
+		}
+
+		public static bool IsConnecting
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public static bool IsConnected
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public static float ServerTime
+		{
+			get
+			{
+				if (IsConnected && CurrentRoom != null)
+					return Instance.serverTime;
+				return -1f;
 			}
 		}
 
@@ -30,16 +114,122 @@ namespace Eitrum.Networking
 
 		#region Static Methods
 
+		#region Name
+
+		public static void AssignName(string name)
+		{
+			Instance.AssignName_Internal(name);
+		}
+
+		#endregion
+
 		#region Server
 
-		public static EiCallback ConnectToMasterServer ()
+		public static EiCallback ConnectToMasterServer()
 		{
-			EiCallback promise = new EiCallback ();
+
+			return Instance.ConnectToMasterServer_Internal();
+		}
+
+		public static void Diconnect()
+		{
+			Instance.Diconnect_Internal();
+		}
+
+		#endregion
+
+		#region Region
+
+		public static EiCallback ConnectToRegion(EiNetworkRegion region)
+		{
+			EiCallback promise = new EiCallback();
 
 			return promise;
 		}
 
-		public static void Diconnect ()
+		#endregion
+
+		#region Lobby
+
+		public static EiCallback<EiNetworkLobby> ConnectToLobby(EiNetworkLobby lobby)
+		{
+			EiCallback<EiNetworkLobby> promise = new EiCallback<EiNetworkLobby>();
+
+			return promise;
+		}
+
+		public static EiCallback ConnectToLobby(string lobbyName)
+		{
+			EiCallback promise = new EiCallback();
+
+			return promise;
+		}
+
+		public static EiCallback LeaveLobby()
+		{
+			EiCallback promise = new EiCallback();
+
+			return promise;
+		}
+
+		#endregion
+
+		#region Room
+
+		public static void ConnectToRoom(string roomName)
+		{
+
+		}
+
+		public static void ConnectToRoom(EiNetworkRoom room)
+		{
+
+		}
+
+		public static void CreateRoom(string roomName)
+		{
+			CreateRoom(new EiNetworkRoom(roomName));
+		}
+
+		public static void CreateRoom(EiNetworkRoom room)
+		{
+
+		}
+
+		public static void CreateRoom(EiNetworkRoomOptions roomOptions)
+		{
+			CreateRoom(new EiNetworkRoom(roomOptions));
+		}
+
+		public static void LeaveRoom()
+		{
+
+		}
+
+		#endregion
+
+		#endregion
+
+		#region Internal Local Methods
+
+		#region Name
+
+		private void AssignName_Internal(string name)
+		{
+			localPlayer.AssignName(name);
+		}
+
+		#endregion
+
+		#region Server
+
+		private EiCallback ConnectToMasterServer_Internal()
+		{
+
+			return onMasterServerCallback;
+		}
+
+		private void Diconnect_Internal()
 		{
 
 		}
@@ -48,62 +238,66 @@ namespace Eitrum.Networking
 
 		#region Region
 
-		public static void ConnectToRegion (EiNetworkRegion region)
+		private EiCallback ConnectToRegion_Internal(EiNetworkRegion region)
 		{
-			
+
+			return null;
 		}
 
 		#endregion
 
 		#region Lobby
 
-		public static void ConnectToLobby (EiNetworkLobby lobby)
+		private EiCallback<EiNetworkLobby> ConnectToLobby_Internal(EiNetworkLobby lobby)
 		{
 
+			return null;
 		}
 
-		public static void ConnectToLobby (string lobbyName)
+		private EiCallback ConnectToLobby_Internal(string lobbyName)
 		{
 
+			return null;
 		}
 
-		public static void LeaveLobby ()
+		private EiCallback LeaveLobby_Internal()
 		{
 
+			return null;
 		}
 
 		#endregion
 
 		#region Room
 
-		public static void ConnectToRoom (string roomName)
+		private void ConnectToRoom_Internal(string roomName)
 		{
 
 		}
 
-		public static void ConnectToRoom (EiNetworkRoom room)
+		private void ConnectToRoom_Internal(EiNetworkRoom room)
 		{
 
 		}
 
-		public static void CreateRoom (string roomName)
-		{
-			CreateRoom (new EiNetworkRoom (roomName));
-		}
-
-		public static void CreateRoom (EiNetworkRoom room)
+		private void CreateRoom_Internal(string roomName)
 		{
 
 		}
 
-		public static void CreateRoom (EiNetworkRoomOptions roomOptions)
+		private void CreateRoom_Internal(EiNetworkRoom room)
 		{
-			CreateRoom (new EiNetworkRoom (roomOptions));
+
 		}
 
-		public static void LeaveRoom ()
+		private void CreateRoom_Internal(EiNetworkRoomOptions roomOptions)
 		{
-			
+
+		}
+
+		private void LeaveRoom_Internal()
+		{
+
 		}
 
 		#endregion

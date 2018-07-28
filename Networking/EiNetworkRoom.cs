@@ -18,50 +18,66 @@ namespace Eitrum.Networking
 
 		#region Properties
 
-		public string RoomName {
-			get {
+		public string RoomName
+		{
+			get
+			{
 				return roomName;
 			}
 		}
 
-		public bool CanJoin {
-			get {
+		public bool CanJoin
+		{
+			get
+			{
 				return isOpen && (maxPlayers == 0 || (maxPlayers - currentPlayers > 0));
 			}
 		}
 
-		public bool IsPasswordProtected {
-			get {
+		public bool IsPasswordProtected
+		{
+			get
+			{
 				return password != 0;
 			}
 		}
 
-		public int CurrentPlayers {
-			get {
+		public int CurrentPlayers
+		{
+			get
+			{
 				return currentPlayers;
 			}
 		}
 
-		public int MaxPlayers {
-			get {
+		public int MaxPlayers
+		{
+			get
+			{
 				return maxPlayers;
 			}
 		}
 
-		public bool IsVisible {
-			get {
+		public bool IsVisible
+		{
+			get
+			{
 				return isVisible;
 			}
 		}
 
-		public bool IsOpen {
-			get {
+		public bool IsOpen
+		{
+			get
+			{
 				return isOpen;
 			}
 		}
 
-		public int CustomRoomPropertyLength {
-			get {
+		public int CustomRoomPropertyLength
+		{
+			get
+			{
 				return customRoomProperties.Length;
 			}
 		}
@@ -70,23 +86,28 @@ namespace Eitrum.Networking
 
 		#region Help Methods
 
-		public string GetCustomRoomProperty (int index)
+		public string GetCustomRoomProperty(int index)
 		{
-			return customRoomProperties [index];
+			return customRoomProperties[index];
 		}
 
 		#endregion
 
 		#region Constructors
 
-		public EiNetworkRoom (string name)
+		public EiNetworkRoom(string name) : this(name, EiNetworkRoomOptions.Default)
 		{
-			this.roomName = name;
+
 		}
 
-		public EiNetworkRoom (EiNetworkRoomOptions options)
+		public EiNetworkRoom(EiNetworkRoomOptions options) : this(options.roomName, options)
 		{
-			roomName = options.roomName;
+
+		}
+
+		public EiNetworkRoom(string name, EiNetworkRoomOptions options)
+		{
+			roomName = name;
 			maxPlayers = options.maxPlayers;
 			password = options.password;
 			isVisible = options.isVisible;
@@ -112,10 +133,13 @@ namespace Eitrum.Networking
 
 		#region Properties
 
-		public static EiNetworkRoomOptions Default {
-			get {
-				return new EiNetworkRoomOptions () {
-					roomName = "No name",
+		public static EiNetworkRoomOptions Default
+		{
+			get
+			{
+				return new EiNetworkRoomOptions()
+				{
+					roomName = "Default",
 					maxPlayers = 0,
 					password = 0,
 					isVisible = true,
