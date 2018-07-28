@@ -19,6 +19,7 @@ namespace Eitrum.Database
 
 		#region Variables
 
+#pragma warning disable
 		[SerializeField]
 		private List<EiPrefabSubCategory> subCategories = new List<EiPrefabSubCategory>();
 

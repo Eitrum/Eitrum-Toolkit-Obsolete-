@@ -11,7 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3305d93475fe90499256606f03ce24c, type: 3}
   m_Name: EiPrefabSubCategory
   m_EditorClassIdentifier: 
-  categoryName: 
+  categoryName: Tool Items
   subCategories: []
-  items: []
-  isFolded: 0
+  items:
+  - {fileID: 11400000, guid: 60bbecb8feb025248bf51b2c610d9f1a, type: 2}
+  - {fileID: 11400000, guid: a2c1834762c29f24d834e10dce158f1e, type: 2}
+  isFolded: 1

@@ -31,6 +31,7 @@ namespace Eitrum.Database
 
 			DrawDatabase(db);
 			FixID(db);
+			EditorUtility.SetDirty(db);
 		}
 
 		#endregion
@@ -96,6 +97,7 @@ namespace Eitrum.Database
 
 			if (GUILayout.Button("Add Category", GUILayout.Width(100f)))
 			{
+
 				var dc = EiPrefabSubCategory.CreateAsset(simplePath);
 				GetSubCategoryList(db).Add(dc);
 			}
@@ -109,6 +111,7 @@ namespace Eitrum.Database
 			}
 
 			EditorGUILayout.EndHorizontal();
+			EditorUtility.SetDirty(db);
 		}
 
 		void DrawSubCategory(EiPrefabSubCategory subCategory)
@@ -155,19 +158,23 @@ namespace Eitrum.Database
 				if (GUILayout.Button("Add Item", GUILayout.Width(100f)))
 				{
 					var entryToAdd = EiPrefab.CreateAsset(simplePath);
-					Undo.RecordObject(entryToAdd, "Entry Change");
+					Undo.RecordObject(entryToAdd, "Add new Item");
 					items.Add(entryToAdd);
+					Undo.RecordObject(subCategory, "Added Item");
 					EditorUtility.SetDirty(entryToAdd);
+					EditorUtility.SetDirty(subCategory);
 				}
 				if (GUILayout.Button("Add Sub Category", GUILayout.Width(160f)))
 				{
 					var dc = EiPrefabSubCategory.CreateAsset(simplePath);
 					subCatList.Add(dc);
+					Undo.RecordObject(subCategory, "Added Category");
 				}
 
 				EditorGUILayout.EndHorizontal();
 				LeaveSubCategory();
 			}
+			EditorUtility.SetDirty(subCategory);
 		}
 
 		void DrawItem(EiPrefab item)
