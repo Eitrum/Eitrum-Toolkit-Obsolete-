@@ -29,11 +29,19 @@ namespace Eitrum.Database
 
 		#region Core
 
-
+		public EiPrefab _Get(int index)
+		{
+			return cachedItems[index];
+		}
 
 		#endregion
 
 		#region Static Getters
+
+		public EiPrefab Get(int index)
+		{
+			return Instance._Get(index);
+		}
 
 		#endregion
 	}
