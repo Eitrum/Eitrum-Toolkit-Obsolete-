@@ -12,6 +12,11 @@ namespace Eitrum
 			return vec.normalized;
 		}
 
+		public static Vector3 ClampMagnitude(this Vector3 vec, float maxDistance)
+		{
+			return Vector3.ClampMagnitude(vec, maxDistance);
+		}
+
 		public static Vector3 ClampMagnitudeXZ (this Vector3 vec, float maxDistance)
 		{
 			var y = vec.y;
