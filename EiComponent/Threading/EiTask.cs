@@ -118,40 +118,149 @@ namespace Eitrum
 
 		#region Static creation
 
+		#region Task
+
 		public static EiTask Run(Action action)
 		{
 			return new EiTask(action);
 		}
 
-		public static EiTask Run(Action action, Action onCompleteCallback, Action onCompleteUnityThreadCallback)
+		public static EiTask Run(Action action, Action onCompleteCallback)
 		{
-			return new EiTask(action, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask(action, onCompleteCallback);
 		}
 
-		public static EiTask<T> Run<T>(Func<T> func, Action<T> onCompleteCallback, Action<T> onCompleteUnityThreadCallback)
+		public static EiTask Run(Action action, Action onCompleteCallback, bool anyThread)
 		{
-			return new EiTask<T>(func, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask(action, onCompleteCallback, anyThread);
 		}
 
-		public static EiTask<T1, TResult> Run<T1, TResult>(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask Run(Action action, Action onCompleteCallback, Action onCompleteAnyThread)
 		{
-			return new EiTask<T1, TResult>(func, value, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask(action, onCompleteCallback, onCompleteAnyThread);
 		}
 
-		public static EiTask<T1, T2, TResult> Run<T1, T2, TResult>(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		#endregion
+
+		#region Static TResult
+
+		public static EiTask<TResult> Run<TResult>(Func<TResult> func)
 		{
-			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<TResult>(func);
 		}
 
-		public static EiTask<T1, T2, T3, TResult> Run<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask<TResult> Run<TResult>(Func<TResult> func, Action<TResult> onCompleteCallback)
 		{
-			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<TResult>(func, onCompleteCallback);
 		}
 
-		public static EiTask<T1, T2, T3, T4, TResult> Run<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask<TResult> Run<TResult>(Func<TResult> func, Action<TResult> onCompleteCallback, bool anyThread)
 		{
-			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<TResult>(func, onCompleteCallback, anyThread);
 		}
+
+		public static EiTask<TResult> Run<TResult>(Func<TResult> func, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<TResult>(func, onCompleteCallback, onCompleteAnyThread);
+		}
+
+		#endregion
+
+		#region Static T1 Result
+
+		public static EiTask<T1, TResult> Run<T1, TResult>(Func<T1, TResult> func, T1 value)
+		{
+			return new EiTask<T1, TResult>(func, value);
+		}
+
+		public static EiTask<T1, TResult> Run<T1, TResult>(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, TResult>(func, value, onCompleteCallback);
+		}
+
+		public static EiTask<T1, TResult> Run<T1, TResult>(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, TResult>(func, value, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, TResult> Run<T1, TResult>(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, TResult>(func, value, onCompleteCallback, onCompleteAnyThread);
+		}
+
+		#endregion
+
+		#region Static T2 Result
+
+		public static EiTask<T1, T2, TResult> Run<T1, T2, TResult>(Func<T1, T2, TResult> func, T1 value, T2 value2)
+		{
+			return new EiTask<T1, T2, TResult>(func, value, value2);
+		}
+
+		public static EiTask<T1, T2, TResult> Run<T1, T2, TResult>(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback);
+		}
+
+		public static EiTask<T1, T2, TResult> Run<T1, T2, TResult>(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, T2, TResult> Run<T1, T2, TResult>(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback, onCompleteAnyThread);
+		}
+
+		#endregion
+
+		#region Static T3 Result
+
+		public static EiTask<T1, T2, T3, TResult> Run<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3)
+		{
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3);
+		}
+
+		public static EiTask<T1, T2, T3, TResult> Run<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback);
+		}
+
+		public static EiTask<T1, T2, T3, TResult> Run<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, T2, T3, TResult> Run<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback, onCompleteAnyThread);
+		}
+
+		#endregion
+
+		#region Static T4 Result
+
+		public static EiTask<T1, T2, T3, T4, TResult> Run<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4)
+		{
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4);
+		}
+
+		public static EiTask<T1, T2, T3, T4, TResult> Run<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback);
+		}
+
+		public static EiTask<T1, T2, T3, T4, TResult> Run<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, T2, T3, T4, TResult> Run<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback, onCompleteAnyThread);
+		}
+
+		#endregion
 
 		#endregion
 
@@ -468,17 +577,34 @@ namespace Eitrum
 
 		#region Constructors
 
-		public EiTask(Func<TResult> action)
+		public EiTask(Func<TResult> func)
 		{
-			task = action;
+			task = func;
 			task.BeginInvoke(Callback, null);
 		}
 
-		public EiTask(Func<TResult> action, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public EiTask(Func<TResult> func, Action<TResult> onCompleteCallback)
 		{
-			this.onAnyThreadTrigger = onCompleteCallback;
-			this.onUnityThreadTrigger = onCompleteUnityThreadCallback;
-			task = action;
+			onUnityThreadTrigger += onCompleteCallback;
+			task = func;
+			task.BeginInvoke(Callback, null);
+		}
+
+		public EiTask(Func<TResult> func, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			if (anyThread)
+				onAnyThreadTrigger += onCompleteCallback;
+			else
+				onUnityThreadTrigger += onCompleteCallback;
+			task = func;
+			task.BeginInvoke(Callback, null);
+		}
+
+		public EiTask(Func<TResult> func, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			onUnityThreadTrigger += onCompleteCallback;
+			onAnyThreadTrigger += onCompleteAnyThread;
+			task = func;
 			task.BeginInvoke(Callback, null);
 		}
 
@@ -552,11 +678,26 @@ namespace Eitrum
 
 		#endregion
 
-		#region Static
+		#region Static TResult
 
-		public static EiTask<TResult> Run(Func<TResult> func, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask<TResult> Run(Func<TResult> func)
 		{
-			return new EiTask<TResult>(func, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<TResult>(func);
+		}
+
+		public static EiTask<TResult> Run(Func<TResult> func, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<TResult>(func, onCompleteCallback);
+		}
+
+		public static EiTask<TResult> Run(Func<TResult> func, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<TResult>(func, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<TResult> Run(Func<TResult> func, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<TResult>(func, onCompleteCallback, onCompleteAnyThread);
 		}
 
 		#endregion
@@ -575,6 +716,12 @@ namespace Eitrum
 		#endregion
 
 		#region Constructors
+
+		public EiTask(Func<T1, TResult> func, T1 value)
+		{
+			task = func;
+			task.BeginInvoke(value, Callback, null);
+		}
 
 		public EiTask(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback)
 		{
@@ -671,11 +818,26 @@ namespace Eitrum
 
 		#endregion
 
-		#region Static
+		#region Static T1 Result
 
-		public static EiTask<T1, TResult> Run(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask<T1, TResult> Run(Func<T1, TResult> func, T1 value)
 		{
-			return new EiTask<T1, TResult>(func, value, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<T1, TResult>(func, value);
+		}
+
+		public static EiTask<T1, TResult> Run(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, TResult>(func, value, onCompleteCallback);
+		}
+
+		public static EiTask<T1, TResult> Run(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, TResult>(func, value, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, TResult> Run(Func<T1, TResult> func, T1 value, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, TResult>(func, value, onCompleteCallback, onCompleteAnyThread);
 		}
 
 		#endregion
@@ -694,6 +856,12 @@ namespace Eitrum
 		#endregion
 
 		#region Constructors
+
+		public EiTask(Func<T1, T2, TResult> func, T1 value, T2 value2)
+		{
+			task = func;
+			task.BeginInvoke(value, value2, Callback, null);
+		}
 
 		public EiTask(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback)
 		{
@@ -790,11 +958,26 @@ namespace Eitrum
 
 		#endregion
 
-		#region Static
+		#region Static T2 Result
 
-		public static EiTask<T1, T2, TResult> Run(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask<T1, T2, TResult> Run(Func<T1, T2, TResult> func, T1 value, T2 value2)
 		{
-			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<T1, T2, TResult>(func, value, value2);
+		}
+
+		public static EiTask<T1, T2, TResult> Run(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback);
+		}
+
+		public static EiTask<T1, T2, TResult> Run(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, T2, TResult> Run(Func<T1, T2, TResult> func, T1 value, T2 value2, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, T2, TResult>(func, value, value2, onCompleteCallback, onCompleteAnyThread);
 		}
 
 		#endregion
@@ -813,6 +996,12 @@ namespace Eitrum
 		#endregion
 
 		#region Constructors
+
+		public EiTask(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3)
+		{
+			task = func;
+			task.BeginInvoke(value, value2, value3, Callback, null);
+		}
 
 		public EiTask(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback)
 		{
@@ -909,11 +1098,26 @@ namespace Eitrum
 
 		#endregion
 
-		#region Static
+		#region Static T3 Result
 
-		public static EiTask<T1, T2, T3, TResult> Run(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask<T1, T2, T3, TResult> Run(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3)
 		{
-			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3);
+		}
+
+		public static EiTask<T1, T2, T3, TResult> Run(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback);
+		}
+
+		public static EiTask<T1, T2, T3, TResult> Run(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, T2, T3, TResult> Run(Func<T1, T2, T3, TResult> func, T1 value, T2 value2, T3 value3, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, T2, T3, TResult>(func, value, value2, value3, onCompleteCallback, onCompleteAnyThread);
 		}
 
 		#endregion
@@ -932,6 +1136,12 @@ namespace Eitrum
 		#endregion
 
 		#region Constructors
+
+		public EiTask(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4)
+		{
+			task = func;
+			task.BeginInvoke(value, value2, value3, value4, Callback, null);
+		}
 
 		public EiTask(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback)
 		{
@@ -1028,11 +1238,26 @@ namespace Eitrum
 
 		#endregion
 
-		#region Static
+		#region Static T4 Result
 
-		public static EiTask<T1, T2, T3, T4, TResult> Run(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback, Action<TResult> onCompleteUnityThreadCallback)
+		public static EiTask<T1, T2, T3, T4, TResult> Run(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4)
 		{
-			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback, onCompleteUnityThreadCallback);
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4);
+		}
+
+		public static EiTask<T1, T2, T3, T4, TResult> Run(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback)
+		{
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback);
+		}
+
+		public static EiTask<T1, T2, T3, T4, TResult> Run(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback, bool anyThread)
+		{
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback, anyThread);
+		}
+
+		public static EiTask<T1, T2, T3, T4, TResult> Run(Func<T1, T2, T3, T4, TResult> func, T1 value, T2 value2, T3 value3, T4 value4, Action<TResult> onCompleteCallback, Action<TResult> onCompleteAnyThread)
+		{
+			return new EiTask<T1, T2, T3, T4, TResult>(func, value, value2, value3, value4, onCompleteCallback, onCompleteAnyThread);
 		}
 
 		#endregion
