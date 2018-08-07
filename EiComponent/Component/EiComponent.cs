@@ -207,17 +207,22 @@ namespace Eitrum
 
 		#region Message System
 
-		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (Action<T> action)
+		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T>(Action<T> action)
 		{
-			return EiMessage.Subscribe<T> (this, action);
+			return EiMessage.Subscribe<T>(this, action);
 		}
 
-		protected void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
+		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T>(EiComponent component, Action<T> action)
+		{
+			return EiMessage.Subscribe<T>(component, action);
+		}
+
+		public static void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
 		{
 			EiMessage.Unsubscribe<T> (subscriber);
 		}
 
-		public void Publish<T> (T message) where T : EiCore
+		public static void Publish<T> (T message) where T : EiCore
 		{
 			EiMessage<T>.Publish (message);
 		}
