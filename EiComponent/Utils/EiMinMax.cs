@@ -17,47 +17,57 @@ namespace Eitrum
 
 		#region Properties
 
-		public float MinValue {
-			get {
+		public float MinValue
+		{
+			get
+			{
 				return minValue;
 			}
 		}
 
-		public float MaxValue {
-			get {
+		public float MaxValue
+		{
+			get
+			{
 				return maxValue;
 			}
 		}
 
-		public float Difference {
-			get {
+		public float Difference
+		{
+			get
+			{
 				return maxValue - minValue;
 			}
 		}
 
-		public float RandomValue {
-			get {
-				return EiRandom.Range (minValue, maxValue);
+		public float RandomValue
+		{
+			get
+			{
+				return EiRandom.Range(minValue, maxValue);
 			}
 		}
 
-		public EiMinMaxFloat Default { 
-			get { 
-				return new EiMinMaxFloat (0f, 1f); 
-			} 
+		public static EiMinMaxFloat Default
+		{
+			get
+			{
+				return new EiMinMaxFloat(0f, 1f);
+			}
 		}
 
 		#endregion
 
 		#region Constructors
 
-		public EiMinMaxFloat (float min, float max)
+		public EiMinMaxFloat(float min, float max)
 		{
 			minValue = min;
 			maxValue = max;
 		}
 
-		public EiMinMaxFloat (EiMinMaxFloat reference)
+		public EiMinMaxFloat(EiMinMaxFloat reference)
 		{
 			minValue = reference.minValue;
 			maxValue = reference.maxValue;
@@ -67,19 +77,19 @@ namespace Eitrum
 
 		#region Core
 
-		public float GetValue (float time)
+		public float GetValue(float time)
 		{
-			return Mathf.Lerp (minValue, maxValue, time);
+			return Mathf.Lerp(minValue, maxValue, time);
 		}
 
-		public float GetRandomValue ()
+		public float GetRandomValue()
 		{
 			return RandomValue;
 		}
 
-		public float GetRandomValue (EiRandom random)
+		public float GetRandomValue(EiRandom random)
 		{
-			return random._Range (minValue, maxValue);
+			return random._Range(minValue, maxValue);
 		}
 
 		#endregion

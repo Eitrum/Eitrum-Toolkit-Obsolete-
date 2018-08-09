@@ -17,6 +17,17 @@ namespace Eitrum
 
 		#region Properties
 
+		public bool set
+		{
+			set
+			{
+				if (value)
+					Increment();
+				else
+					Decrement();
+			}
+		}
+
 		public bool IsTrue
 		{
 			get
