@@ -163,7 +163,13 @@ namespace Eitrum
 		public void Trigger(T value)
 		{
 			this.value = value;
-			EiTask.Run(Nothing, UnityThreadTrigger, AnyThreadTrigger);
+			if (EiUnityThreading.IsMainThread)
+			{
+				UnityThreadTrigger();
+				EiTask.Run(AnyThreadTrigger);
+			}
+			else
+				EiTask.Run(Nothing, UnityThreadTrigger, AnyThreadTrigger);
 		}
 
 		public void Clear()

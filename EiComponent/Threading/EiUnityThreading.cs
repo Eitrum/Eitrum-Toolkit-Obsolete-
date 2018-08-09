@@ -6,22 +6,32 @@ namespace Eitrum
 {
 	public class EiUnityThreading : EiComponentSingleton<EiUnityThreading>
 	{
-		public override void SingletonCreation ()
+		public override void SingletonCreation()
 		{
-			KeepAlive ();
+			KeepAlive();
 		}
 
-		public static EiPropertyEvent<bool> CloseThreads = new EiPropertyEvent<bool> (false);
+		public static EiPropertyEvent<bool> CloseThreads = new EiPropertyEvent<bool>(false);
 
 		static Thread mainThread = Thread.CurrentThread;
 
-		public static Thread MainThread {
-			get {
+		public static Thread MainThread
+		{
+			get
+			{
 				return mainThread;
 			}
 		}
 
-		void OnDestroy ()
+		public static bool IsMainThread
+		{
+			get
+			{
+				return Thread.CurrentThread == mainThread;
+			}
+		}
+
+		void OnDestroy()
 		{
 			CloseThreads.Value = true;
 		}
