@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Eitrum
 {
-	public struct EiMultiBool
+	public struct EiBoolStack
 	{
 		#region Variables
 
@@ -44,11 +44,11 @@ namespace Eitrum
 			}
 		}
 
-		public EiMultiBool Copy
+		public EiBoolStack Copy
 		{
 			get
 			{
-				return new EiMultiBool(this);
+				return new EiBoolStack(this);
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace Eitrum
 
 		#region Constructors
 
-		public EiMultiBool(EiMultiBool multiBool)
+		public EiBoolStack(EiBoolStack multiBool)
 		{
 			boo = multiBool.boo;
 			trigger = multiBool.trigger;
@@ -145,18 +145,18 @@ namespace Eitrum
 
 		#region Operators
 
-		public static implicit operator bool(EiMultiBool multiBool)
+		public static implicit operator bool(EiBoolStack multiBool)
 		{
 			return multiBool.boo > 0;
 		}
 
-		public static EiMultiBool operator ++(EiMultiBool multiBool)
+		public static EiBoolStack operator ++(EiBoolStack multiBool)
 		{
 			multiBool.Increment();
 			return multiBool;
 		}
 
-		public static EiMultiBool operator --(EiMultiBool multiBool)
+		public static EiBoolStack operator --(EiBoolStack multiBool)
 		{
 			multiBool.Decrement();
 			return multiBool;
