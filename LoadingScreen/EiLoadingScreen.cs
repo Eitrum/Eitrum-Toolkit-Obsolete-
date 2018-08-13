@@ -18,7 +18,7 @@ namespace Eitrum.Loading
 		#endregion
 
 		#region Variables
-		
+
 		public bool autoActivateScene = false;
 		private AsyncOperation async = null;
 		private string currentLoadingSceneName = "";
@@ -45,7 +45,7 @@ namespace Eitrum.Loading
 				if (async == null)
 					return 0f;
 
-				if (IsAllowSceneActivation)
+				if (!IsAllowSceneActivation)
 				{
 					return async.progress / 0.9f;
 				}
@@ -100,7 +100,16 @@ namespace Eitrum.Loading
 				return;
 			}
 
+			StartCoroutine(LoadLevelAsync(sceneName, unloadAllScenes));
+		}
+
+		private IEnumerator LoadLevelAsync(string sceneName, bool unloadAllScenes)
+		{
+			currentLoadingSceneName = sceneName;
+			onStartLoading.Trigger(currentLoadingSceneName);
 			this.gameObject.SetActive(true);
+
+			yield return null;
 
 			if (unloadAllScenes)
 				async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
@@ -109,9 +118,9 @@ namespace Eitrum.Loading
 
 			async.allowSceneActivation = autoActivateScene;
 			async.completed += OnComplete;
-			currentLoadingSceneName = sceneName;
 
-			onStartLoading.Trigger(currentLoadingSceneName);
+			while (!async.isDone)
+				yield return null;
 		}
 
 		public void ActivateScene()
@@ -157,6 +166,40 @@ namespace Eitrum.Loading
 				if (scene.name != sceneName)
 					SceneManager.UnloadSceneAsync(scene);
 			}
+		}
+
+		#endregion
+
+		#region Subscribe
+
+		public void SubscribeOnStartLoading(Action<string> method)
+		{
+			onStartLoading.Subscribe(method);
+		}
+
+		public void SubscribeOnStartLoading(Action<string> method, bool anyThread)
+		{
+			onStartLoading.Subscribe(method, anyThread);
+		}
+
+		public void UnsubscribeOnStartLoading(Action<string> method)
+		{
+			onStartLoading.Unsubscribe(method);
+		}
+
+		public void SubscribeOnDoneLoading(Action<string> method)
+		{
+			onDoneLoading.Subscribe(method);
+		}
+
+		public void SubscribeOnDoneLoading(Action<string> method, bool anyThread)
+		{
+			onDoneLoading.Subscribe(method, anyThread);
+		}
+
+		public void UnsubscribeOnDoneLoading(Action<string> method)
+		{
+			onDoneLoading.Unsubscribe(method);
 		}
 
 		#endregion

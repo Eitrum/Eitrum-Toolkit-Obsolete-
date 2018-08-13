@@ -37,6 +37,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4197718525449752}
+  - component: {fileID: 114297815154696768}
   m_Layer: 5
   m_Name: GravityGun
   m_TagString: Untagged
@@ -284,6 +285,7 @@ GameObject:
   - component: {fileID: 222003023311972480}
   - component: {fileID: 114450593856323718}
   - component: {fileID: 114925075465561934}
+  - component: {fileID: 114294555188488104}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -302,6 +304,7 @@ GameObject:
   - component: {fileID: 222169013475504206}
   - component: {fileID: 114264416580088468}
   - component: {fileID: 114773073432476326}
+  - component: {fileID: 114472749733451350}
   m_Layer: 5
   m_Name: LoadingBar
   m_TagString: Untagged
@@ -530,7 +533,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1065593182887172}
-  m_LocalRotation: {x: 0.07128063, y: 0.830552, z: 0.10934429, w: -0.5414299}
+  m_LocalRotation: {x: 0.07393088, y: 0.8170757, z: 0.107570104, w: -0.5615606}
   m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_Children:
@@ -541,7 +544,7 @@ Transform:
   - {fileID: 4220783629145110}
   m_Father: {fileID: 4919171625247148}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -15, y: 246.2, z: 0}
+  m_LocalEulerAnglesHint: {x: -15, y: 249, z: 0}
 --- !u!4 &4220783629145110
 Transform:
   m_ObjectHideFlags: 1
@@ -1501,13 +1504,42 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114294555188488104
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1423342565930838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f6eacf30159584a93eead852dafe71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entity: {fileID: 0}
+  networkView: {fileID: 0}
+  loadingScreen: {fileID: 114193484074895918}
+--- !u!114 &114297815154696768
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1065593182887172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c454b5b0e2bfe2479a91adcd1c2a700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entity: {fileID: 0}
+  networkView: {fileID: 0}
+  rotation: {x: 0, y: -30, z: 0}
+  rotationSpace: 1
 --- !u!114 &114403359199779114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1568,6 +1600,21 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114472749733451350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1505743577432456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4634e1c0b9397094dbe3b94cb50beed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entity: {fileID: 0}
+  networkView: {fileID: 0}
+  image: {fileID: 114749304858086134}
+  loadingScreen: {fileID: 114193484074895918}
 --- !u!114 &114551679815136540
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1634,12 +1681,12 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 73f189be8f0273b449bd83cfc4974e19, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillMethod: 0
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
 --- !u!114 &114773073432476326

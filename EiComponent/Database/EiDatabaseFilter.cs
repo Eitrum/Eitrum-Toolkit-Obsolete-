@@ -42,6 +42,7 @@ namespace Eitrum
 			if (pathFilter != null && !path.Contains(pathFilter))
 				return false;
 
+#if UNITY_EDITOR
 			if (typeFilter == typeof(UnityEngine.SceneManagement.Scene))
 			{
 				var assetPath = AssetDatabase.GetAssetPath(item.Object);
@@ -51,6 +52,7 @@ namespace Eitrum
 				}
 				return false;
 			}
+#endif
 
 			if (typeFilter == null)
 				return true;
