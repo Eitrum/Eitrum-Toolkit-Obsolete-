@@ -22,8 +22,10 @@ namespace Eitrum
 		[SerializeField]
 		private EiPrefabDatabase database = null;
 
+#if EITRUM_POOLING
 		[SerializeField]
 		private EiPoolData poolData = new EiPoolData();
+#endif
 
 		#endregion
 
@@ -75,6 +77,7 @@ namespace Eitrum
 
 		public GameObject Instantiate()
 		{
+#if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
 				var poolObj = poolData.Get();
@@ -89,11 +92,13 @@ namespace Eitrum
 					ent.AssignPoolTarget(poolData);
 				return entGo;
 			}
+#endif
 			return MonoBehaviour.Instantiate(GameObject);
 		}
 
 		public GameObject Instantiate(Transform parent)
 		{
+#if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
 				var poolObj = poolData.Get();
@@ -107,11 +112,13 @@ namespace Eitrum
 				if (ent) ent.AssignPoolTarget(poolData);
 				return entGo;
 			}
+#endif
 			return MonoBehaviour.Instantiate(GameObject, parent);
 		}
 
 		public GameObject Instantiate(Vector3 position)
 		{
+#if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
 				var poolObj = poolData.Get();
@@ -125,11 +132,13 @@ namespace Eitrum
 				if (ent) ent.AssignPoolTarget(poolData);
 				return entGo;
 			}
+#endif
 			return MonoBehaviour.Instantiate(GameObject, position, Quaternion.identity);
 		}
 
 		public GameObject Instantiate(Vector3 position, Quaternion rotation)
 		{
+#if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
 				var poolObj = poolData.Get();
@@ -143,11 +152,13 @@ namespace Eitrum
 				if (ent) ent.AssignPoolTarget(poolData);
 				return entGo;
 			}
+#endif
 			return MonoBehaviour.Instantiate(GameObject, position, rotation);
 		}
 
 		public GameObject Instantiate(Vector3 position, Quaternion rotation, Transform parent)
 		{
+#if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
 				var poolObj = poolData.Get();
@@ -161,12 +172,14 @@ namespace Eitrum
 				if (ent) ent.AssignPoolTarget(poolData);
 				return entGo;
 			}
+#endif
 
 			return MonoBehaviour.Instantiate(GameObject, position, rotation, parent);
 		}
 
 		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale)
 		{
+#if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
 				var poolObj = poolData.Get();
@@ -183,6 +196,7 @@ namespace Eitrum
 				if (ent) ent.AssignPoolTarget(poolData);
 				return entGo;
 			}
+#endif
 
 			var go = MonoBehaviour.Instantiate(GameObject, position, rotation);
 			var goScale = go.transform.localScale;
@@ -193,6 +207,7 @@ namespace Eitrum
 
 		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
 		{
+#if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
 				var poolObj = poolData.Get();
@@ -209,7 +224,7 @@ namespace Eitrum
 				if (ent) ent.AssignPoolTarget(poolData);
 				return entGo;
 			}
-
+#endif
 			var go = MonoBehaviour.Instantiate(GameObject, position, rotation, parent);
 			var goScale = go.transform.localScale;
 			goScale.Scale(scale);
