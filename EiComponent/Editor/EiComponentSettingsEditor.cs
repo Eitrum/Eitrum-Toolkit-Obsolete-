@@ -72,7 +72,7 @@ namespace Eitrum
 				PlayerSettings.allowUnsafeCode = true;
 
 				AssetDatabase.ImportAsset(reImportPath, ImportAssetOptions.ForceUpdate);
-				if (EditorUtility.DisplayDialog("Settings Updated", "You might need to restart scripting editor for it to take effect", "Ok"))
+				if (EditorUtility.DisplayDialog("Settings Updated", "You might need to restart scripting editor for it to take effect.\n\nSerialized objects and data might change as code gets removed.", "Ok"))
 					Close();
 			}
 		}

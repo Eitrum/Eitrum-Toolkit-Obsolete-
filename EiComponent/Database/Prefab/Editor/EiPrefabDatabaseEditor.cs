@@ -193,18 +193,19 @@ namespace Eitrum.Database
 			}
 			EditorGUILayout.EndHorizontal();
 
-
+#if EITRUM_POOLING
 			var poolData = GetItemPoolData(item);
 			EditorGUILayout.BeginHorizontal();
 			ApplyPoolSize(poolData, Math.Max(0, EditorGUILayout.IntField("Pool Size", poolData.PoolSize)));
 			EditorGUILayout.EndHorizontal();
+#endif
 			GUILayout.Space(8f);
 			EditorUtility.SetDirty(item);
 		}
 
-		#endregion
+#endregion
 
-		#region SubCategory Helper
+#region SubCategory Helper
 
 		void EnterSubCategory()
 		{
@@ -219,9 +220,9 @@ namespace Eitrum.Database
 			EditorGUILayout.EndHorizontal();
 		}
 
-		#endregion
+#endregion
 
-		#region Helpers
+#region Helpers
 
 		public static void ClearDatabase(EiPrefabDatabase db)
 		{
@@ -243,7 +244,7 @@ namespace Eitrum.Database
 			subCategory.DestroyFile();
 		}
 
-		#region Item Config
+#region Item Config
 
 		public static void ApplyItemName(EiPrefab item, string name)
 		{
@@ -264,7 +265,7 @@ namespace Eitrum.Database
 		{
 			typeof(EiPrefab).GetField("database", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(item, db);
 		}
-
+		
 		public static EiPoolData GetItemPoolData(EiPrefab item)
 		{
 			return typeof(EiPrefab).GetField("poolData", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(item) as EiPoolData;
@@ -275,7 +276,7 @@ namespace Eitrum.Database
 			typeof(EiPoolData).GetField("poolSize", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(poolData, value);
 		}
 
-		#endregion
+#endregion
 
 		public static List<EiPrefab> GetCachedItemList(EiPrefabDatabase db)
 		{
@@ -297,6 +298,6 @@ namespace Eitrum.Database
 			typeof(EiPrefabSubCategory).GetField("categoryName", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(subCategory, value);
 		}
 
-		#endregion
+#endregion
 	}
 }
