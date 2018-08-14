@@ -27,7 +27,7 @@ namespace Eitrum
 		private static int uniqueIdGenerator = 1;
 
 #if !EITRUM_PERFORMANCE_MODE
-		private Dictionary<int, Transform> parentContainers = new Dictionary<int, Transform>();
+		private static Dictionary<int, Transform> parentContainers = new Dictionary<int, Transform>();
 #endif
 
 		[Header("Components")]
@@ -250,6 +250,7 @@ namespace Eitrum
 					Debug.LogWarning("Input Component Will not be created, make sure you do not need it or add it manually");
 			}
 		}
+
 		protected override void AttachComponents()
 		{
 			base.AttachComponents();
