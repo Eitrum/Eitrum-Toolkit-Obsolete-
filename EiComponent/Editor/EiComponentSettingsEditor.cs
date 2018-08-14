@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using UnityEngine;
 using UnityEditor;
@@ -10,6 +8,9 @@ namespace Eitrum
 {
 	public class EiComponentSettingsEditor : EditorWindow
 	{
+
+		#region Variables
+
 		const string mcs = "Assets/mcs.rsp";
 		const string csc = "Assets/csc.rsp";
 		const string reImportPath = "Assets/Eitrum/EiComponent/Core/EiCore.cs";
@@ -17,6 +18,7 @@ namespace Eitrum
 		const string definePrefix = "-define:";
 
 		string[] defines = new string[]{
+			"EITRUM_PERFORMANCE_MODE",
 			"EITRUM_POOLING",
 			"EITRUM_NETWORKING"
 		};
@@ -26,6 +28,10 @@ namespace Eitrum
 
 		public bool useBuiltInPooling = true;
 
+		#endregion
+
+		#region Menu Item
+
 		[MenuItem("Eitrum/Settings")]
 		public static void OpenSettings()
 		{
@@ -33,6 +39,10 @@ namespace Eitrum
 			win.titleContent = new GUIContent("Eitrum Settings");
 			win.Show();
 		}
+
+		#endregion
+
+		#region Helper
 
 		void LoadFromFile()
 		{
@@ -48,6 +58,10 @@ namespace Eitrum
 					enabledDefines[i] = true;
 			}
 		}
+
+		#endregion
+
+		#region Core
 
 		private void OnGUI()
 		{
@@ -76,5 +90,7 @@ namespace Eitrum
 					Close();
 			}
 		}
+
+		#endregion
 	}
 }

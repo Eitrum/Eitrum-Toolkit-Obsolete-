@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Eitrum
 {
@@ -10,5 +7,15 @@ namespace Eitrum
 		void OnPoolInstantiate();
 
 		void OnPoolDestroy();
+	}
+
+	[Serializable]
+	public class EiPoolableComponent : EiSerializeInterface<EiPoolableInterface>
+	{
+		public EiPoolableComponent(EiPoolableInterface interf)
+		{
+			base.component = interf.Component;
+			base.targetInterface = interf;
+		}
 	}
 }

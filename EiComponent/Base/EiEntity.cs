@@ -12,45 +12,49 @@ namespace Eitrum
 
 		[Header("Entity Settings")]
 		[SerializeField]
-		protected string entityName = "default-entity";
-
-		[SerializeField]
-		[Tooltip("Will Generate a bit of overhead but makes it possible to search for any entity")]
-		protected bool subscribeToEntityList = false;
+		private string entityName = "default-entity";
 
 		[SerializeField]
 		[Readonly]
-		protected int entityTypeId = 0;
+		[Tooltip("Only assigned when first called")]
+		private int entityTypeId = 0;
 
 		[SerializeField]
 		[Readonly]
-		protected int entityId = 0;
+		[Tooltip("Only assigned when first called")]
+		private int entityId = 0;
 
 		private static int uniqueIdGenerator = 1;
 
+#if !EITRUM_PERFORMANCE_MODE
+		private Dictionary<int, Transform> parentContainers = new Dictionary<int, Transform>();
+#endif
+
 		[Header("Components")]
 		[SerializeField]
-		protected Rigidbody rigidbodyComponent;
+		private Rigidbody rigidbodyComponent;
 
 		[SerializeField]
-		protected Collider colliderComponent;
+		private Collider colliderComponent;
 
 		[SerializeField]
-		protected AudioSource audioComponent;
+		private AudioSource audioComponent;
 
 		[SerializeField]
-		protected EiInput input;
+		private EiInput input;
 
+#if EITRUM_POOLING
 		[Header("Pool Settings")]
 		[SerializeField]
-		private EiPoolableInterface[] poolableInterfaces;
+		private EiPoolableComponent[] poolableInterfaces;
 		private EiPoolData poolTarget;
+#endif
 
 		#endregion
 
 		#region Properties
 
-		public virtual string EntityName
+		public string EntityName
 		{
 			get
 			{
@@ -62,7 +66,7 @@ namespace Eitrum
 			}
 		}
 
-		public virtual int EntityTypeId
+		public int EntityTypeId
 		{
 			get
 			{
@@ -74,7 +78,7 @@ namespace Eitrum
 			}
 		}
 
-		public virtual int EntityId
+		public int EntityId
 		{
 			get
 			{
@@ -94,7 +98,7 @@ namespace Eitrum
 			}
 		}
 
-		public virtual Rigidbody Body
+		public Rigidbody Body
 		{
 			get
 			{
@@ -106,7 +110,7 @@ namespace Eitrum
 			}
 		}
 
-		public virtual Collider Collider
+		public Collider Collider
 		{
 			get
 			{
@@ -118,7 +122,7 @@ namespace Eitrum
 			}
 		}
 
-		public virtual AudioSource Audio
+		public AudioSource Audio
 		{
 			get
 			{
@@ -137,8 +141,8 @@ namespace Eitrum
 				return input;
 			}
 		}
-
-		public EiPoolableInterface[] PoolableInterfaces
+#if EITRUM_POOLING
+		public EiPoolableComponent[] PoolableInterfaces
 		{
 			get
 			{
@@ -153,21 +157,38 @@ namespace Eitrum
 				return poolTarget;
 			}
 		}
+#endif
 
 		#endregion
 
 		#region Core
 
-		void Awake()
+#if !EITRUM_PERFORMANCE_MODE
+		private void Awake()
 		{
-
+			AssignToParent();
 		}
+
+		private void AssignToParent()
+		{
+			if (this.transform.parent == null)
+			{
+				Transform parent = null;
+				if (parentContainers.ContainsKey(EntityTypeId))
+					parent = parentContainers[EntityTypeId];
+				else
+					parentContainers.Add(EntityTypeId, parent = new GameObject(entityName).transform);
+
+				this.transform.SetParent(parent);
+			}
+		}
+#endif
 
 		public void FreezePhysics()
 		{
 			if (rigidbodyComponent)
 			{
-				rigidbodyComponent.velocity = Vector3.zero;
+				rigidbodyComponent.Sleep();
 				rigidbodyComponent.isKinematic = true;
 			}
 		}
@@ -180,11 +201,36 @@ namespace Eitrum
 			}
 		}
 
+		public void SetParent(EiEntity entity)
+		{
+			this.transform.SetParent(entity.transform);
+		}
+
+#if EITRUM_POOLING
 		public void AssignPoolTarget(EiPoolData item)
 		{
 			poolTarget = item;
 		}
-		
+#endif
+		#endregion
+
+		#region SetRemove Parent
+
+		public void SetParent(EiComponent component)
+		{
+			this.transform.SetParent(component.transform);
+		}
+
+		public void SetParent(Transform transform)
+		{
+			this.transform.SetParent(transform);
+		}
+
+		public void ReleaseParent()
+		{
+			this.transform.SetParent(null);
+		}
+
 		#endregion
 
 #if UNITY_EDITOR
@@ -211,7 +257,14 @@ namespace Eitrum
 			colliderComponent = GetComponentInChildren<Collider>();
 			audioComponent = GetComponentInChildren<AudioSource>();
 			input = GetComponentInChildren<EiInput>();
-			poolableInterfaces = GetComponentsInChildren<EiPoolableInterface>();
+#if EITRUM_POOLING
+			var interfaces = GetComponentsInChildren<EiPoolableInterface>();
+			poolableInterfaces = new EiPoolableComponent[interfaces.Length];
+			for (int i = 0; i < interfaces.Length; i++)
+			{
+				poolableInterfaces[i] = new EiPoolableComponent(interfaces[i]);
+			}
+#endif
 		}
 
 #endif

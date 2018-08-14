@@ -77,7 +77,7 @@ namespace Eitrum
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
-				interfaces[i].OnPoolInstantiate();
+				interfaces[i].Get.OnPoolInstantiate();
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace Eitrum
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
-				interfaces[i].OnPoolInstantiate();
+				interfaces[i].Get.OnPoolInstantiate();
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace Eitrum
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
-				interfaces[i].OnPoolInstantiate();
+				interfaces[i].Get.OnPoolInstantiate();
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace Eitrum
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
-				interfaces[i].OnPoolDestroy();
+				interfaces[i].Get.OnPoolDestroy();
 			}
 		}
 

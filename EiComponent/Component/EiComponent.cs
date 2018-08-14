@@ -11,10 +11,12 @@ namespace Eitrum
 		[SerializeField]
 		[HideInInspector]
 		private EiEntity entity;
+#if EITRUM_NETWORKING
 		[SerializeField]
 		[HideInInspector]
-		#pragma warning disable
+#pragma warning disable
 		private EiNetworkView networkView;
+#endif
 
 		// Should Not ever be touched by anything!!! Used by core engine for performance
 		public EiLLNode<EiUpdateInterface> preUpdateNode;
@@ -27,42 +29,60 @@ namespace Eitrum
 
 		#region Properties
 
-		public virtual EiEntity Entity {
-			get {
+		public EiEntity Entity
+		{
+			get
+			{
 				if (!entity)
-					entity = GetComponent<EiEntity> ();
+					entity = GetComponent<EiEntity>();
 				return entity;
 			}
 		}
 
-		public virtual bool IsNetworked {
-			get {
+		public bool IsNetworked
+		{
+			get
+			{
+#if EITRUM_NETWORKING
 				return networkView != null;
+#else
+				return false;
+#endif
 			}
 		}
 
-		public virtual EiNetworkView NetworkView {
-			get {
+#if EITRUM_NETWORKING
+		public EiNetworkView NetworkView
+		{
+			get
+			{
 				if (!networkView)
-					networkView = GetComponent<EiNetworkView> ();
+					networkView = GetComponent<EiNetworkView>();
 				return networkView;
 			}
 		}
+#endif
 
-		public EiComponent Component {
-			get {
+		public EiComponent Component
+		{
+			get
+			{
 				return this;
 			}
 		}
 
-		public EiCore Core {
-			get {
+		public EiCore Core
+		{
+			get
+			{
 				return null;
 			}
 		}
 
-		public bool IsNull {
-			get {
+		public bool IsNull
+		{
+			get
+			{
 				return this == null;
 			}
 		}
@@ -71,27 +91,27 @@ namespace Eitrum
 
 		#region Virtual Update Calls
 
-		public virtual void PreUpdateComponent (float time)
+		public virtual void PreUpdateComponent(float time)
 		{
 
 		}
 
-		public virtual void UpdateComponent (float time)
+		public virtual void UpdateComponent(float time)
 		{
 
 		}
 
-		public virtual void LateUpdateComponent (float time)
+		public virtual void LateUpdateComponent(float time)
 		{
 
 		}
 
-		public virtual void FixedUpdateComponent (float time)
+		public virtual void FixedUpdateComponent(float time)
 		{
 
 		}
 
-		public virtual void ThreadedUpdateComponent (float time)
+		public virtual void ThreadedUpdateComponent(float time)
 		{
 
 		}
@@ -108,30 +128,30 @@ namespace Eitrum
 		/// <returns>The update timer.</returns>
 		/// <param name="time">Time.</param>
 		/// <param name="method">Method.</param>
-		protected EiLLNode<EiUpdateSystem.TimerUpdateData> SubscribeUpdateTimer (float time, Action method)
+		protected EiLLNode<EiUpdateSystem.TimerUpdateData> SubscribeUpdateTimer(float time, Action method)
 		{
-			return EiUpdateSystem.Instance.SubscribeUpdateTimer (this, time, method);
+			return EiUpdateSystem.Instance.SubscribeUpdateTimer(this, time, method);
 		}
 
-		protected void UnsubscribeUpdateTimer (EiLLNode<EiUpdateSystem.TimerUpdateData> node)
+		protected void UnsubscribeUpdateTimer(EiLLNode<EiUpdateSystem.TimerUpdateData> node)
 		{
-			EiUpdateSystem.Instance.UnsubscribeTimerUpdate (node);
+			EiUpdateSystem.Instance.UnsubscribeTimerUpdate(node);
 		}
 
 		#endregion
 
 		#region Pre Update
 
-		protected void SubscribePreUpdate ()
+		protected void SubscribePreUpdate()
 		{
 			if (preUpdateNode == null)
-				preUpdateNode = EiUpdateSystem.Instance.SubscribePreUpdate (this);
+				preUpdateNode = EiUpdateSystem.Instance.SubscribePreUpdate(this);
 		}
 
-		protected void UnsubscribePreUpdate ()
+		protected void UnsubscribePreUpdate()
 		{
 			if (preUpdateNode != null)
-				EiUpdateSystem.Instance.UnsubscribePreUpdate (preUpdateNode);
+				EiUpdateSystem.Instance.UnsubscribePreUpdate(preUpdateNode);
 			preUpdateNode = null;
 		}
 
@@ -139,16 +159,16 @@ namespace Eitrum
 
 		#region Update
 
-		protected void SubscribeUpdate ()
+		protected void SubscribeUpdate()
 		{
 			if (updateNode == null)
-				updateNode = EiUpdateSystem.Instance.SubscribeUpdate (this);
+				updateNode = EiUpdateSystem.Instance.SubscribeUpdate(this);
 		}
 
-		protected void UnsubscribeUpdate ()
+		protected void UnsubscribeUpdate()
 		{
 			if (updateNode != null)
-				EiUpdateSystem.Instance.UnsubscribeUpdate (updateNode);
+				EiUpdateSystem.Instance.UnsubscribeUpdate(updateNode);
 			updateNode = null;
 		}
 
@@ -156,16 +176,16 @@ namespace Eitrum
 
 		#region Threaded Update
 
-		protected void SubscribeThreadedUpdate ()
+		protected void SubscribeThreadedUpdate()
 		{
 			if (threadedUpdateNode == null)
-				threadedUpdateNode = EiThreadedUpdateSystem.Instance.Subscribe (this);
+				threadedUpdateNode = EiThreadedUpdateSystem.Instance.Subscribe(this);
 		}
 
-		protected void UnsubscribeThreadedUpdate ()
+		protected void UnsubscribeThreadedUpdate()
 		{
 			if (threadedUpdateNode != null)
-				EiThreadedUpdateSystem.Instance.Unsubscribe (threadedUpdateNode);
+				EiThreadedUpdateSystem.Instance.Unsubscribe(threadedUpdateNode);
 			threadedUpdateNode = null;
 		}
 
@@ -173,16 +193,16 @@ namespace Eitrum
 
 		#region Late Update
 
-		protected void SubscribeLateUpdate ()
+		protected void SubscribeLateUpdate()
 		{
 			if (lateUpdateNode == null)
-				lateUpdateNode = EiUpdateSystem.Instance.SubscribeLateUpdate (this);
+				lateUpdateNode = EiUpdateSystem.Instance.SubscribeLateUpdate(this);
 		}
 
-		protected void UnsubscribeLateUpdate ()
+		protected void UnsubscribeLateUpdate()
 		{
 			if (lateUpdateNode != null)
-				EiUpdateSystem.Instance.UnsubscribeLateUpdate (lateUpdateNode);
+				EiUpdateSystem.Instance.UnsubscribeLateUpdate(lateUpdateNode);
 			lateUpdateNode = null;
 		}
 
@@ -190,16 +210,16 @@ namespace Eitrum
 
 		#region Fixed Update
 
-		protected void SubscribeFixedUpdate ()
+		protected void SubscribeFixedUpdate()
 		{
 			if (fixedUpdateNode == null)
-				fixedUpdateNode = EiUpdateSystem.Instance.SubscribeFixedUpdate (this);
+				fixedUpdateNode = EiUpdateSystem.Instance.SubscribeFixedUpdate(this);
 		}
 
-		protected void UnsubscribeFixedUpdate ()
+		protected void UnsubscribeFixedUpdate()
 		{
 			if (fixedUpdateNode != null)
-				EiUpdateSystem.Instance.UnsubscribeFixedUpdate (fixedUpdateNode);
+				EiUpdateSystem.Instance.UnsubscribeFixedUpdate(fixedUpdateNode);
 			fixedUpdateNode = null;
 		}
 
@@ -217,42 +237,42 @@ namespace Eitrum
 			return EiMessage.Subscribe<T>(component, action);
 		}
 
-		public static void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
+		public static void Unsubscribe<T>(EiLLNode<EiMessageSubscriber<T>> subscriber)
 		{
-			EiMessage.Unsubscribe<T> (subscriber);
+			EiMessage.Unsubscribe<T>(subscriber);
 		}
 
-		public static void Publish<T> (T message) where T : EiCore
+		public static void Publish<T>(T message) where T : EiCore
 		{
-			EiMessage<T>.Publish (message);
+			EiMessage<T>.Publish(message);
 		}
 
 		#endregion
 
 		#endregion
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		[ContextMenu ("Attach All Components On Entity")]
-		public void AttachAllComponentsOnEntity ()
+		[ContextMenu("Attach All Components On Entity")]
+		public void AttachAllComponentsOnEntity()
 		{
-			var objs = GetComponentsInChildren<EiComponent> (true);
+			var objs = GetComponentsInChildren<EiComponent>(true);
 			foreach (var obj in objs)
-				obj.AttachComponents ();
+				obj.AttachComponents();
 		}
 
-		[ContextMenu ("Attach Components")]
-		private void AttachComponentContextMenu ()
+		[ContextMenu("Attach Components")]
+		private void AttachComponentContextMenu()
 		{
-			AttachComponents ();
+			AttachComponents();
 		}
 
-		protected virtual void AttachComponents ()
+		protected virtual void AttachComponents()
 		{
-			entity = GetComponentInParent<EiEntity> ();
-			networkView = GetComponent<EiNetworkView> ();
+			entity = GetComponentInParent<EiEntity>();
+			networkView = GetComponent<EiNetworkView>();
 		}
 
-		#endif
+#endif
 	}
 }
