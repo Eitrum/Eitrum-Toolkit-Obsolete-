@@ -53,7 +53,18 @@ namespace Eitrum.Health
 					ids.Add (i);
 				}
 
-				property.intValue = ids [EditorGUI.Popup (position, property.displayName, index, items.ToArray ())];
+				Rect popupPosition = new Rect(position);
+				popupPosition.width -= 20f;
+				property.intValue = ids[EditorGUI.Popup(popupPosition, property.displayName, index, items.ToArray())];
+
+				Rect databaseReferencePosition = new Rect(position);
+				databaseReferencePosition.x += position.width - 20f;
+				databaseReferencePosition.width = 20f;
+				if (GUI.Button(databaseReferencePosition, "~"))
+				{
+					Selection.activeObject = go;
+				}
+
 			} else {
 				EditorGUI.PropertyField (position, property, label);
 			}

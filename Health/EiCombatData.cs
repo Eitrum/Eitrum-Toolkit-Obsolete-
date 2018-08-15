@@ -20,7 +20,7 @@ namespace Eitrum.Health
 		private float maxHealthPercentage;
 
 		[SerializeField]
-		private string comment;
+		private string extra;
 		private EiEntity source;
 		private EiHealth target;
 
@@ -95,12 +95,12 @@ namespace Eitrum.Health
 			}
 		}
 
-		public string Comment {
+		public string Extra {
 			get {
-				return comment;
+				return extra;
 			}
 			set {
-				comment = value;
+				extra = value;
 			}
 		}
 
@@ -133,7 +133,7 @@ namespace Eitrum.Health
 			this.flatAmount = flatAmount;
 			this.currentHealthPercentage = 0f;
 			this.maxHealthPercentage = 0f;
-			this.comment = "";
+			this.extra = "";
 			this.source = null;
 			this.target = null;
 		}
@@ -144,7 +144,7 @@ namespace Eitrum.Health
 			this.flatAmount = flatAmount;
 			this.currentHealthPercentage = 0f;
 			this.maxHealthPercentage = 0f;
-			this.comment = "";
+			this.extra = "";
 			this.source = null;
 			this.target = null;
 		}
@@ -155,7 +155,7 @@ namespace Eitrum.Health
 			this.flatAmount = flatAmount;
 			this.currentHealthPercentage = 0f;
 			this.maxHealthPercentage = 0f;
-			this.comment = "";
+			this.extra = "";
 			this.source = source;
 			this.target = null;
 		}
@@ -166,7 +166,7 @@ namespace Eitrum.Health
 			this.flatAmount = flatAmount;
 			this.currentHealthPercentage = currentHealthPercentage;
 			this.maxHealthPercentage = maxHealthPercentage;
-			this.comment = "";
+			this.extra = "";
 			this.source = null;
 			this.target = null;
 		}
@@ -177,18 +177,18 @@ namespace Eitrum.Health
 			this.flatAmount = flatAmount;
 			this.currentHealthPercentage = currentHealthPercentage;
 			this.maxHealthPercentage = maxHealthPercentage;
-			this.comment = "";
+			this.extra = "";
 			this.source = source;
 			this.target = null;
 		}
 
-		public EiCombatData (int damageType, float flatAmount, float currentHealthPercentage, float maxHealthPercentage, string comment, EiEntity source, EiHealth target)
+		public EiCombatData (int damageType, float flatAmount, float currentHealthPercentage, float maxHealthPercentage, string extra, EiEntity source, EiHealth target)
 		{
 			this.damageType = damageType;
 			this.flatAmount = flatAmount;
 			this.currentHealthPercentage = currentHealthPercentage;
 			this.maxHealthPercentage = maxHealthPercentage;
-			this.comment = comment;
+			this.extra = extra;
 			this.source = source;
 			this.target = target;
 		}
@@ -199,7 +199,7 @@ namespace Eitrum.Health
 			this.flatAmount = data.flatAmount;
 			this.currentHealthPercentage = data.currentHealthPercentage;
 			this.maxHealthPercentage = data.maxHealthPercentage;
-			this.comment = data.comment;
+			this.extra = data.extra;
 			this.source = data.source;
 			this.target = data.target;
 		}
@@ -230,7 +230,7 @@ namespace Eitrum.Health
 
 		public void SetComment (string text)
 		{
-			this.comment = text;
+			this.extra = text;
 		}
 
 		public void Clear ()
@@ -239,7 +239,7 @@ namespace Eitrum.Health
 			this.flatAmount = 0f;
 			currentHealthPercentage = 0f;
 			maxHealthPercentage = 0f;
-			comment = "";
+			extra = "";
 			source = null;
 		}
 

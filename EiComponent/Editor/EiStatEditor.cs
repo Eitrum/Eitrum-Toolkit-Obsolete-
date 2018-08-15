@@ -52,7 +52,12 @@ namespace Eitrum
 				floatValues [2] = EditorGUI.FloatField (tempPosition, "Stat MultiplierX", floatValues [2]);
 
 			}
-			folded = EditorGUI.Foldout (position, folded, "", true);
+			var changed = EditorGUI.Foldout (position, folded, "", true);
+			if (changed != folded)
+			{
+				folded = changed;
+				EditorUtility.SetDirty(property.serializedObject.targetObject);
+			}
 
 			baseStat.floatValue = floatValues [0];
 			statMultiplier.floatValue = floatValues [1];
