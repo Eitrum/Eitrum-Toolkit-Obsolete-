@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Eitrum.Health
 {
-	[AddComponentMenu("Eitrum/Health/Base")]
+	[AddComponentMenu("Eitrum/Health/Health")]
 	public class EiHealth : EiComponent, EiDamageInterface, EiHealingInterface
 	{
 		#region Variables
@@ -19,8 +19,12 @@ namespace Eitrum.Health
 		private EiTrigger onDeath = new EiTrigger();
 		private EiTrigger<EiEntity> onDeathEntity = new EiTrigger<EiEntity>();
 
+#if EITRUM_ADVANCED_HEALTH
+
 		private EiPriorityList<Action<EiCombatData>> subscribedDamagePipeline = new EiPriorityList<Action<EiCombatData>>();
 		private EiPriorityList<Action<EiCombatData>> subscribedHealingPipeline = new EiPriorityList<Action<EiCombatData>>();
+
+#endif
 
 		private bool isDead = false;
 
@@ -71,6 +75,13 @@ namespace Eitrum.Health
 		#endregion
 
 		#region Core
+
+#if EITRUM_ADVANCED_HEALTH
+		void Awake(){
+			SubscribeDamagePipeline(0, ApplyDamage);
+			SubscribeHealingPipeline(0, ApplyHeal);
+		}
+#endif
 
 		public void ResetHealth()
 		{
@@ -182,31 +193,35 @@ namespace Eitrum.Health
 		private void DamagePipeline(EiCombatData combatData)
 		{
 			if (!combatData.IsCopy)
-			{
 				combatData = combatData.Copy;
-			}
 			combatData.ApplyTarget(this);
+#if EITRUM_ADVANCED_HEALTH
 			for (int i = subscribedDamagePipeline.Count - 1; i >= 0; i--)
 			{
 				if (!combatData.HasTarget)
 					break;
 				subscribedDamagePipeline[i].Target(combatData);
 			}
+#else
+			ApplyDamage(combatData);
+#endif
 		}
 
 		private void HealPipeline(EiCombatData combatData)
 		{
 			if (!combatData.IsCopy)
-			{
 				combatData = combatData.Copy;
-			}
 			combatData.ApplyTarget(this);
+#if EITRUM_ADVANCED_HEALTH
 			for (int i = subscribedHealingPipeline.Count - 1; i >= 0; i--)
 			{
 				if (!combatData.HasTarget)
 					break;
 				subscribedHealingPipeline[i].Target(combatData);
 			}
+#else
+			ApplyHeal(combatData);
+#endif
 		}
 
 		#endregion
@@ -227,6 +242,7 @@ namespace Eitrum.Health
 
 		#region Subscribe Pipelines
 
+#if EITRUM_ADVANCED_HEALTH
 		public void SubscribeDamagePipeline(int priorityLevel, Action<EiCombatData> target)
 		{
 			subscribedDamagePipeline.Add(priorityLevel, target);
@@ -246,6 +262,7 @@ namespace Eitrum.Health
 		{
 			subscribedHealingPipeline.Remove(target);
 		}
+#endif
 
 		#endregion
 

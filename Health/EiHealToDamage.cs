@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Eitrum.Health
 {
-	[AddComponentMenu ("Eitrum/Health/Heal To Damage")]
+	[AddComponentMenu("Eitrum/Health/Heal To Damage")]
 	public class EiHealToDamage : EiComponent
 	{
 		#region Variables
@@ -17,17 +17,20 @@ namespace Eitrum.Health
 		[SerializeField]
 		protected EiHealth healthComponent;
 
-		protected EiTrigger onHealChange = new EiTrigger ();
+		protected EiTrigger onHealChange = new EiTrigger();
 
 		#endregion
 
 		#region Properties
 
-		public int TargetDamageType {
-			get {
+		public int TargetDamageType
+		{
+			get
+			{
 				return targetDamageType;
 			}
-			set {
+			set
+			{
 				targetDamageType = value;
 			}
 		}
@@ -36,18 +39,23 @@ namespace Eitrum.Health
 
 		#region Core
 
-		void Awake ()
+		void Awake()
 		{
+#if EITRUM_ADVANCED_HEALTH
 			healthComponent.SubscribeHealingPipeline (-priorityLevel, ApplyHeal);
+#else
+			Debug.LogWarning("Enable ADVANCED_HEALTH to enable 'EiHealToDamage'");
+#endif
 		}
 
-		void ApplyHeal (EiCombatData combatData)
+		void ApplyHeal(EiCombatData combatData)
 		{
-			if (targetDamageType == -1 || combatData.DamageType == targetDamageType) {
+			if (targetDamageType == -1 || combatData.DamageType == targetDamageType)
+			{
 				var copy = combatData.Copy;
-				combatData.Clear ();
-				copy.Target.Damage (copy);
-				onHealChange.Trigger ();
+				combatData.Clear();
+				copy.Target.Damage(copy);
+				onHealChange.Trigger();
 			}
 		}
 

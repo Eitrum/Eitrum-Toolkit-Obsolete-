@@ -78,9 +78,13 @@ namespace Eitrum.Health
 
 		void Awake ()
 		{
+#if EITRUM_ADVANCED_HEALTH
 			healthComponent.SubscribeDamagePipeline (damagePriorityLevel, ApplyDamage);
 			healthComponent.SubscribeHealingPipeline (-damagePriorityLevel, ApplyHeal);
 			currentShield.Subscribe (ShieldClamp);
+#else
+			Debug.LogWarning("Enable ADVANCED_HEALTH to enable 'EiShield'");
+#endif
 		}
 
 		void ApplyHeal (EiCombatData heal)

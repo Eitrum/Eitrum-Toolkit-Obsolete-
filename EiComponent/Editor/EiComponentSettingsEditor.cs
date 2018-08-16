@@ -8,7 +8,6 @@ namespace Eitrum
 {
 	public class EiComponentSettingsEditor : EditorWindow
 	{
-
 		#region Variables
 
 		const string mcs = "Assets/mcs.rsp";
@@ -20,7 +19,8 @@ namespace Eitrum
 		string[] defines = new string[]{
 			"EITRUM_PERFORMANCE_MODE",
 			"EITRUM_POOLING",
-			"EITRUM_NETWORKING"
+			"EITRUM_NETWORKING",
+			"EITRUM_ADVANCED_HEALTH"
 		};
 
 		bool[] enabledDefines = new bool[0];
