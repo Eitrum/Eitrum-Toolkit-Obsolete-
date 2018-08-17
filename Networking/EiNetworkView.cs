@@ -3,21 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum.Networking
-{
-	[AddComponentMenu ("Eitrum/Networking/Network View")]
-	public class EiNetworkView : EiComponent
-	{
+namespace Eitrum.Networking {
+	[AddComponentMenu("Eitrum/Networking/Network View")]
+	public class EiNetworkView : EiComponent {
 		#region Variables
 
 		private int viewId = -1;
 		private EiNetworkPlayer owner = null;
 
 		[SerializeField]
-		[TypeFilter (typeof(EiNetworkObservableInterface))]
-		private List<UnityEngine.Object> observableComponentObjects = new List<UnityEngine.Object> ();
-		private List<EiNetworkObservableInterface> observableComponentInterfaces = new List<EiNetworkObservableInterface> ();
-		private static Dictionary<int, EiNetworkView> networkViewDictionary = new Dictionary<int, EiNetworkView> ();
+		private List<EiNetworkObservable> networkObservables;
+		private static Dictionary<int, EiNetworkView> networkViewDictionary = new Dictionary<int, EiNetworkView>();
 
 		#endregion
 
@@ -29,13 +25,13 @@ namespace Eitrum.Networking
 			}
 			set {
 				if (viewId >= 0) {
-					if (networkViewDictionary.ContainsKey (viewId)) {
-						networkViewDictionary.Remove (viewId);
+					if (networkViewDictionary.ContainsKey(viewId)) {
+						networkViewDictionary.Remove(viewId);
 					}
 
-				} 
+				}
 				viewId = value;
-				networkViewDictionary.Add (viewId, this);
+				networkViewDictionary.Add(viewId, this);
 			}
 		}
 
@@ -58,22 +54,9 @@ namespace Eitrum.Networking
 
 		#region Core
 
-		void Awake ()
-		{
-			LoadObservers ();
-		}
-
-		private void LoadObservers ()
-		{
-			for (int i = 0; i < observableComponentObjects.Count; i++) {
-				AddObserver (observableComponentObjects as EiNetworkObservableInterface);
-			}
-		}
-
-		void OnDestroy ()
-		{
-			if (networkViewDictionary.ContainsKey (viewId)) {
-				networkViewDictionary.Remove (viewId);
+		void OnDestroy() {
+			if (networkViewDictionary.ContainsKey(viewId)) {
+				networkViewDictionary.Remove(viewId);
 			}
 		}
 
@@ -81,28 +64,31 @@ namespace Eitrum.Networking
 
 		#region Network Observable
 
-		public void AddObserver (EiNetworkObservableInterface observer)
-		{
+		public void AddObserver(EiNetworkObservableInterface observer) {
 			if (observer != null)
-				observableComponentInterfaces.Add (observer);
+				networkObservables.Add(new EiNetworkObservable(observer));
 		}
 
-		public void RemoveObserver (EiNetworkObservableInterface observer)
-		{
-			observableComponentInterfaces.Remove (observer);
-		}
-
-		public void OnSerializeView (EiBuffer buffer)
-		{
-			if (IsMine) {// write
-				var count = observableComponentInterfaces.Count;
-				for (int i = 0; i < count; i++) {
-					observableComponentInterfaces [i].OnNetworkSerialize (buffer, true);
+		public void RemoveObserver(EiNetworkObservableInterface observer) {
+			for (int i = 0; i < networkObservables.Count; i++) {
+				if (networkObservables[i].Interface == observer) {
+					networkObservables.RemoveAt(i);
+					break;
 				}
-			} else {//read
-				var count = observableComponentInterfaces.Count;
+			}
+		}
+
+		public void OnSerializeView(EiBuffer buffer) {
+			if (IsMine) {// write
+				var count = networkObservables.Count;
 				for (int i = 0; i < count; i++) {
-					observableComponentInterfaces [i].OnNetworkSerialize (buffer, false);
+					networkObservables[i].Interface.OnNetworkSerialize(buffer, true);
+				}
+			}
+			else {//read
+				var count = networkObservables.Count;
+				for (int i = 0; i < count; i++) {
+					networkObservables[i].Interface.OnNetworkSerialize(buffer, false);
 				}
 			}
 		}
@@ -111,28 +97,22 @@ namespace Eitrum.Networking
 
 		#region Static Utilities
 
-		public static EiNetworkView Find (int id)
-		{
-			if (networkViewDictionary.ContainsKey (id)) {
-				return networkViewDictionary [id];
+		public static EiNetworkView Find(int id) {
+			if (networkViewDictionary.ContainsKey(id)) {
+				return networkViewDictionary[id];
 			}
 			return null;
 		}
 
 		#endregion
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		protected override void AttachComponents ()
-		{
-			base.AttachComponents ();
-			observableComponentObjects = new List<UnityEngine.Object> ();
-			var objs = GetComponents<EiNetworkObservableInterface> ();
-			for (int i = 0; i < objs.Length; i++) {
-				observableComponentObjects.Add (objs [i].Component);
-			}
+		protected override void AttachComponents() {
+			base.AttachComponents();
+			networkObservables = new List<EiNetworkObservable>(EiNetworkObservable.ConvertArray(GetComponentsInChildren<EiNetworkObservableInterface>()));
 		}
 
-		#endif
+#endif
 	}
 }

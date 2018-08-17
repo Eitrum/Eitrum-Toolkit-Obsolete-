@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Eitrum
-{
+namespace Eitrum {
 	[Serializable]
-	public class EiPoolData
-	{
+	public class EiPoolData {
 		#region Variables
 
 		[SerializeField]
@@ -22,18 +20,14 @@ namespace Eitrum
 
 		#region Properties
 
-		public bool HasPooling
-		{
-			get
-			{
+		public bool HasPooling {
+			get {
 				return poolSize > 0;
 			}
 		}
 
-		public int PoolSize
-		{
-			get
-			{
+		public int PoolSize {
+			get {
 				return poolSize;
 			}
 		}
@@ -42,19 +36,15 @@ namespace Eitrum
 
 		#region Core
 
-		public EiEntity Get()
-		{
+		public EiEntity Get() {
 			if (pooledObjects.Count == 0)
 				return null;
 			return pooledObjects.Dequeue();
 		}
 
-		public void Set(EiEntity entity)
-		{
-			if (pooledObjects.Count < poolSize)
-			{
-				if (parentContainer == null)
-				{
+		public void Set(EiEntity entity) {
+			if (pooledObjects.Count < poolSize) {
+				if (parentContainer == null) {
 					parentContainer = new GameObject(entity.EntityName + " Pool").transform;
 					parentContainer.SetActive(false);
 				}
@@ -67,36 +57,36 @@ namespace Eitrum
 
 		#region Static Helper Methods
 
-		public static void OnPoolInstantiateHelper(EiEntity entity)
-		{
+		public static void OnPoolInstantiateHelper(EiEntity entity) {
 			var transform = entity.transform;
 			transform.SetParent(null);
 			transform.localPosition = Vector3.zero;
 			transform.localRotation = Quaternion.identity;
 
+#if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
 				interfaces[i].Get.OnPoolInstantiate();
 			}
+#endif
 		}
 
-		public static void OnPoolInstantiateHelper(EiEntity entity, Vector3 position, Quaternion rotation, Transform parent)
-		{
+		public static void OnPoolInstantiateHelper(EiEntity entity, Vector3 position, Quaternion rotation, Transform parent) {
 			var transform = entity.transform;
 			transform.SetParent(parent);
 			transform.localPosition = position;
 			transform.localRotation = rotation;
-
+#if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
 				interfaces[i].Get.OnPoolInstantiate();
 			}
+#endif
 		}
 
-		public static void OnPoolInstantiateHelper(EiEntity entity, Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
-		{
+		public static void OnPoolInstantiateHelper(EiEntity entity, Vector3 position, Quaternion rotation, Vector3 scale, Transform parent) {
 			var transform = entity.transform;
 			transform.SetParent(parent);
 			transform.localPosition = position;
@@ -105,21 +95,23 @@ namespace Eitrum
 			var goScale = transform.localScale;
 			goScale.Scale(scale);
 			transform.localScale = goScale;
-
+#if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
 				interfaces[i].Get.OnPoolInstantiate();
 			}
+#endif
 		}
 
-		public static void OnPoolDestroyHelper(EiEntity entity)
-		{
+		public static void OnPoolDestroyHelper(EiEntity entity) {
+#if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
 			for (int i = 0; i < interfaces.Length; i++)
 			{
 				interfaces[i].Get.OnPoolDestroy();
 			}
+#endif
 		}
 
 		#endregion

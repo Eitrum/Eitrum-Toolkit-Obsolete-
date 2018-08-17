@@ -2,25 +2,21 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Eitrum
-{
-	[CustomPropertyDrawer (typeof(EiStat))]
-	public class EiStatEditor : PropertyDrawer
-	{
+namespace Eitrum {
+	[CustomPropertyDrawer(typeof(EiStat))]
+	public class EiStatEditor : PropertyDrawer {
 		static bool folded = false;
 
-		public override float GetPropertyHeight (SerializedProperty property, GUIContent label)
-		{
+		public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
 			if (folded)
-				return base.GetPropertyHeight (property, label) * 4f;
-			return base.GetPropertyHeight (property, label);
+				return base.GetPropertyHeight(property, label) * 4f;
+			return base.GetPropertyHeight(property, label);
 		}
 
-		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
-		{
-			var baseStat = property.FindPropertyRelative ("baseStat");
-			var statMultiplier = property.FindPropertyRelative ("statMultiplier");
-			var statMultiplierX = property.FindPropertyRelative ("statMultiplierX");
+		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+			var baseStat = property.FindPropertyRelative("baseStat");
+			var statMultiplier = property.FindPropertyRelative("statMultiplier");
+			var statMultiplierX = property.FindPropertyRelative("statMultiplierX");
 			var floatValues = new float[] {
 				baseStat.floatValue,
 				statMultiplier.floatValue,
@@ -35,33 +31,33 @@ namespace Eitrum
 					new GUIContent ("X"),
 					new GUIContent ("Y")
 				};
-				EditorGUI.MultiFloatField (position, label, labels, floatValues);
+				EditorGUI.MultiFloatField(position, label, labels, floatValues);
 
-			} else {
-				EditorGUI.LabelField (position, label);
-				var tempPosition = new Rect (position);
-				var height = base.GetPropertyHeight (property, label);
+			}
+			else {
+				EditorGUI.LabelField(position, label);
+				var tempPosition = new Rect(position);
+				var height = base.GetPropertyHeight(property, label);
 				tempPosition.x += 20f;
 				tempPosition.height = height;
 				tempPosition.width -= 20f;
 				tempPosition.y += height;
-				floatValues [0] = EditorGUI.FloatField (tempPosition, "Base Stat", floatValues [0]);
+				floatValues[0] = EditorGUI.FloatField(tempPosition, "Base Stat", floatValues[0]);
 				tempPosition.y += height;
-				floatValues [1] = EditorGUI.FloatField (tempPosition, "Stat Multiplier", floatValues [1]);
+				floatValues[1] = EditorGUI.FloatField(tempPosition, "Stat Multiplier", floatValues[1]);
 				tempPosition.y += height;
-				floatValues [2] = EditorGUI.FloatField (tempPosition, "Stat MultiplierX", floatValues [2]);
+				floatValues[2] = EditorGUI.FloatField(tempPosition, "Stat MultiplierX", floatValues[2]);
 
 			}
-			var changed = EditorGUI.Foldout (position, folded, "", true);
-			if (changed != folded)
-			{
+			var changed = EditorGUI.Foldout(position, folded, "", true);
+			if (changed != folded) {
 				folded = changed;
 				EditorUtility.SetDirty(property.serializedObject.targetObject);
 			}
 
-			baseStat.floatValue = floatValues [0];
-			statMultiplier.floatValue = floatValues [1];
-			statMultiplierX.floatValue = floatValues [2];
+			baseStat.floatValue = floatValues[0];
+			statMultiplier.floatValue = floatValues[1];
+			statMultiplierX.floatValue = floatValues[2];
 		}
 	}
 }

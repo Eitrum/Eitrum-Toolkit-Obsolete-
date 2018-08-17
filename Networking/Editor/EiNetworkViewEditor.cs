@@ -4,14 +4,9 @@ using UnityEditor;
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace Eitrum.Networking
-{
-	[CustomEditor (typeof(EiNetworkView))]
-	public class EiNetworkViewEditor : Editor
-	{
-		public override void OnInspectorGUI ()
-		{
-			base.OnInspectorGUI ();
-		}
+namespace Eitrum.Networking {
+	[CustomEditor(typeof(EiNetworkView))]
+	public class EiNetworkViewEditor : Editor {
+
 	}
 }
