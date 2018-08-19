@@ -52,9 +52,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
-  networkView: {fileID: 0}
   subCategories:
   - {fileID: 11400000, guid: 07d79d8db0a7a454ca0c02ef4aae378d, type: 2}
   cachedItems:
-  - {fileID: 11400000, guid: 60bbecb8feb025248bf51b2c610d9f1a, type: 2}
-  - {fileID: 11400000, guid: a2c1834762c29f24d834e10dce158f1e, type: 2}
+  - {fileID: 11400000, guid: 2a33b983b4cbc1a47ad7f5e0a74534b7, type: 2}
+  - {fileID: 11400000, guid: 4d4fc1f465ceb714183027ade8b89b00, type: 2}

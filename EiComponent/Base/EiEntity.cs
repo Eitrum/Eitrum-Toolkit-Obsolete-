@@ -139,25 +139,33 @@ namespace Eitrum {
 
 #if !EITRUM_PERFORMANCE_MODE
 		private void Awake() {
-			AssignToParent();
+			if (this.transform.parent == null) {
+				AssignToParent();
+			}
 		}
 
 		private void AssignToParent() {
-			if (this.transform.parent == null) {
-				Transform parent = null;
-				if (parentContainers.ContainsKey(EntityTypeId))
-					parent = parentContainers[EntityTypeId];
-				else
-					parentContainers.Add(EntityTypeId, parent = new GameObject(entityName).transform);
+			Transform parent = null;
+			if (parentContainers.ContainsKey(EntityTypeId))
+				parent = parentContainers[EntityTypeId];
+			else
+				parentContainers.Add(EntityTypeId, parent = new GameObject(entityName).transform);
 
-				this.transform.SetParent(parent);
-			}
+			this.transform.SetParent(parent);
 		}
 #endif
 
+		public void SleepPhysics() {
+			if (rigidbodyComponent) {
+				rigidbodyComponent.velocity = Vector3.zero;
+				rigidbodyComponent.angularVelocity = Vector3.zero;
+			}
+		}
+
 		public void FreezePhysics() {
 			if (rigidbodyComponent) {
-				rigidbodyComponent.Sleep();
+				rigidbodyComponent.velocity = Vector3.zero;
+				rigidbodyComponent.angularVelocity = Vector3.zero;
 				rigidbodyComponent.isKinematic = true;
 			}
 		}
@@ -168,10 +176,6 @@ namespace Eitrum {
 			}
 		}
 
-		public void SetParent(EiEntity entity) {
-			this.transform.SetParent(entity.transform);
-		}
-
 #if EITRUM_POOLING
 		public void AssignPoolTarget(EiPoolData item) {
 			poolTarget = item;
@@ -180,7 +184,8 @@ namespace Eitrum {
 
 
 		public override void Destroy() {
-			onDestroy(this);
+			if (onDestroy != null)
+				onDestroy(this);
 #if EITRUM_POOLING
 			EiPoolData.OnPoolDestroyHelper(this);
 #else
@@ -192,6 +197,11 @@ namespace Eitrum {
 
 		#region SetRemove Parent
 
+
+		public void SetParent(EiEntity entity) {
+			this.transform.SetParent(entity.transform);
+		}
+
 		public void SetParent(EiComponent component) {
 			this.transform.SetParent(component.transform);
 		}
@@ -201,7 +211,11 @@ namespace Eitrum {
 		}
 
 		public void ReleaseParent() {
+#if !EITRUM_PERFORMANCE_MODE
+			AssignToParent();
+#else
 			this.transform.SetParent(null);
+#endif
 		}
 
 		#endregion

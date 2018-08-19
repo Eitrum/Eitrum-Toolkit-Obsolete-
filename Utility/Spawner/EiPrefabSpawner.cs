@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum.Utility.Spawner
-{
+namespace Eitrum.Utility.Spawner {
 	[AddComponentMenu("Eitrum/Utility/Spawner/Prefab Spawner")]
-	public class EiPrefabSpawner : EiComponent
-	{
+	public class EiPrefabSpawner : EiComponent {
 		#region Variables
 
 		[Header("Spawn Settings")]
@@ -42,7 +40,7 @@ namespace Eitrum.Utility.Spawner
 		private float distanceToLoseReference = 1f;
 		[Readonly]
 		[SerializeField]
-		private UnityEngine.Object spawnedReference;
+		private GameObject spawnedReference;
 
 		private EiTrigger onSpawned = new EiTrigger();
 		private EiTrigger<UnityEngine.Object> onSpawnedObject = new EiTrigger<UnityEngine.Object>();
@@ -51,66 +49,50 @@ namespace Eitrum.Utility.Spawner
 
 		#region Properties
 
-		public bool UsesCooldown
-		{
-			get
-			{
+		public bool UsesCooldown {
+			get {
 				return useCooldown.Value;
 			}
 		}
 
-		public float MinCooldown
-		{
-			get
-			{
+		public float MinCooldown {
+			get {
 				return minCooldown.Value;
 			}
 		}
 
-		public float MaxCooldown
-		{
-			get
-			{
+		public float MaxCooldown {
+			get {
 				return maxCooldown.Value;
 			}
 		}
 
-		public float CurrentCooldown
-		{
-			get
-			{
+		public float CurrentCooldown {
+			get {
 				return currentCooldown.Value;
 			}
 		}
 
-		public bool HasTarget
-		{
-			get
-			{
+		public bool HasTarget {
+			get {
 				return spawnTarget != null;
 			}
 		}
 
-		public Vector3 SpawnPosition
-		{
-			get
-			{
+		public Vector3 SpawnPosition {
+			get {
 				return (HasTarget ? spawnTarget.position : transform.position);
 			}
 		}
 
-		public Quaternion SpawnRotation
-		{
-			get
-			{
+		public Quaternion SpawnRotation {
+			get {
 				return (HasTarget ? spawnTarget.rotation : transform.rotation);
 			}
 		}
 
-		public Vector3 SpawnScale
-		{
-			get
-			{
+		public Vector3 SpawnScale {
+			get {
 				return (HasTarget ? spawnTarget.lossyScale : transform.lossyScale);
 			}
 		}
@@ -119,17 +101,14 @@ namespace Eitrum.Utility.Spawner
 
 		#region Core
 
-		void Awake()
-		{
+		void Awake() {
 			SubscribeUpdate();
 			if (spawnOnAwake)
 				ForceSpawn();
 		}
 
-		public override void UpdateComponent(float time)
-		{
-			if (loseReferenceByDistance && (spawnedReference is GameObject) && distanceToLoseReference < Vector3.Distance(SpawnPosition, (spawnedReference as GameObject).transform.position))
-			{
+		public override void UpdateComponent(float time) {
+			if (loseReferenceByDistance && distanceToLoseReference < Vector3.Distance(SpawnPosition, (spawnedReference as GameObject).transform.position)) {
 				if (respawnIfReferenceIsGone && destroyOldObject)
 					ForceSpawn();
 				else
@@ -145,20 +124,15 @@ namespace Eitrum.Utility.Spawner
 		}
 
 		[ContextMenu("Spawn")]
-		public void Spawn()
-		{
-			if (useCooldown.Value && currentCooldown.Value > 0f)
-			{
+		public void Spawn() {
+			if (useCooldown.Value && currentCooldown.Value > 0f) {
 				return;
 			}
-			if (waitUntilReferenceIsGone && spawnedReference != null)
-			{
-				if (loseReferenceByDistance && (spawnedReference is GameObject) && distanceToLoseReference < Vector3.Distance(SpawnPosition, (spawnedReference as GameObject).transform.position))
-				{
+			if (waitUntilReferenceIsGone && spawnedReference != null) {
+				if (loseReferenceByDistance && distanceToLoseReference < Vector3.Distance(SpawnPosition, (spawnedReference as GameObject).transform.position)) {
 					spawnedReference = null;
 				}
-				else
-				{
+				else {
 					return;
 				}
 			}
@@ -166,18 +140,15 @@ namespace Eitrum.Utility.Spawner
 		}
 
 		[ContextMenu("Force Spawn")]
-		public void ForceSpawn()
-		{
+		public void ForceSpawn() {
 			InternalSpawn();
 		}
 
-		private void InternalSpawn()
-		{
+		private void InternalSpawn() {
 			if (useCooldown.Value)
 				currentCooldown.Value = EiRandom.Range(MinCooldown, MaxCooldown);
 
-			if (destroyOldObject && spawnedReference != null)
-			{
+			if (destroyOldObject && spawnedReference != null) {
 				Destroy(spawnedReference);
 			}
 			spawnedReference = prefabToSpawn.Instantiate(SpawnPosition, SpawnRotation, SpawnScale);
@@ -190,13 +161,10 @@ namespace Eitrum.Utility.Spawner
 
 #if UNITY_EDITOR
 
-		void OnDrawGizmos()
-		{
-			if (prefabToSpawn && prefabToSpawn.Item)
-			{
+		void OnDrawGizmos() {
+			if (prefabToSpawn && prefabToSpawn.Item) {
 				var mesh = prefabToSpawn.GameObject.GetComponentsInChildren<MeshFilter>();
-				for (int i = 0; i < mesh.Length; i++)
-				{
+				for (int i = 0; i < mesh.Length; i++) {
 					var go = mesh[i].gameObject;
 					var scale = go.transform.lossyScale;
 					if (scalePrefab)
