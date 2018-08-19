@@ -42,7 +42,7 @@ namespace Eitrum {
 			return pooledObjects.Dequeue();
 		}
 
-		public void Set(EiEntity entity) {
+		public bool Set(EiEntity entity) {
 			if (pooledObjects.Count < poolSize) {
 				if (parentContainer == null) {
 					parentContainer = new GameObject(entity.EntityName + " Pool").transform;
@@ -50,7 +50,9 @@ namespace Eitrum {
 				}
 				entity.transform.SetParent(parentContainer);
 				pooledObjects.Enqueue(entity);
+				return true;
 			}
+			return false;
 		}
 
 		#endregion
@@ -65,8 +67,7 @@ namespace Eitrum {
 
 #if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
-			for (int i = 0; i < interfaces.Length; i++)
-			{
+			for (int i = 0; i < interfaces.Length; i++) {
 				interfaces[i].Get.OnPoolInstantiate();
 			}
 #endif
@@ -79,8 +80,7 @@ namespace Eitrum {
 			transform.localRotation = rotation;
 #if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
-			for (int i = 0; i < interfaces.Length; i++)
-			{
+			for (int i = 0; i < interfaces.Length; i++) {
 				interfaces[i].Get.OnPoolInstantiate();
 			}
 #endif
@@ -97,8 +97,7 @@ namespace Eitrum {
 			transform.localScale = goScale;
 #if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
-			for (int i = 0; i < interfaces.Length; i++)
-			{
+			for (int i = 0; i < interfaces.Length; i++) {
 				interfaces[i].Get.OnPoolInstantiate();
 			}
 #endif
@@ -107,10 +106,15 @@ namespace Eitrum {
 		public static void OnPoolDestroyHelper(EiEntity entity) {
 #if EITRUM_POOLING
 			var interfaces = entity.PoolableInterfaces;
-			for (int i = 0; i < interfaces.Length; i++)
-			{
+			for (int i = 0; i < interfaces.Length; i++) {
 				interfaces[i].Get.OnPoolDestroy();
 			}
+			var poolTarget = entity.PoolTarget;
+			if (!poolTarget.Set(entity)) {
+				MonoBehaviour.Destroy(entity.gameObject);
+			}
+#else
+			MonoBehaviour.Destroy(entity.gameObject);
 #endif
 		}
 

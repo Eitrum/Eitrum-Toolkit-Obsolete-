@@ -13,7 +13,7 @@ namespace Eitrum {
 		[SerializeField]
 		[HideInInspector]
 #pragma warning disable
-		private EiNetworkView networkView;
+		private EiNetworkView netView;
 #endif
 
 		// Should Not ever be touched by anything!!! Used by core engine for performance
@@ -38,7 +38,7 @@ namespace Eitrum {
 		public bool IsNetworked {
 			get {
 #if EITRUM_NETWORKING
-				return networkView != null;
+				return netView != null;
 #else
 				return false;
 #endif
@@ -46,13 +46,12 @@ namespace Eitrum {
 		}
 
 #if EITRUM_NETWORKING
-		public EiNetworkView NetworkView
+		public EiNetworkView NetView // Ugly name of NetView because unity built in 'NetworkView'
 		{
-			get
-			{
-				if (!networkView)
-					networkView = GetComponent<EiNetworkView>();
-				return networkView;
+			get {
+				if (!netView)
+					netView = GetComponent<EiNetworkView>();
+				return netView;
 			}
 		}
 #endif
@@ -73,6 +72,63 @@ namespace Eitrum {
 			get {
 				return this == null;
 			}
+		}
+
+		#endregion
+
+		#region Instantiate EiPrefab
+
+		public static GameObject Instantiate(EiPrefab prefab) {
+			return prefab.Instantiate();
+		}
+
+		public static GameObject Instantiate(EiPrefab prefab, Vector3 position) {
+			return prefab.Instantiate(position);
+		}
+
+		public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation) {
+			return prefab.Instantiate(position, rotation);
+		}
+
+		public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation, Transform parent) {
+			return prefab.Instantiate(position, rotation, parent);
+		}
+
+		public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation, Vector3 scale) {
+			return prefab.Instantiate(position, rotation, scale);
+		}
+
+		public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation, Vector3 scale, Transform parent) {
+			return prefab.Instantiate(position, rotation, scale, parent);
+		}
+
+		#endregion
+
+		#region Destroy
+
+		public virtual void Destroy() {
+			if (entity)
+				entity.Destroy();
+			else
+				MonoBehaviour.Destroy(gameObject);
+		}
+
+		public static void Destroy(EiEntity entity) {
+			entity.Destroy();
+		}
+
+		public static void Destroy(GameObject gameObject) {
+			var entity = gameObject.GetComponent<EiEntity>();
+			if (entity) {
+				entity.Destroy();
+			}
+			else {
+				MonoBehaviour.Destroy(gameObject);
+			}
+		}
+
+		public static void Destroy(Transform transform) {
+			Destroy(transform.gameObject);
 		}
 
 		#endregion
@@ -235,7 +291,7 @@ namespace Eitrum {
 		protected virtual void AttachComponents() {
 			entity = GetComponentInParent<EiEntity>();
 #if EITRUM_NETWORKING
-			networkView = GetComponent<EiNetworkView>();
+			netView = GetComponent<EiNetworkView>();
 #endif
 		}
 

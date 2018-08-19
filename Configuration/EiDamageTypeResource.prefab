@@ -52,7 +52,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
-  networkView: {fileID: 0}
   damageCategories:
   - Normal / Bludgeoning
   - Normal / Piercing
