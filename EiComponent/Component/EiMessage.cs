@@ -45,9 +45,6 @@ namespace Eitrum
 		}
 
 		#endregion
-
-
-
 	}
 
 	public class EiMessageSubscriber<T> : EiCore

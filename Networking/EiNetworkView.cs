@@ -13,6 +13,10 @@ namespace Eitrum.Networking {
 
 		[SerializeField]
 		private List<EiNetworkObservable> networkObservables;
+
+		private Dictionary<int, byte> rpcMethodLookup = new Dictionary<int, byte>();
+		private List<Action<byte[]>> rpcMethods = new List<Action<byte[]>>();
+
 		private static Dictionary<int, EiNetworkView> networkViewDictionary = new Dictionary<int, EiNetworkView>();
 
 		#endregion
@@ -28,7 +32,6 @@ namespace Eitrum.Networking {
 					if (networkViewDictionary.ContainsKey(viewId)) {
 						networkViewDictionary.Remove(viewId);
 					}
-
 				}
 				viewId = value;
 				networkViewDictionary.Add(viewId, this);
@@ -57,6 +60,40 @@ namespace Eitrum.Networking {
 		void OnDestroy() {
 			if (networkViewDictionary.ContainsKey(viewId)) {
 				networkViewDictionary.Remove(viewId);
+			}
+		}
+
+		#endregion
+
+		#region RPC
+
+		public void SubscribeRPC(Action<byte[]> method) {
+			var methodHash = method.GetHashCode();
+			rpcMethodLookup.Add(methodHash, (byte)rpcMethods.Count);
+			rpcMethods.Add(method);
+		}
+
+		public void RPC(Action<byte[]> method, byte[] data) {
+			var key = method.GetHashCode();
+			if (rpcMethodLookup.ContainsKey(key)) {
+				var methodId = rpcMethodLookup[key];
+				//Send to other clients
+				method(data);
+			}
+			else {
+				Debug.LogWarningFormat("{0} Method Key not found, can not send rpc to other clients", method.Method.Name);
+			}
+		}
+
+		public void RPCPlayer(EiNetworkPlayer player, Action<byte[]> method, byte[] data) {
+			var key = method.GetHashCode();
+			if (rpcMethodLookup.ContainsKey(key)) {
+				var methodId = rpcMethodLookup[key];
+				//Send to other clients
+				method(data);
+			}
+			else {
+				Debug.LogWarningFormat("{0} Method Key not found, can not send rpc to other clients", method.Method.Name);
 			}
 		}
 
