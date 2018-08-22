@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum.Utility.Rotation
-{
-	[AddComponentMenu("Eitrum/Utility/Rotation/Basic")]
-	public class EiRotation : EiComponent
-	{
+namespace Eitrum.Utility.Rotation {
+	[AddComponentMenu("Eitrum/Utility/Rotation/Basic Rotation")]
+	public class EiRotation : EiComponent {
 		#region Variables
 
 		[SerializeField]
@@ -18,23 +16,19 @@ namespace Eitrum.Utility.Rotation
 
 		#region Core
 
-		private void Awake()
-		{
+		private void Awake() {
 			SubscribeUpdate();
 		}
 
-		private void OnEnable()
-		{
+		private void OnEnable() {
 			SubscribeUpdate();
 		}
 
-		private void OnDisable()
-		{
+		private void OnDisable() {
 			UnsubscribeUpdate();
 		}
 
-		public override void UpdateComponent(float time)
-		{
+		public override void UpdateComponent(float time) {
 			this.transform.Rotate(rotation * time, rotationSpace);
 		}
 

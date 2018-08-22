@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum.Utility.Rotation
-{
+namespace Eitrum.Utility.Rotation {
 	[AddComponentMenu("Eitrum/Utility/Rotation/Physics Rotation")]
-	public class EiRotationPhysics : EiComponent
-	{
+	public class EiRotationPhysics : EiComponent {
 		#region Variables
 
 		[SerializeField]
@@ -20,24 +18,20 @@ namespace Eitrum.Utility.Rotation
 
 		#region Core
 
-		private void Awake()
-		{
+		private void Awake() {
 			body = Entity.Body;
 			SubscribeFixedUpdate();
 		}
 
-		private void OnEnable()
-		{
+		private void OnEnable() {
 			SubscribeFixedUpdate();
 		}
 
-		private void OnDisable()
-		{
+		private void OnDisable() {
 			UnsubscribeFixedUpdate();
 		}
 
-		public override void FixedUpdateComponent(float time)
-		{
+		public override void FixedUpdateComponent(float time) {
 			var forceToAdd = rotationForce * Mathf.Deg2Rad;
 			if (relativeToMass)
 				forceToAdd *= body.mass;

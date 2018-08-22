@@ -3,18 +3,11 @@ using UnityEngine;
 using Eitrum.Networking.Internal;
 
 namespace Eitrum.Networking {
-	public class EiNetwork {
+	public class EiNetwork : EiComponentSingleton<EiNetwork> {
 		#region Singleton
 
-		private static EiNetwork instance;
-
-		private static EiNetwork Instance {
-			get {
-				if (instance == null) {
-					instance = new EiNetwork();
-				}
-				return instance;
-			}
+		public override void SingletonCreation() {
+			KeepAlive();
 		}
 
 		#endregion

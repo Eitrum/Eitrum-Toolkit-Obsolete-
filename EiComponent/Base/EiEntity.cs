@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Eitrum {
 	[AddComponentMenu("Eitrum/Core/Entity")]
 	public class EiEntity : EiComponent {
+
 		#region Variables
 
 		[Header("Entity Settings")]
@@ -196,8 +197,7 @@ namespace Eitrum {
 		#endregion
 
 		#region SetRemove Parent
-
-
+		
 		public void SetParent(EiEntity entity) {
 			this.transform.SetParent(entity.transform);
 		}
