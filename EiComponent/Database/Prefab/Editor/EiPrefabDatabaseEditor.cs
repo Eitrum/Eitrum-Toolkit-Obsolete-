@@ -166,10 +166,18 @@ namespace Eitrum.Database {
 
 #if EITRUM_POOLING
 			var poolData = GetItemPoolData(item);
-			EditorGUILayout.BeginHorizontal();
-			ApplyKeepPoolAlive(poolData, EditorGUILayout.ToggleLeft("Keep Pool Alive", poolData.KeepPoolAlive, GUILayout.MaxWidth(130f)));
-			ApplyPoolSize(poolData, Math.Max(0, EditorGUILayout.IntField("Pool Size", poolData.PoolSize)));
-			EditorGUILayout.EndHorizontal();
+			var hasEntityComponent = item.GameObject ? item.GameObject.GetComponent<EiEntity>() != null : false;
+			if (hasEntityComponent) {
+				EditorGUILayout.BeginHorizontal();
+				ApplyKeepPoolAlive(poolData, EditorGUILayout.ToggleLeft("Keep Pool Alive", poolData.KeepPoolAlive, GUILayout.MaxWidth(130f)));
+				ApplyPoolSize(poolData, Math.Max(0, EditorGUILayout.IntField("Pool Size", poolData.PoolSize)));
+				EditorGUILayout.EndHorizontal();
+			}
+			else {
+				EditorGUILayout.LabelField("Pooling not enabled, need \"EiEntity\" component");
+				ApplyKeepPoolAlive(poolData, false);
+				ApplyPoolSize(poolData, 0);
+			}
 			poolData.GetType().GetField("prefab", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(poolData, item);
 #endif
 			GUILayout.Space(8f);
