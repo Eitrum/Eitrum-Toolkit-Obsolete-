@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Eitrum
-{
-	public class EiLinkedList<T> where T : class
-	{
+namespace Eitrum {
+	public class EiLinkedList<T> where T : class {
 		#region Variables
 
-		static EiSyncronizedQueue<EiLLNode<T>> nodes = new EiSyncronizedQueue<EiLLNode<T>> ();
+		static EiSyncronizedQueue<EiLLNode<T>> nodes = new EiSyncronizedQueue<EiLLNode<T>>();
 
 		private EiLLNode<T> node;
 		private int count;
@@ -28,12 +26,11 @@ namespace Eitrum
 
 		#region Add
 
-		public EiLLNode<T> Add (T value)
-		{
+		public EiLLNode<T> Add(T value) {
 			lock (this) {
 				EiLLNode<T> node;
-				if (!nodes.TryDequeue (out node))
-					node = new EiLLNode<T> (value);
+				if (!nodes.TryDequeue(out node))
+					node = new EiLLNode<T>(value);
 				else
 					node.Value = value;
 
@@ -41,7 +38,8 @@ namespace Eitrum
 					this.node = node;
 					node.Next = this.node;
 					node.Prev = this.node;
-				} else {
+				}
+				else {
 					node.Prev = this.node.Prev;
 					node.Next = this.node;
 					this.node.Prev.Next = node;
@@ -54,22 +52,20 @@ namespace Eitrum
 			}
 		}
 
-		public EiLLNode<T>[] AddRange (T[] values)
-		{
+		public EiLLNode<T>[] AddRange(T[] values) {
 			lock (this) {
 				EiLLNode<T>[] nodes = new EiLLNode<T>[values.Length];
 				for (int i = 0; i < values.Length; i++) {
-					nodes [i] = Add (values [i]);
+					nodes[i] = Add(values[i]);
 				}
 				return nodes;
 			}
 		}
 
-		public void Move (EiLLNode<T> node, EiLinkedList<T> otherList)
-		{
+		public void Move(EiLLNode<T> node, EiLinkedList<T> otherList) {
 			if (node.List != this)
-				throw new Exception ("You are not allowed to move nodes from other list without going through its own list");
-			
+				throw new Exception("You are not allowed to move nodes from other list without going through its own list");
+
 			if (count == 1) {
 				this.node = null;
 			}
@@ -79,11 +75,12 @@ namespace Eitrum
 
 			node.List = otherList;
 
-			if (otherList.Count () == 0) {
+			if (otherList.Count() == 0) {
 				node.Next = node;
 				node.Prev = node;
 				otherList.node = node;
-			} else {
+			}
+			else {
 				otherList.node.Prev.Next = node;
 				node.Prev = otherList.node.Prev;
 				node.Next = otherList.node;
@@ -102,22 +99,20 @@ namespace Eitrum
 		/// Will iterate through object until it finds object, then delete it.
 		/// </summary>
 		/// <param name="obj">Object.</param>
-		public void Remove (T nodeObject)
-		{
+		public void Remove(T nodeObject) {
 			lock (this) {
-				var iterator = GetIterator ();
+				var iterator = GetIterator();
 				EiLLNode<T> node = null;
-				while (iterator.Next (out node)) {
+				while (iterator.Next(out node)) {
 					if (node.Value == nodeObject) {
-						Remove (node);
+						Remove(node);
 						return;
 					}
 				}
 			}
 		}
 
-		public void Remove (EiLLNode<T> node)
-		{
+		public void Remove(EiLLNode<T> node) {
 			lock (this) {
 				if (node.List != this)
 					return;
@@ -131,32 +126,29 @@ namespace Eitrum
 				node.Prev = null;
 				node.Next = null;
 				node.List = null;
-				nodes.Enqueue (node);
+				nodes.Enqueue(node);
 
 				if (count <= 1) {
 					this.node = null;
-				} 
+				}
 				count--;
 			}
 		}
 
-		public void Clear ()
-		{
+		public void Clear() {
 			for (int i = count; i > 0; i--)
-				Remove (node);
-			ClearFast ();
+				Remove(node);
+			ClearFast();
 		}
 
-		public void ClearFast ()
-		{
+		public void ClearFast() {
 			lock (this) {
 				node = null;
 				count = 0;
 			}
 		}
 
-		public void RemoveAfter (EiLLNode<T> node)
-		{
+		public void RemoveAfter(EiLLNode<T> node) {
 			lock (this) {
 				if (node.List != this)
 					return;
@@ -164,13 +156,12 @@ namespace Eitrum
 				while (nextNode != this.node) {
 					var toRemove = nextNode;
 					nextNode = nextNode.Next;
-					Remove (toRemove);
+					Remove(toRemove);
 				}
 			}
 		}
 
-		public void RemoveBefore (EiLLNode<T> node)
-		{
+		public void RemoveBefore(EiLLNode<T> node) {
 			lock (this) {
 				if (node.List != this)
 					return;
@@ -178,7 +169,7 @@ namespace Eitrum
 				while (nextNode != this.node) {
 					var toRemove = nextNode;
 					nextNode = nextNode.Prev;
-					Remove (toRemove);
+					Remove(toRemove);
 				}
 			}
 		}
@@ -187,55 +178,47 @@ namespace Eitrum
 
 		#region Helper
 
-		public T First ()
-		{
+		public T First() {
 			if (node == null)
 				return null;
 			return node.Value;
 		}
 
-		public T Last ()
-		{
+		public T Last() {
 			if (node == null)
 				return null;
 			return node.Prev.Value;
 		}
 
-		public EiLLNode<T> FirstNode ()
-		{
+		public EiLLNode<T> FirstNode() {
 			return node;
 		}
 
-		public EiLLNode<T> LastNode ()
-		{
+		public EiLLNode<T> LastNode() {
 			if (node == null)
 				return null;
 			return node.Prev;
 		}
 
-		public EiLLIterator<T> GetIterator ()
-		{
+		public EiLLIterator<T> GetIterator() {
 			lock (this) {
-				return new EiLLIterator<T> (node);
+				return new EiLLIterator<T>(node);
 			}
 		}
 
-		public void ShiftNext ()
-		{
+		public void ShiftNext() {
 			lock (this) {
 				node = node.Next;
 			}
 		}
 
-		public void ShiftBack ()
-		{
+		public void ShiftBack() {
 			lock (this) {
 				node = node.Prev;
 			}
 		}
 
-		public int Count ()
-		{
+		public int Count() {
 			lock (this) {
 				return count;
 			}
@@ -244,8 +227,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public struct EiLLIterator<T> where T : class
-	{
+	public struct EiLLIterator<T> where T : class {
 		#region Variables
 
 		private EiLLNode<T> first;
@@ -255,8 +237,7 @@ namespace Eitrum
 
 		#region Constructors
 
-		public EiLLIterator (EiLLNode<T> first)
-		{
+		public EiLLIterator(EiLLNode<T> first) {
 			this.first = first;
 			current = null;
 		}
@@ -265,13 +246,11 @@ namespace Eitrum
 
 		#region Next
 
-		public bool Next ()
-		{
-			return Next (out (current));
+		public bool Next() {
+			return Next(out (current));
 		}
 
-		public bool Next (out EiLLNode<T> node)
-		{
+		public bool Next(out EiLLNode<T> node) {
 			if (current == null) {
 				if (first == null) {
 					node = null;
@@ -285,8 +264,7 @@ namespace Eitrum
 			return current != first && node != null;
 		}
 
-		public bool Next (out T value)
-		{
+		public bool Next(out T value) {
 			if (current == null) {
 				if (first == null) {
 					value = default(T);
@@ -304,23 +282,23 @@ namespace Eitrum
 
 		#region Destroying Current
 
-		public void DestroyCurrent ()
-		{
+		public void DestroyCurrent() {
 			var cur = current;
 			if (first == current) {
 				first = current.Next;
 				current = null;
-			} else {
+			}
+			else {
 				current = current.Prev;
 			}
-			cur.List.Remove (current);
+			if (cur != null && cur.List != null)
+				cur.List.Remove(cur);
 		}
 
 		#endregion
 	}
 
-	public class EiLLNode<T> where T : class
-	{
+	public class EiLLNode<T> where T : class {
 		#region Variables
 
 		public EiLLNode<T> Next;
@@ -333,8 +311,7 @@ namespace Eitrum
 
 		#region Constructor
 
-		public EiLLNode (T value)
-		{
+		public EiLLNode(T value) {
 			this.Value = value;
 			Next = null;
 			Prev = null;
@@ -345,14 +322,12 @@ namespace Eitrum
 
 		#region Helpers
 
-		public void RemoveFromList ()
-		{
-			List.Remove (this);
+		public void RemoveFromList() {
+			List.Remove(this);
 		}
 
-		public void MoveTo (EiLinkedList<T> otherList)
-		{
-			List.Move (this, otherList);
+		public void MoveTo(EiLinkedList<T> otherList) {
+			List.Move(this, otherList);
 		}
 
 		#endregion
