@@ -1,14 +1,8 @@
 ﻿using Eitrum.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-namespace Eitrum
-{
-	public class EiPrefab : EiScriptableObject<EiPrefab>
-	{
+namespace Eitrum {
+	public class EiPrefab : EiScriptableObject<EiPrefab> {
 		#region Variables
 
 		[Readonly]
@@ -31,42 +25,32 @@ namespace Eitrum
 
 		#region Properties
 
-		public GameObject Item
-		{
-			get
-			{
+		public GameObject Item {
+			get {
 				return item;
 			}
 		}
 
-		public GameObject GameObject
-		{
-			get
-			{
+		public GameObject GameObject {
+			get {
 				return item;
 			}
 		}
 
-		public string ItemName
-		{
-			get
-			{
+		public string ItemName {
+			get {
 				return itemName;
 			}
 		}
 
-		public int UniqueId
-		{
-			get
-			{
+		public int UniqueId {
+			get {
 				return uniqueId;
 			}
 		}
 
-		public EiPrefabDatabase Database
-		{
-			get
-			{
+		public EiPrefabDatabase Database {
+			get {
 				return database;
 			}
 		}
@@ -75,8 +59,7 @@ namespace Eitrum
 
 		#region GameObject Instantiate
 
-		public GameObject Instantiate()
-		{
+		public GameObject Instantiate() {
 #if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
@@ -96,8 +79,7 @@ namespace Eitrum
 			return MonoBehaviour.Instantiate(GameObject);
 		}
 
-		public GameObject Instantiate(Transform parent)
-		{
+		public GameObject Instantiate(Transform parent) {
 #if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
@@ -116,8 +98,7 @@ namespace Eitrum
 			return MonoBehaviour.Instantiate(GameObject, parent);
 		}
 
-		public GameObject Instantiate(Vector3 position)
-		{
+		public GameObject Instantiate(Vector3 position) {
 #if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
@@ -136,8 +117,7 @@ namespace Eitrum
 			return MonoBehaviour.Instantiate(GameObject, position, Quaternion.identity);
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation)
-		{
+		public GameObject Instantiate(Vector3 position, Quaternion rotation) {
 #if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
@@ -156,8 +136,7 @@ namespace Eitrum
 			return MonoBehaviour.Instantiate(GameObject, position, rotation);
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation, Transform parent)
-		{
+		public GameObject Instantiate(Vector3 position, Quaternion rotation, Transform parent) {
 #if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
@@ -177,8 +156,7 @@ namespace Eitrum
 			return MonoBehaviour.Instantiate(GameObject, position, rotation, parent);
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale)
-		{
+		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale) {
 #if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
@@ -205,8 +183,7 @@ namespace Eitrum
 			return go;
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
-		{
+		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale, Transform parent) {
 #if EITRUM_POOLING
 			if (poolData.HasPooling)
 			{
@@ -230,6 +207,57 @@ namespace Eitrum
 			goScale.Scale(scale);
 			go.transform.localScale = goScale;
 			return go;
+		}
+
+		#endregion
+
+		#region PoolData API
+
+		/// <summary>
+		/// Fills the pool to its maximum by 1 object a frame
+		/// ONLY WORKS WHEN POOLING IS ENABLED
+		/// </summary>
+		[System.Diagnostics.Conditional("EITRUM_POOLING")]
+		public void PoolFill() {
+#if EITRUM_POOLING
+			poolData.Fill();
+#endif
+		}
+
+		/// <summary>
+		/// Pre loads the pool with 1 object during this frame
+		/// ONLY WORKS WHEN POOLING IS ENABLED
+		/// </summary>
+		[System.Diagnostics.Conditional("EITRUM_POOLING")]
+		public void PoolPreLoadObject() {
+#if EITRUM_POOLING
+			poolData.PreLoadObject();
+#endif
+		}
+
+		/// <summary>
+		/// Pre loads the pool with objects over a set amount of time
+		/// ONLY WORKS WHEN POOLING IS ENABLED
+		/// </summary>
+		/// <param name="amount"></param>
+		/// <param name="time"></param>
+		[System.Diagnostics.Conditional("EITRUM_POOLING")]
+		public void PoolPreLoadObjects(int amount, float time) {
+#if EITRUM_POOLING
+			poolData.PreLoadObjects(amount, time);
+#endif
+		}
+
+		/// <summary>
+		/// Pre loads the pool with objects 1 at a frame
+		/// ONLY WORKS WHEN POOLING IS ENABLED
+		/// </summary>
+		/// <param name="amount"></param>
+		[System.Diagnostics.Conditional("EITRUM_POOLING")]
+		public void PoolPreLoadObjects(int amount) {
+#if EITRUM_POOLING
+			poolData.PreLoadObjects(amount);
+#endif
 		}
 
 		#endregion
