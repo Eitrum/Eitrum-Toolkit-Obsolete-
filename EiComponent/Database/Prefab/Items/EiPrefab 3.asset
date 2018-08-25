@@ -16,6 +16,6 @@ MonoBehaviour:
   uniqueId: 1
   database: {fileID: 114053056546841476, guid: 1898f6a03563a574d80fddca61a5f193, type: 2}
   poolData:
-    poolSize: 4
-    keepPoolAlive: 1
+    poolSize: 0
+    keepPoolAlive: 0
     prefab: {fileID: 11400000}

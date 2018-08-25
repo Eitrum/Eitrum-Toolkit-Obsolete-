@@ -260,6 +260,18 @@ namespace Eitrum {
 #endif
 		}
 
+		/// <summary>
+		/// Clears the pool of any objects not in use
+		/// ONLY WORKS WHEN POOLING IS ENABLED
+		/// </summary>
+		/// <param name="amount"></param>
+		[System.Diagnostics.Conditional("EITRUM_POOLING")]
+		public void PoolClear() {
+#if EITRUM_POOLING
+			poolData.ClearObjects();
+#endif
+		}
+
 		#endregion
 	}
 }

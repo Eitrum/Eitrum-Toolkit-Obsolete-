@@ -129,6 +129,14 @@ namespace Eitrum {
 				updateNode = EiUpdateSystem.Instance.SubscribeUpdate(this);
 		}
 
+		/// <summary>
+		/// Clears the pool of any objects not currently in use
+		/// </summary>
+		public void ClearObjects() {
+			parentContainer.Destroy(0f);
+			pooledObjects.Clear();
+		}
+
 		#endregion
 
 		#region Update system Implementations
