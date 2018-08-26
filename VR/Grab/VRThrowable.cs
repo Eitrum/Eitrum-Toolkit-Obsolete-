@@ -164,7 +164,7 @@ namespace Eitrum.VR {
 				this.transform.rotation = grab.transform.rotation * (lerpRotationToCenter ? Quaternion.Slerp(onGrabRotation, Quaternion.Euler(grabRotationOffset), value) : onGrabRotation);
 			}
 
-			timeUntilNextRecord -= time;
+			timeUntilNextRecord -= time / Time.timeScale;
 			if (timeUntilNextRecord <= 0f) {
 				timeUntilNextRecord += recordStepInterval;
 				Record();

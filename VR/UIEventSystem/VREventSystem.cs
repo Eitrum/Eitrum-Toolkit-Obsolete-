@@ -54,7 +54,7 @@ namespace Eitrum.VR.UI {
 
 		private void Awake() {
 #if !EITRUM_PERFORMANCE_MODE
-			if(!pointer)
+			if (!pointer)
 				throw new System.Exception(string.Format("{0} (VREventSystem) do not have a pointer attached", gameObject.name));
 #endif
 			SubscribePreUpdate();
@@ -68,7 +68,6 @@ namespace Eitrum.VR.UI {
 				}
 				if (currentDragObject != null) {
 					currentDragObject.OnPointerDrag(this, Vector3.zero, VREventState.End);
-					Debug.Log("It ended");
 					currentDragObject = null;
 				}
 				currentClickObject = null;
@@ -128,7 +127,7 @@ namespace Eitrum.VR.UI {
 					currentHoverObject.OnPointerHover(this, VREventState.Begin);
 			}
 			if (isKeyActive) {
-				if (!dragActive && Vector3.Distance(startPosition, currentPosition) >= dragThreshold) {
+				if (!dragActive && currentDragObject != null && Vector3.Distance(startPosition, currentPosition) >= dragThreshold) {
 					dragActive = true;
 					currentDragObject.OnPointerDrag(this, currentPosition - startPosition, VREventState.Begin);
 				}

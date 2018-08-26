@@ -12,7 +12,6 @@ namespace Eitrum.Health {
 				return;
 			var damageInterface = collision.collider.GetComponent<EiDamageInterface>();
 			if (damageInterface != null) {
-				Debug.Log("Hit and dealing damage now");
 				var copy = damage.Copy;
 				copy.ApplySource(Entity);
 				

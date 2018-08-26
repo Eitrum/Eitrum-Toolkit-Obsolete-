@@ -89,13 +89,6 @@ namespace Eitrum.VR {
 					pointerTarget.SetActive(alwaysShowPointer || didHit);
 				if (lineRenderer)
 					lineRenderer.enabled = alwaysShowPointer || didHit;
-				if (alwaysShowPointer) {
-					var localPosition = new Vector3(0, 0, pointerRange);
-					if (lineRenderer)
-						lineRenderer.SetPosition(1, localPosition);
-					if (pointerTarget)
-						pointerTarget.transform.localPosition = localPosition;
-				}
 			}
 			if (hit) {
 				var localPosition = new Vector3(0, 0, lastHit.distance);
@@ -103,6 +96,15 @@ namespace Eitrum.VR {
 					lineRenderer.SetPosition(1, localPosition);
 				if (pointerTarget)
 					pointerTarget.transform.localPosition = localPosition;
+			}
+			else {
+				if (alwaysShowPointer) {
+					var localPosition = new Vector3(0, 0, pointerRange);
+					if (lineRenderer)
+						lineRenderer.SetPosition(1, localPosition);
+					if (pointerTarget)
+						pointerTarget.transform.localPosition = localPosition;
+				}
 			}
 		}
 
@@ -112,6 +114,12 @@ namespace Eitrum.VR {
 
 		public void Enable() {
 			isDisabled.Decrement();
+			if (!isDisabled && alwaysShowPointer) {
+				if (pointerTarget)
+					pointerTarget.SetActive(true);
+				if (lineRenderer)
+					lineRenderer.enabled = true;
+			}
 		}
 
 		public void Disable() {

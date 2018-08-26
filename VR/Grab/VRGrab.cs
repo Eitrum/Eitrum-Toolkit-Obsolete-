@@ -35,6 +35,10 @@ namespace Eitrum.VR {
 		[SerializeField]
 		private float releaseThreshold = 0.05f;
 
+		[Header("Other Settings")]
+		[SerializeField]
+		private bool simulateGrabSlowMotion = false;
+
 		#endregion
 
 		#region State
@@ -91,7 +95,9 @@ namespace Eitrum.VR {
 		}
 
 		public override void UpdateComponent(float time) {
-			var newValue = Input.GetAxisRaw(inputAxis);
+			var newValue = simulateGrabSlowMotion ?
+				Mathf.Lerp(grabAmount, Input.GetAxisRaw(inputAxis), Time.timeScale * Mathf.Lerp(time, 1f, Time.timeScale)) :
+				Input.GetAxisRaw(inputAxis);
 			if (isGrabbing) {
 				if (newValue > grabAmount)
 					previousStateValue = newValue;
