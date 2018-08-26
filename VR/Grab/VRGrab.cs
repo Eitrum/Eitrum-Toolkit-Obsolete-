@@ -13,6 +13,11 @@ namespace Eitrum.VR {
 		[SerializeField]
 		private string inputAxis = "Joystick_Axis_11";
 		[SerializeField]
+		[Tooltip("This is an optional field")]
+		private VRPointer pointer;
+
+		[Header("Physics Settings")]
+		[SerializeField]
 		[Tooltip("0 == Unlimited objects")]
 		[Range(0, 128)]
 		private int maxGrabObjects = 0;
@@ -21,6 +26,8 @@ namespace Eitrum.VR {
 		[SerializeField]
 		[Tooltip("This limits the amount of collisions for grab check down to 32 objects")]
 		private bool useOptimizedGrab = false;
+
+		[Header("Range and Input Threshold")]
 		[SerializeField]
 		private float grabRadius = 1f;
 		[SerializeField]
@@ -123,29 +130,28 @@ namespace Eitrum.VR {
 			if (useOptimizedGrab) {
 				var hits = Physics.OverlapSphereNonAlloc(this.transform.position, this.transform.lossyScale.x * grabRadius, optimizedGrab, layerMask, QueryTriggerInteraction.UseGlobal);
 				for (int i = 0; i < hits; i++) {
-					var grab = optimizedGrab[i].GetComponents<EiGrabInterface>();
-					for (int g = 0; g < grab.Length; g++) {
-						if (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects) {
-							if (grab[g].OnGrab(this))
-								grabbedObjects.Add(grab[g]);
-							else
-								break;
-						}
+					var grab = optimizedGrab[i].GetComponent<EiGrabInterface>();
+					if (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects) {
+						if (grab.OnGrab(this))
+							grabbedObjects.Add(grab);
 					}
 				}
 			}
 			else {
 				var hitObjects = Physics.OverlapSphere(this.transform.position, this.transform.lossyScale.x * grabRadius, layerMask, QueryTriggerInteraction.UseGlobal);
 				for (int i = 0; i < hitObjects.Length; i++) {
-					var grab = hitObjects[i].GetComponents<EiGrabInterface>();
-					for (int g = 0; g < grab.Length; g++) {
-						if (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects) {
-							if (grab[g].OnGrab(this))
-								grabbedObjects.Add(grab[g]);
-							else
-								break;
-						}
+					var grab = hitObjects[i].GetComponent<EiGrabInterface>();
+					if (grab != null && (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects)) {
+						if (grab.OnGrab(this))
+							grabbedObjects.Add(grab);
 					}
+				}
+			}
+			if (pointer && pointer.Hit) {
+				var grabInterface = pointer.HitObject.GetComponent<EiGrabInterface>();
+				if (grabInterface != null && (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects)) {
+					if (grabInterface.OnGrab(this))
+						grabbedObjects.Add(grabInterface);
 				}
 			}
 		}
@@ -156,13 +162,8 @@ namespace Eitrum.VR {
 		/// <param name="grabInterface"></param>
 		/// <returns>Returns true if grab succeeded, otherwise returns false.</returns>
 		public bool Grab(EiEntity entity) {
-			var grab = entity.GetComponents<EiGrabInterface>();
-			bool isGrabbed = false;
-			for (int i = 0; i < grab.Length; i++) {
-				if (Grab(grab[i]))
-					isGrabbed = true;
-			}
-			return isGrabbed;
+			var grab = entity.GetComponent<EiGrabInterface>();
+			return Grab(grab);
 		}
 
 		/// <summary>
@@ -234,6 +235,11 @@ namespace Eitrum.VR {
 
 		private void OnDrawGizmos() {
 			Gizmos.DrawWireSphere(this.transform.position, GrabRadius);
+		}
+
+		protected override void AttachComponents() {
+			base.AttachComponents();
+			pointer = GetComponent<VRPointer>();
 		}
 
 #endif
