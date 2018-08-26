@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Eitrum {
@@ -65,7 +63,11 @@ namespace Eitrum {
 			if (pooledObjects.Count == 0) {
 				return null;
 			}
-			return pooledObjects.Dequeue();
+			var entity = pooledObjects.Dequeue();
+#if EITRUM_POOLING
+			entity.SetPooled(false);
+#endif
+			return entity;
 		}
 
 		public bool Set(EiEntity entity) {
@@ -76,15 +78,18 @@ namespace Eitrum {
 				}
 				entity.SleepPhysics();
 				entity.transform.SetParent(parentContainer);
+#if EITRUM_POOLING
+				entity.SetPooled(true);
+#endif
 				pooledObjects.Enqueue(entity);
 				return true;
 			}
 			return false;
 		}
 
-		#endregion
+#endregion
 
-		#region Fill API
+				#region Fill API
 
 		/// <summary>
 		/// Fills the pool with objects until its full, 1 object per frame
@@ -137,9 +142,9 @@ namespace Eitrum {
 			pooledObjects.Clear();
 		}
 
-		#endregion
+				#endregion
 
-		#region Update system Implementations
+				#region Update system Implementations
 
 		EiComponent EiBaseInterface.Component {
 			get {
@@ -184,9 +189,9 @@ namespace Eitrum {
 			throw new NotImplementedException();
 		}
 
-		#endregion
+				#endregion
 
-		#region Static Helper Methods
+				#region Static Helper Methods
 
 		public static void OnPoolInstantiateHelper(EiEntity entity) {
 			var transform = entity.transform;
@@ -251,6 +256,6 @@ namespace Eitrum {
 #endif
 		}
 
-		#endregion
+				#endregion
 	}
 }

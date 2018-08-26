@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace Eitrum.VR {
 	[AddComponentMenu("Eitrum/VR/Grabbable")]
@@ -45,7 +44,7 @@ namespace Eitrum.VR {
 		#region Grab Interface
 
 		bool EiGrabInterface.OnGrab(VRGrab grab) {
-			if (!CanBeGrabbed)
+			if (!CanBeGrabbed || grab == lastGrabbedHand)
 				return false;
 			lastGrabbedHand = grab;
 			if (setAsChildOfhand) {

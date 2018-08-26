@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.XR;
 
 namespace Eitrum.VR {
 
@@ -56,7 +55,7 @@ namespace Eitrum.VR {
 			if (!Entity || !Entity.Body) {
 				throw new System.Exception(string.Format("VR Throwable object ({0}) is missing Entity or Rigidbody Component", this.gameObject.name));
 			}
-			if(GetComponent<EiGrabInterface>() != this)
+			if(GetComponent<EiGrabInterface>() != this as EiGrabInterface)
 				throw new System.Exception(string.Format("VR Throwable object ({0}) is having other Grab Interface Component", this.gameObject.name));
 		}
 #endif
@@ -124,7 +123,7 @@ namespace Eitrum.VR {
 		#region Grab Interface
 
 		bool EiGrabInterface.OnGrab(VRGrab grab) {
-			if (!CanBeGrabbed)
+			if (!CanBeGrabbed || grab == lastGrabbedHand)
 				return false;
 
 			lastGrabbedHand = grab;

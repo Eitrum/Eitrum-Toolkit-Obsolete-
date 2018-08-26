@@ -67,6 +67,10 @@ namespace Eitrum.VR {
 
 		private void Awake() {
 			SubscribePreUpdate();
+			UpdatePointerVisuals();
+		}
+
+		void UpdatePointerVisuals() {
 			if (pointerTarget)
 				pointerTarget.SetActive(didHit);
 			if (lineRenderer)
@@ -103,14 +107,18 @@ namespace Eitrum.VR {
 
 		public void Disable() {
 			isDisabled.Increment();
-			if (isDisabled)
+			if (isDisabled) {
 				didHit = false;
+				UpdatePointerVisuals();
+			}
 		}
 
 		public void SetActive(bool value) {
 			isDisabled.Set(!value);
-			if (isDisabled)
+			if (isDisabled) {
 				didHit = false;
+				UpdatePointerVisuals();
+			}
 		}
 
 		#endregion

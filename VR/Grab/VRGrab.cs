@@ -127,6 +127,15 @@ namespace Eitrum.VR {
 		public void Grab() {
 			isGrabbing = true;
 			onGrab.Trigger();
+
+			if (pointer && pointer.Hit) {
+				var grabInterface = pointer.HitObject.GetComponent<EiGrabInterface>();
+				if (grabInterface != null && (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects)) {
+					if (grabInterface.OnGrab(this))
+						grabbedObjects.Add(grabInterface);
+				}
+			}
+
 			if (useOptimizedGrab) {
 				var hits = Physics.OverlapSphereNonAlloc(this.transform.position, this.transform.lossyScale.x * grabRadius, optimizedGrab, layerMask, QueryTriggerInteraction.UseGlobal);
 				for (int i = 0; i < hits; i++) {
@@ -147,13 +156,8 @@ namespace Eitrum.VR {
 					}
 				}
 			}
-			if (pointer && pointer.Hit) {
-				var grabInterface = pointer.HitObject.GetComponent<EiGrabInterface>();
-				if (grabInterface != null && (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects)) {
-					if (grabInterface.OnGrab(this))
-						grabbedObjects.Add(grabInterface);
-				}
-			}
+			if (pointer)
+				pointer.Disable();
 		}
 
 		/// <summary>
@@ -188,6 +192,8 @@ namespace Eitrum.VR {
 		/// </summary>
 		public void Release() {
 			isGrabbing = false;
+			if (pointer)
+				pointer.Enable();
 			onRelease.Trigger();
 
 			var iterator = grabbedObjects.GetIterator();

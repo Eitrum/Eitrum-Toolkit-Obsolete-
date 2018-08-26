@@ -6,7 +6,7 @@ using Eitrum.Networking;
 
 namespace Eitrum {
 	public class EiComponent : MonoBehaviour, EiUpdateInterface {
-#region Variables
+		#region Variables
 
 		[SerializeField]
 		[HideInInspector]
@@ -25,9 +25,9 @@ namespace Eitrum {
 		public EiLLNode<EiUpdateInterface> fixedUpdateNode;
 		public EiLLNode<EiUpdateInterface> threadedUpdateNode;
 
-#endregion
+		#endregion
 
-#region Properties
+		#region Properties
 
 		public EiEntity Entity {
 			get {
@@ -72,13 +72,17 @@ namespace Eitrum {
 
 		public bool IsNull {
 			get {
+#if EITRUM_POOLING
+				return this == null || (Entity && entity.IsPooled);
+#else
 				return this == null;
+#endif
 			}
 		}
 
-#endregion
+		#endregion
 
-#region Instantiate EiPrefab
+		#region Instantiate EiPrefab
 
 		public static GameObject Instantiate(EiPrefab prefab) {
 			return prefab.Instantiate();
@@ -104,9 +108,9 @@ namespace Eitrum {
 			return prefab.Instantiate(position, rotation, scale, parent);
 		}
 
-#endregion
+		#endregion
 
-#region Destroy
+		#region Destroy
 
 		public virtual void Destroy() {
 			if (entity)
@@ -133,9 +137,9 @@ namespace Eitrum {
 			Destroy(transform.gameObject);
 		}
 
-#endregion
+		#endregion
 
-#region Virtual Update Calls
+		#region Virtual Update Calls
 
 		public virtual void PreUpdateComponent(float time) {
 
@@ -157,11 +161,11 @@ namespace Eitrum {
 
 		}
 
-#endregion
+		#endregion
 
-#region Subscribe/Unsubscribe
+		#region Subscribe/Unsubscribe
 
-#region Update Timer
+		#region Update Timer
 
 		/// <summary>
 		/// Subscribes the update timer, store value to be able to unsubscribe.
@@ -177,9 +181,9 @@ namespace Eitrum {
 			EiUpdateSystem.Instance.UnsubscribeTimerUpdate(node);
 		}
 
-#endregion
+		#endregion
 
-#region Pre Update
+		#region Pre Update
 
 		protected void SubscribePreUpdate() {
 			if (preUpdateNode == null)
@@ -192,9 +196,9 @@ namespace Eitrum {
 			preUpdateNode = null;
 		}
 
-#endregion
+		#endregion
 
-#region Update
+		#region Update
 
 		protected void SubscribeUpdate() {
 			if (updateNode == null)
@@ -207,9 +211,9 @@ namespace Eitrum {
 			updateNode = null;
 		}
 
-#endregion
+		#endregion
 
-#region Threaded Update
+		#region Threaded Update
 
 		protected void SubscribeThreadedUpdate() {
 			if (threadedUpdateNode == null)
@@ -222,9 +226,9 @@ namespace Eitrum {
 			threadedUpdateNode = null;
 		}
 
-#endregion
+		#endregion
 
-#region Late Update
+		#region Late Update
 
 		protected void SubscribeLateUpdate() {
 			if (lateUpdateNode == null)
@@ -237,9 +241,9 @@ namespace Eitrum {
 			lateUpdateNode = null;
 		}
 
-#endregion
+		#endregion
 
-#region Fixed Update
+		#region Fixed Update
 
 		protected void SubscribeFixedUpdate() {
 			if (fixedUpdateNode == null)
@@ -252,9 +256,9 @@ namespace Eitrum {
 			fixedUpdateNode = null;
 		}
 
-#endregion
+		#endregion
 
-#region Message System
+		#region Message System
 
 		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T>(Action<T> action) {
 			return EiMessage.Subscribe<T>(this, action);
@@ -272,10 +276,11 @@ namespace Eitrum {
 			EiMessage<T>.Publish(message);
 		}
 
-#endregion
+		#endregion
 
-#endregion
+		#endregion
 
+		#region Editor
 #if UNITY_EDITOR
 
 		[ContextMenu("Attach All Components On Entity")]
@@ -296,7 +301,7 @@ namespace Eitrum {
 			netView = GetComponent<EiNetworkView>();
 #endif
 		}
-
 #endif
+		#endregion
 	}
 }

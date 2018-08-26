@@ -47,8 +47,8 @@ namespace Eitrum {
 		[SerializeField]
 		private EiPoolableComponent[] poolableInterfaces;
 		private EiPoolData poolTarget;
+		private bool isPooled = false;
 #endif
-
 		private Action<EiEntity> onDestroy;
 
 		#endregion
@@ -120,6 +120,7 @@ namespace Eitrum {
 				return input;
 			}
 		}
+
 #if EITRUM_POOLING
 		public EiPoolableComponent[] PoolableInterfaces {
 			get {
@@ -130,6 +131,12 @@ namespace Eitrum {
 		public EiPoolData PoolTarget {
 			get {
 				return poolTarget;
+			}
+		}
+
+		public bool IsPooled {
+			get {
+				return isPooled;
 			}
 		}
 #endif
@@ -181,6 +188,14 @@ namespace Eitrum {
 		public void AssignPoolTarget(EiPoolData item) {
 			poolTarget = item;
 		}
+
+		/// <summary>
+		/// used by pooling system
+		/// </summary>
+		/// <param name="value"></param>
+		public void SetPooled(bool value) {
+			isPooled = value;
+		}
 #endif
 
 
@@ -197,7 +212,7 @@ namespace Eitrum {
 		#endregion
 
 		#region SetRemove Parent
-		
+
 		public void SetParent(EiEntity entity) {
 			this.transform.SetParent(entity.transform);
 		}

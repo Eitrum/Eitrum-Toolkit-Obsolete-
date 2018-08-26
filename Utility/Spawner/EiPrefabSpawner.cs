@@ -43,7 +43,7 @@ namespace Eitrum.Utility.Spawner {
 		private GameObject spawnedReference;
 
 		private EiTrigger onSpawned = new EiTrigger();
-		private EiTrigger<UnityEngine.Object> onSpawnedObject = new EiTrigger<UnityEngine.Object>();
+		private EiTrigger<GameObject> onSpawnedObject = new EiTrigger<GameObject>();
 
 		#endregion
 
@@ -153,8 +153,23 @@ namespace Eitrum.Utility.Spawner {
 			}
 			spawnedReference = prefabToSpawn.Instantiate(SpawnPosition, SpawnRotation, SpawnScale);
 
+			var entity = spawnedReference.GetComponent<EiEntity>();
+			if (entity) {
+				entity.SubscribeOnDeath(OnEntityDestroyed);
+			}
+
 			onSpawned.Trigger();
 			onSpawnedObject.Trigger(spawnedReference);
+		}
+
+		void OnEntityDestroyed(EiEntity entity) {
+			if (this == null)
+				return;
+			if (spawnedReference == entity.gameObject) {
+				spawnedReference = null;
+				if (respawnIfReferenceIsGone)
+					ForceSpawn();
+			}
 		}
 
 		#endregion
