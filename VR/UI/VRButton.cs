@@ -71,7 +71,6 @@ namespace Eitrum.VR.UI {
 			newColor = color;
 			EiTimer.Stop(transition);
 			transition = EiTimer.Animate(transitionTime, Animation);
-			Debug.Log(color);
 		}
 
 		void Animation(float time) {

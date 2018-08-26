@@ -3,7 +3,7 @@
 namespace Eitrum.VR {
 
 	[AddComponentMenu("Eitrum/VR/Throwable")]
-	public class VRThrowable : EiComponent, EiGrabInterface {
+	public class VRThrowable : EiComponent, EiGrabInterface, EiPoolableInterface {
 
 		#region Variables
 		[Header("Grab Settings")]
@@ -55,7 +55,7 @@ namespace Eitrum.VR {
 			if (!Entity || !Entity.Body) {
 				throw new System.Exception(string.Format("VR Throwable object ({0}) is missing Entity or Rigidbody Component", this.gameObject.name));
 			}
-			if(GetComponent<EiGrabInterface>() != this as EiGrabInterface)
+			if (GetComponent<EiGrabInterface>() != this as EiGrabInterface)
 				throw new System.Exception(string.Format("VR Throwable object ({0}) is having other Grab Interface Component", this.gameObject.name));
 		}
 #endif
@@ -199,6 +199,18 @@ namespace Eitrum.VR {
 				this.deltaRotation = deltaRotation;
 				angularVel = deltaRotation.ToAngularVelocity();
 			}
+		}
+
+		#endregion
+
+		#region Pool Interface
+
+		void EiPoolableInterface.OnPoolInstantiate() {
+
+		}
+
+		void EiPoolableInterface.OnPoolDestroy() {
+			lastGrabbedHand = null;
 		}
 
 		#endregion

@@ -177,6 +177,7 @@ namespace Eitrum
 	[Serializable]
 	public class EiPropertyEventFloat : EiPropertyEvent<float>
 	{
+		[SerializeField]
 		private bool clamp01 = false;
 
 		public EiPropertyEventFloat ()

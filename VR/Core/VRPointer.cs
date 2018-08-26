@@ -9,6 +9,8 @@ namespace Eitrum.VR {
 		[Header("Settings")]
 		[SerializeField]
 		private float pointerRange = 20f;
+		[SerializeField]
+		private bool alwaysShowPointer = false;
 
 		[Header("Visual Settings (Optional, Local Position)")]
 		[SerializeField]
@@ -84,9 +86,16 @@ namespace Eitrum.VR {
 			if (hit != didHit) {
 				didHit = hit;
 				if (pointerTarget)
-					pointerTarget.SetActive(didHit);
+					pointerTarget.SetActive(alwaysShowPointer || didHit);
 				if (lineRenderer)
-					lineRenderer.enabled = didHit;
+					lineRenderer.enabled = alwaysShowPointer || didHit;
+				if (alwaysShowPointer) {
+					var localPosition = new Vector3(0, 0, pointerRange);
+					if (lineRenderer)
+						lineRenderer.SetPosition(1, localPosition);
+					if (pointerTarget)
+						pointerTarget.transform.localPosition = localPosition;
+				}
 			}
 			if (hit) {
 				var localPosition = new Vector3(0, 0, lastHit.distance);

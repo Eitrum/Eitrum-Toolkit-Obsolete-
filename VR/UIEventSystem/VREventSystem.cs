@@ -42,6 +42,12 @@ namespace Eitrum.VR.UI {
 			}
 		}
 
+		public Vector3 PointerPosition {
+			get {
+				return pointer.WorldPosition;
+			}
+		}
+
 		#endregion
 
 		#region Core
@@ -62,6 +68,7 @@ namespace Eitrum.VR.UI {
 				}
 				if (currentDragObject != null) {
 					currentDragObject.OnPointerDrag(this, Vector3.zero, VREventState.End);
+					Debug.Log("It ended");
 					currentDragObject = null;
 				}
 				currentClickObject = null;
@@ -113,6 +120,7 @@ namespace Eitrum.VR.UI {
 				}
 				if (currentDragObject != null) {
 					currentDragObject.OnPointerDrag(this, delta, VREventState.End);
+					currentDragObject = null;
 					dragActive = false;
 				}
 				currentHoverObject = hitObj.GetComponent<VROnPointerHover>();
