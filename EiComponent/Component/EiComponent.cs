@@ -19,11 +19,11 @@ namespace Eitrum {
 #endif
 
 		// Should Not ever be touched by anything!!! Used by core engine for performance
-		public EiLLNode<EiUpdateInterface> preUpdateNode;
-		public EiLLNode<EiUpdateInterface> updateNode;
-		public EiLLNode<EiUpdateInterface> lateUpdateNode;
-		public EiLLNode<EiUpdateInterface> fixedUpdateNode;
-		public EiLLNode<EiUpdateInterface> threadedUpdateNode;
+		private EiLLNode<EiUpdateInterface> preUpdateNode;
+		private EiLLNode<EiUpdateInterface> updateNode;
+		private EiLLNode<EiUpdateInterface> lateUpdateNode;
+		private EiLLNode<EiUpdateInterface> fixedUpdateNode;
+		private EiLLNode<EiUpdateInterface> threadedUpdateNode;
 
 		#endregion
 
