@@ -3,28 +3,26 @@
 namespace Eitrum.VR {
 
 	[AddComponentMenu("Eitrum/VR/Throwable")]
-	public class VRThrowable : EiComponent, EiGrabInterface, EiPoolableInterface {
+	public class VRThrowable : EiComponent {
 
 		#region Variables
-		[Header("Grab Settings")]
-		public bool setAsChildOfhand = false;
-		public bool canSwitchHand = false;
-
-		[Header("Position Settings")]
-		public bool lerpPositionToCenter = false;
-		public Vector3 grabOffset = Vector3.zero;
-		public bool lerpRotationToCenter = false;
-		public Vector3 grabRotationOffset = Vector3.zero;
+		[Header("VRGrabbable")]
+		[SerializeField]
+		private VRGrabbable grabbable;
 
 		[Header("Throw Settings")]
-		public float forceMultiplier = 2f;
-		[Tooltip("Not Implemented Yet")]
-		public bool advancedThrowingCalculations = false;
+		[SerializeField]
+		private float forceMultiplier = 2f;
+		//[Tooltip("Not Implemented Yet")]
+		//[SerializeField]
+		//private bool advancedThrowingCalculations = false;
 
 		[Header("Throw Step Settings")]
-		public float recordStepInterval = 0.02f;
+		[SerializeField]
+		private float recordStepInterval = 0.02f;
 		[Range(1, 10)]
-		public int recordStepKeyframes = 5;
+		[SerializeField]
+		private int recordStepKeyframes = 5;
 
 		private Vector3 lastPosition;
 		private Quaternion lastRotation;
@@ -32,33 +30,28 @@ namespace Eitrum.VR {
 		private Keyframe[] keyframes;
 		private int index = 0;
 
-		private Vector3 onGrabLocation;
-		private Quaternion onGrabRotation;
-		private VRGrab lastGrabbedHand;
-
-		#endregion
-
-		#region Properties
-
-		public bool CanBeGrabbed {
-			get {
-				return canSwitchHand || lastGrabbedHand == null;
-			}
-		}
-
 		#endregion
 
 		#region Core
 
-#if !EITRUM_PERFORMANCE_MODE
 		void Awake() {
+#if !EITRUM_PERFORMANCE_MODE
 			if (!Entity || !Entity.Body) {
 				throw new System.Exception(string.Format("VR Throwable object ({0}) is missing Entity or Rigidbody Component", this.gameObject.name));
 			}
-			if (GetComponent<EiGrabInterface>() != this as EiGrabInterface)
-				throw new System.Exception(string.Format("VR Throwable object ({0}) is having other Grab Interface Component", this.gameObject.name));
-		}
 #endif
+			grabbable.OnGrabSubscribe(OnGrab);
+			grabbable.OnGrabUpdateSubscribe(OnGrabUpdate);
+			grabbable.OnReleaseSubscribe(OnRelase);
+		}
+
+		private void OnDestroy() {
+			if (grabbable) {
+				grabbable.OnGrabUnsubscribe(OnGrab);
+				grabbable.OnGrabUpdateUnsubscribe(OnGrabUpdate);
+				grabbable.OnReleaseUnsubscribe(OnRelase);
+			}
+		}
 
 		#endregion
 
@@ -122,21 +115,7 @@ namespace Eitrum.VR {
 
 		#region Grab Interface
 
-		bool EiGrabInterface.OnGrab(VRGrab grab) {
-			if (!CanBeGrabbed || grab == lastGrabbedHand)
-				return false;
-
-			lastGrabbedHand = grab;
-			if (setAsChildOfhand) {
-				Entity.SetParent(grab.transform);
-				onGrabLocation = this.transform.localPosition;
-				onGrabRotation = this.transform.localRotation;
-			}
-			else {
-				onGrabLocation = Quaternion.Inverse(grab.transform.rotation) * (this.transform.position - grab.transform.position);
-				onGrabRotation = Quaternion.Inverse(grab.transform.rotation) * this.transform.rotation;
-			}
-
+		void OnGrab(VRGrab grab) {
 			Entity.FreezePhysics();
 
 			if (keyframes == null)
@@ -147,28 +126,9 @@ namespace Eitrum.VR {
 
 			index = 0;
 			timeUntilNextRecord = recordStepInterval;
-			return true;
 		}
 
-		void EiGrabInterface.OnGrabUpdate(VRGrab grab, float value, float time) {
-			if (lastGrabbedHand != grab)
-				return;
-			if (setAsChildOfhand) {
-				if (lerpPositionToCenter)
-					this.transform.localPosition = Vector3.Lerp(onGrabLocation, grabOffset, value);
-				else
-					this.transform.localPosition = onGrabLocation;
-
-				if (lerpRotationToCenter)
-					this.transform.localRotation = Quaternion.Slerp(onGrabRotation, Quaternion.Euler(grabRotationOffset), value);
-				else
-					this.transform.localRotation = onGrabRotation;
-			}
-			else {
-				this.transform.position = grab.transform.position + (grab.transform.rotation) * (lerpPositionToCenter ? Vector3.Lerp(onGrabLocation, grabOffset, value) : onGrabLocation);
-				this.transform.rotation = grab.transform.rotation * (lerpRotationToCenter ? Quaternion.Slerp(onGrabRotation, Quaternion.Euler(grabRotationOffset), value) : onGrabRotation);
-			}
-
+		void OnGrabUpdate(VRGrab grab, float value, float time) {
 			timeUntilNextRecord -= time / Time.timeScale;
 			if (timeUntilNextRecord <= 0f) {
 				timeUntilNextRecord += recordStepInterval;
@@ -176,14 +136,7 @@ namespace Eitrum.VR {
 			}
 		}
 
-		void EiGrabInterface.OnRelase(VRGrab grab) {
-			if (lastGrabbedHand != grab)
-				return;
-			lastGrabbedHand = null;
-
-			if (setAsChildOfhand)
-				Entity.ReleaseParent();
-
+		void OnRelase(VRGrab grab) {
 			Entity.UnfreezePhysics();
 			Entity.Body.velocity = GetVelocity();
 			Entity.Body.angularVelocity = GetAngularVelocity();
@@ -208,16 +161,13 @@ namespace Eitrum.VR {
 
 		#endregion
 
-		#region Pool Interface
-
-		void EiPoolableInterface.OnPoolInstantiate() {
-
+		#region Editor
+#if UNITY_EDITOR
+		protected override void AttachComponents() {
+			base.AttachComponents();
+			grabbable = this.GetOrAddComponent<VRGrabbable>();
 		}
-
-		void EiPoolableInterface.OnPoolDestroy() {
-			lastGrabbedHand = null;
-		}
-
+#endif
 		#endregion
 	}
 }
