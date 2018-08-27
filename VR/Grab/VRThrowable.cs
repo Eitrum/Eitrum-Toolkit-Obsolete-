@@ -156,8 +156,13 @@ namespace Eitrum.VR {
 			if (setAsChildOfhand) {
 				if (lerpPositionToCenter)
 					this.transform.localPosition = Vector3.Lerp(onGrabLocation, grabOffset, value);
+				else
+					this.transform.localPosition = onGrabLocation;
+
 				if (lerpRotationToCenter)
 					this.transform.localRotation = Quaternion.Slerp(onGrabRotation, Quaternion.Euler(grabRotationOffset), value);
+				else
+					this.transform.localRotation = onGrabRotation;
 			}
 			else {
 				this.transform.position = grab.transform.position + (grab.transform.rotation) * (lerpPositionToCenter ? Vector3.Lerp(onGrabLocation, grabOffset, value) : onGrabLocation);

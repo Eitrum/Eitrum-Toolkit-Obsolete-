@@ -11,9 +11,15 @@ namespace Eitrum.VR {
 	public class VRTracker : EiComponent {
 
 		#region Variables
+
 		[Header("Settings")]
 		[SerializeField]
 		private XRNode trackingNode = XRNode.Head;
+
+		private Vector3 localPosition;
+		private Quaternion localRotation;
+
+		private EiBoolStack disabled = new EiBoolStack();
 
 		#endregion
 
@@ -22,6 +28,42 @@ namespace Eitrum.VR {
 		public XRNode TrackingNode {
 			get {
 				return trackingNode;
+			}
+		}
+
+		public bool IsEnabled {
+			get {
+				return !disabled;
+			}
+		}
+
+		public bool IsDisabled {
+			get {
+				return disabled;
+			}
+		}
+
+		public Vector3 InputLocalPosition {
+			get {
+				return localPosition;
+			}
+		}
+
+		public Vector3 TrackedWorldPosition {
+			get {
+				return this.transform.position;
+			}
+		}
+
+		public Quaternion InputLocalRotation {
+			get {
+				return localRotation;
+			}
+		}
+
+		public Quaternion TrackedWorldRotation {
+			get {
+				return this.transform.rotation;
 			}
 		}
 
@@ -36,8 +78,20 @@ namespace Eitrum.VR {
 		public override void PreUpdateComponent(float time) {
 			if (!VRCore.HasTracking(trackingNode))
 				return;
-			this.transform.localPosition = InputTracking.GetLocalPosition(trackingNode);
-			this.transform.localRotation = InputTracking.GetLocalRotation(trackingNode);
+			localPosition = InputTracking.GetLocalPosition(trackingNode);
+			localRotation = InputTracking.GetLocalRotation(trackingNode);
+			if (!disabled) {
+				this.transform.localPosition = localPosition;
+				this.transform.localRotation = localRotation;
+			}
+		}
+
+		public void DisableTracking() {
+			disabled++;
+		}
+
+		public void EnableTracking() {
+			disabled--;
 		}
 
 		#endregion
