@@ -5,15 +5,15 @@ using UnityEditor;
 namespace Eitrum {
 	[CustomPropertyDrawer(typeof(EiStat))]
 	public class EiStatEditor : PropertyDrawer {
-		static bool folded = false;
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-			if (folded)
+			if (property.isExpanded)
 				return base.GetPropertyHeight(property, label) * 4f;
 			return base.GetPropertyHeight(property, label);
 		}
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+			var folded = property.isExpanded;
 			var baseStat = property.FindPropertyRelative("baseStat");
 			var statMultiplier = property.FindPropertyRelative("statMultiplier");
 			var statMultiplierX = property.FindPropertyRelative("statMultiplierX");
@@ -51,7 +51,7 @@ namespace Eitrum {
 			}
 			var changed = EditorGUI.Foldout(position, folded, "", true);
 			if (changed != folded) {
-				folded = changed;
+				property.isExpanded = changed;
 				EditorUtility.SetDirty(property.serializedObject.targetObject);
 			}
 
