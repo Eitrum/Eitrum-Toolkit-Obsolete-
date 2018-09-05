@@ -617,7 +617,7 @@ namespace Eitrum
 
 		public EiBuffer Write (Type value)
 		{
-			return WriteASCII (value.FullName);
+			return WriteASCII (value.AssemblyQualifiedName);
 		}
 
 		public EiBuffer Write (DateTime value)
