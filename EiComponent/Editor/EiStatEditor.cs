@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Eitrum {
-	[CustomPropertyDrawer(typeof(EiStat))]
+	[CustomPropertyDrawer(typeof(EiStat), true)]
 	public class EiStatEditor : PropertyDrawer {
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {

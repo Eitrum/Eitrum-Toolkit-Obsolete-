@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class Readonly : PropertyAttribute
-{
-	
+namespace Eitrum {
+	[AttributeUsage(AttributeTargets.Field)]
+	public class Readonly : PropertyAttribute {
+	}
 }
