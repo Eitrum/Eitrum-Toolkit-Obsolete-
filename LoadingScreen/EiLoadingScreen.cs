@@ -77,16 +77,6 @@ namespace Eitrum.Loading
 
 		#region Core
 
-		public void LoadLevel(EiDatabaseItem item)
-		{
-			LoadLevel(item.SceneName);
-		}
-
-		public void LoadLevel(EiDatabaseItem item, bool unloadAllScenes)
-		{
-			LoadLevel(item.SceneName, unloadAllScenes);
-		}
-
 		public void LoadLevel(string sceneName)
 		{
 			LoadLevel(sceneName, true);

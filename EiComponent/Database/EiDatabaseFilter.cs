@@ -36,28 +36,5 @@ namespace Eitrum
 				return true;
 			return item.Item.GetComponent(typeFilter) != null;
 		}
-
-		public bool IsCorrect(EiDatabaseItem item, string path)
-		{
-			if (pathFilter != null && !path.Contains(pathFilter))
-				return false;
-
-#if UNITY_EDITOR
-			if (typeFilter == typeof(UnityEngine.SceneManagement.Scene))
-			{
-				var assetPath = AssetDatabase.GetAssetPath(item.Object);
-				if (assetPath.EndsWith(".unity"))
-				{
-					return true;
-				}
-				return false;
-			}
-#endif
-
-			if (typeFilter == null)
-				return true;
-
-			return typeFilter == item.Object.GetType();
-		}
 	}
 }
