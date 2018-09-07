@@ -3,9 +3,9 @@
 --- !u!134 &13400000
 PhysicMaterial:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: MaxFricionNoBounce
+  m_Name: MaxFrictionNoBounce
   dynamicFriction: 2000
   staticFriction: 2000
   bounciness: 0
