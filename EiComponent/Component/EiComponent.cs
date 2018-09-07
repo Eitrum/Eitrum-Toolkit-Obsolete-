@@ -7,7 +7,6 @@ using Eitrum.Networking;
 namespace Eitrum {
 	public class EiComponent : MonoBehaviour, EiUpdateInterface {
 		#region Variables
-
 		[SerializeField]
 		[HideInInspector]
 		private EiEntity entity;
@@ -44,6 +43,12 @@ namespace Eitrum {
 #else
 				return false;
 #endif
+			}
+		}
+
+		public static bool GameRunning {
+			get {
+				return EiUnityThreading.gameRunning;
 			}
 		}
 
