@@ -52,6 +52,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 0}
-  subCategories:
-  - {fileID: 11400000, guid: 07d79d8db0a7a454ca0c02ef4aae378d, type: 2}
+  subCategories: []
   cachedItems: []
