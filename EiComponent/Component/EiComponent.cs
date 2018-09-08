@@ -211,7 +211,7 @@ namespace Eitrum {
 		}
 
 		protected void UnsubscribeUpdate() {
-			if (updateNode != null)
+			if (updateNode != null && GameRunning)
 				EiUpdateSystem.Instance.UnsubscribeUpdate(updateNode);
 			updateNode = null;
 		}

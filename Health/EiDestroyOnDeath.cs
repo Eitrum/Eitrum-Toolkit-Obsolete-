@@ -1,14 +1,12 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Eitrum.Health
-{
-	[AddComponentMenu ("Eitrum/Health/Destroy On Death")]
-	public class EiDestroyOnDeath : EiComponent
-	{
+namespace Eitrum.Health {
+	[AddComponentMenu("Eitrum/Health/Destroy On Death")]
+	public class EiDestroyOnDeath : EiComponent {
 		#region Variables
 
-		[Header ("Settings")]
+		[Header("Settings")]
 		[SerializeField]
 		protected Transform targetRootToDestroy;
 		[SerializeField]
@@ -20,41 +18,39 @@ namespace Eitrum.Health
 
 		#region Core
 
-		void Awake ()
-		{
-			healthComponent.SubscribeOnDeath (OnDeathCallback);
+		void Awake() {
+			healthComponent.SubscribeOnDeath(OnDeathCallback);
 		}
 
-		void OnDestroy ()
-		{
-			healthComponent.UnsubscribeOnDeath (OnDeathCallback);
+		void OnDestroy() {
+			healthComponent.UnsubscribeOnDeath(OnDeathCallback);
 		}
 
-		void OnDeathCallback ()
-		{
-			EiTimer.Once (timeBeforeDestroy, DestroyThis);
-		}
-
-		void DestroyThis ()
-		{
-			if (targetRootToDestroy)
-				Destroy (targetRootToDestroy);
+		void OnDeathCallback() {
+			if (timeBeforeDestroy == 0f)
+				DestroyThis();
 			else
-				Destroy (this.gameObject);
+				EiTimer.Once(timeBeforeDestroy, DestroyThis);
+		}
+
+		void DestroyThis() {
+			if (targetRootToDestroy)
+				Destroy(targetRootToDestroy);
+			else
+				Destroy(this.gameObject);
 		}
 
 		#endregion
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		protected override void AttachComponents ()
-		{
+		protected override void AttachComponents() {
 			targetRootToDestroy = this.transform;
-			healthComponent = GetComponent<EiHealth> ();
-			base.AttachComponents ();
+			healthComponent = GetComponent<EiHealth>();
+			base.AttachComponents();
 		}
 
-		#endif
+#endif
 	}
 }
 

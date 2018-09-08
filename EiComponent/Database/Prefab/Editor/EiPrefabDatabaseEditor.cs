@@ -4,15 +4,32 @@ using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 
-namespace Eitrum.Database {
+namespace Eitrum.Database.Prefab{
 	[CustomEditor(typeof(EiPrefabDatabase))]
 	public class EiPrefabDatabaseEditor : Editor {
 		#region Variables
 
 		const string simplePath = "Eitrum/EiComponent/Database/Prefab/Items";
+		const string configPath = "Assets/Eitrum/Configuration/EiPrefabDatabase.prefab";
 
 		private List<EiPrefab> prefabs = new List<EiPrefab>();
 		private int id = 0;
+
+		#endregion
+
+		#region Editor
+
+		[MenuItem("Eitrum/Prefab Database")]
+		public static void OpenPrefabDatabase() {
+			var go = AssetDatabase.LoadAssetAtPath<GameObject>(configPath);
+			if (!go) {
+				var tempObj = new GameObject("EiPrefabDatabase", typeof(EiPrefabDatabase));
+				go = PrefabUtility.CreatePrefab(configPath, tempObj);
+				UnityEngine.MonoBehaviour.DestroyImmediate(tempObj);
+			}
+			var window = EditorWindow.GetWindow<EiPrefabDatabaseWindow>();
+			window.database = go.GetComponent<EiPrefabDatabase>();
+		}
 
 		#endregion
 
@@ -66,7 +83,7 @@ namespace Eitrum.Database {
 
 		#region Draw
 
-		void DrawDatabase(EiPrefabDatabase db) {
+		public static void DrawDatabase(EiPrefabDatabase db) {
 			var subCatList = GetSubCategoryList(db);
 			EditorGUILayout.LabelField(string.Format("Categories ({0})", subCatList.Count));
 			for (int i = 0; i < subCatList.Count; i++) {
@@ -75,7 +92,7 @@ namespace Eitrum.Database {
 					subCatList.RemoveAt(i--);
 					continue;
 				}
-				DrawSubCategory(subCatList[i]);
+				DrawSubCategory(db, subCatList[i]);
 			}
 
 			EditorGUILayout.BeginHorizontal();
@@ -96,7 +113,7 @@ namespace Eitrum.Database {
 			EditorUtility.SetDirty(db);
 		}
 
-		void DrawSubCategory(EiPrefabSubCategory subCategory) {
+		private static void DrawSubCategory(EiPrefabDatabase db, EiPrefabSubCategory subCategory) {
 			var subCatList = subCategory.subCategories;
 			var items = subCategory.items;
 
@@ -117,7 +134,7 @@ namespace Eitrum.Database {
 						subCatList.RemoveAt(i--);
 						continue;
 					}
-					DrawSubCategory(subCatList[i]);
+					DrawSubCategory(db, subCatList[i]);
 				}
 				for (int i = 0; i < items.Count; i++) {
 					var item = items[i];
@@ -125,7 +142,7 @@ namespace Eitrum.Database {
 						items.RemoveAt(i--);
 						continue;
 					}
-					DrawItem(item);
+					DrawItem(db, item);
 				}
 
 				EditorGUILayout.BeginHorizontal();
@@ -150,13 +167,13 @@ namespace Eitrum.Database {
 			EditorUtility.SetDirty(subCategory);
 		}
 
-		void DrawItem(EiPrefab item) {
+		private static void DrawItem(EiPrefabDatabase db, EiPrefab item) {
 			EditorGUILayout.BeginHorizontal();
 			Undo.RecordObject(item, "Entry Change");
 			ApplyItemName(item, item.Item ? item.Item.name : "empty");
 			ApplyItemGameObject(item, EditorGUILayout.ObjectField(item.Item, typeof(GameObject), false) as GameObject);
 			if (item.Database == null)
-				ApplyItemDatabaseReference(item, target as EiPrefabDatabase);
+				ApplyItemDatabaseReference(item, db);
 			if (GUILayout.Button("X", GUILayout.Width(24f))) {
 				item.DestroyFile();
 				EditorGUILayout.EndHorizontal();
@@ -188,13 +205,13 @@ namespace Eitrum.Database {
 
 		#region SubCategory Helper
 
-		void EnterSubCategory() {
+		private static void EnterSubCategory() {
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(24f);
 			EditorGUILayout.BeginVertical();
 		}
 
-		void LeaveSubCategory() {
+		private static void LeaveSubCategory() {
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
 		}
@@ -270,5 +287,20 @@ namespace Eitrum.Database {
 		}
 
 		#endregion
+	}
+
+	public class EiPrefabDatabaseWindow : EditorWindow {
+
+		const string configPath = "Assets/Eitrum/Configuration/EiPrefabDatabase.prefab";
+		public EiPrefabDatabase database;
+		private Vector2 scroll;
+
+		private void OnGUI() {
+			scroll = EditorGUILayout.BeginScrollView(scroll);
+			if (database) {
+				EiPrefabDatabaseDrawer.DrawDatabase(database);
+			}
+			EditorGUILayout.EndScrollView();
+		}
 	}
 }

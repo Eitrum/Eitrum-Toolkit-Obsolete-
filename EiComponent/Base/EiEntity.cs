@@ -154,8 +154,11 @@ namespace Eitrum {
 
 		private void AssignToParent() {
 			Transform parent = null;
-			if (parentContainers.ContainsKey(EntityTypeId))
+			if (parentContainers.ContainsKey(EntityTypeId)) {
 				parent = parentContainers[EntityTypeId];
+				if (!parent)
+					parent = parentContainers[EntityTypeId] = new GameObject(entityName).transform;
+			}
 			else
 				parentContainers.Add(EntityTypeId, parent = new GameObject(entityName).transform);
 
