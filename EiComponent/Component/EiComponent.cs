@@ -286,6 +286,7 @@ namespace Eitrum {
 		#endregion
 
 		#region Editor
+#if UNITY_EDITOR
 
 		[ContextMenu("Attach All Components On Entity")]
 		public void AttachAllComponentsOnEntity() {
@@ -305,7 +306,7 @@ namespace Eitrum {
 			netView = GetComponent<EiNetworkView>();
 #endif
 		}
-
+#endif
 		#endregion
 	}
 }
