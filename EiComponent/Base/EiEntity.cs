@@ -251,7 +251,8 @@ namespace Eitrum {
 
 		#endregion
 
-#if UNITY_EDITOR
+		#region Editor
+
 		[ContextMenu("Add Missing Components")]
 		public virtual void AddMissingComponents() {
 			if (!rigidbodyComponent)
@@ -282,6 +283,6 @@ namespace Eitrum {
 #endif
 		}
 
-#endif
+		#endregion
 	}
 }
