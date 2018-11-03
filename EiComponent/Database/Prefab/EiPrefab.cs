@@ -1,25 +1,22 @@
 ﻿using Eitrum.Database;
 using UnityEngine;
 
-namespace Eitrum {
-	public class EiPrefab : EiScriptableObject<EiPrefab> {
+namespace Eitrum
+{
+	[CreateAssetMenu (fileName = "Prefab", menuName = "Eitrum/Database/Prefab", order = 1000)]
+	public class EiPrefab : EiScriptableObject<EiPrefab>
+	{
 		#region Variables
 
-		[Readonly]
-		[SerializeField]
-		private string itemName = "empty";
-		[SerializeField]
-		private GameObject item = null;
-		[SerializeField]
-		[Readonly]
-		private int uniqueId = 0;
-		[SerializeField]
-		private EiPrefabDatabase database = null;
+		[SerializeField] private string itemName = "empty";
+		[SerializeField] private GameObject item = null;
+		[SerializeField] private int uniqueId = 0;
+		[SerializeField] private EiPrefabDatabase database = null;
 
-#if EITRUM_POOLING
+		#if EITRUM_POOLING
 		[SerializeField]
-		private EiPoolData poolData = new EiPoolData();
-#endif
+		private EiPoolData poolData = new EiPoolData ();
+		#endif
 
 		#endregion
 
@@ -59,152 +56,151 @@ namespace Eitrum {
 
 		#region GameObject Instantiate
 
-		public GameObject Instantiate() {
+		public GameObject Instantiate ()
+		{
 #if EITRUM_POOLING
-			if (poolData.HasPooling)
-			{
-				var poolObj = poolData.Get();
-				if (poolObj)
-				{
-					EiPoolData.OnPoolInstantiateHelper(poolObj);
+			if (poolData.HasPooling) {
+				var poolObj = poolData.Get ();
+				if (poolObj) {
+					EiPoolData.OnPoolInstantiateHelper (poolObj);
 					return poolObj.gameObject;
 				}
-				var entGo = MonoBehaviour.Instantiate(GameObject);
-				var ent = entGo.GetComponent<EiEntity>();
+				var entGo = MonoBehaviour.Instantiate (GameObject);
+				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
-					ent.AssignPoolTarget(poolData);
+					ent.AssignPoolTarget (poolData);
 				return entGo;
 			}
 #endif
-			return MonoBehaviour.Instantiate(GameObject);
+			return MonoBehaviour.Instantiate (GameObject);
 		}
 
-		public GameObject Instantiate(Transform parent) {
+		public GameObject Instantiate (Transform parent)
+		{
 #if EITRUM_POOLING
-			if (poolData.HasPooling)
-			{
-				var poolObj = poolData.Get();
-				if (poolObj)
-				{
-					EiPoolData.OnPoolInstantiateHelper(poolObj, Vector3.zero, Quaternion.identity, parent);
+			if (poolData.HasPooling) {
+				var poolObj = poolData.Get ();
+				if (poolObj) {
+					EiPoolData.OnPoolInstantiateHelper (poolObj, Vector3.zero, Quaternion.identity, parent);
 					return poolObj.gameObject;
 				}
-				var entGo = MonoBehaviour.Instantiate(GameObject, parent);
-				var ent = entGo.GetComponent<EiEntity>();
-				if (ent) ent.AssignPoolTarget(poolData);
+				var entGo = MonoBehaviour.Instantiate (GameObject, parent);
+				var ent = entGo.GetComponent<EiEntity> ();
+				if (ent)
+					ent.AssignPoolTarget (poolData);
 				return entGo;
 			}
 #endif
-			return MonoBehaviour.Instantiate(GameObject, parent);
+			return MonoBehaviour.Instantiate (GameObject, parent);
 		}
 
-		public GameObject Instantiate(Vector3 position) {
+		public GameObject Instantiate (Vector3 position)
+		{
 #if EITRUM_POOLING
-			if (poolData.HasPooling)
-			{
-				var poolObj = poolData.Get();
-				if (poolObj)
-				{
-					EiPoolData.OnPoolInstantiateHelper(poolObj, position, Quaternion.identity, null);
+			if (poolData.HasPooling) {
+				var poolObj = poolData.Get ();
+				if (poolObj) {
+					EiPoolData.OnPoolInstantiateHelper (poolObj, position, Quaternion.identity, null);
 					return poolObj.gameObject;
 				}
-				var entGo = MonoBehaviour.Instantiate(GameObject, position, Quaternion.identity);
-				var ent = entGo.GetComponent<EiEntity>();
-				if (ent) ent.AssignPoolTarget(poolData);
+				var entGo = MonoBehaviour.Instantiate (GameObject, position, Quaternion.identity);
+				var ent = entGo.GetComponent<EiEntity> ();
+				if (ent)
+					ent.AssignPoolTarget (poolData);
 				return entGo;
 			}
 #endif
-			return MonoBehaviour.Instantiate(GameObject, position, Quaternion.identity);
+			return MonoBehaviour.Instantiate (GameObject, position, Quaternion.identity);
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation) {
+		public GameObject Instantiate (Vector3 position, Quaternion rotation)
+		{
 #if EITRUM_POOLING
-			if (poolData.HasPooling)
-			{
-				var poolObj = poolData.Get();
-				if (poolObj)
-				{
-					EiPoolData.OnPoolInstantiateHelper(poolObj, position, rotation, null);
+			if (poolData.HasPooling) {
+				var poolObj = poolData.Get ();
+				if (poolObj) {
+					EiPoolData.OnPoolInstantiateHelper (poolObj, position, rotation, null);
 					return poolObj.gameObject;
 				}
-				var entGo = MonoBehaviour.Instantiate(GameObject, position, rotation);
-				var ent = entGo.GetComponent<EiEntity>();
-				if (ent) ent.AssignPoolTarget(poolData);
+				var entGo = MonoBehaviour.Instantiate (GameObject, position, rotation);
+				var ent = entGo.GetComponent<EiEntity> ();
+				if (ent)
+					ent.AssignPoolTarget (poolData);
 				return entGo;
 			}
 #endif
-			return MonoBehaviour.Instantiate(GameObject, position, rotation);
+			return MonoBehaviour.Instantiate (GameObject, position, rotation);
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation, Transform parent) {
+		public GameObject Instantiate (Vector3 position, Quaternion rotation, Transform parent)
+		{
 #if EITRUM_POOLING
-			if (poolData.HasPooling)
-			{
-				var poolObj = poolData.Get();
-				if (poolObj)
-				{
-					EiPoolData.OnPoolInstantiateHelper(poolObj, position, rotation, parent);
+			if (poolData.HasPooling) {
+				var poolObj = poolData.Get ();
+				if (poolObj) {
+					EiPoolData.OnPoolInstantiateHelper (poolObj, position, rotation, parent);
 					return poolObj.gameObject;
 				}
-				var entGo = MonoBehaviour.Instantiate(GameObject, position, rotation, parent);
-				var ent = entGo.GetComponent<EiEntity>();
-				if (ent) ent.AssignPoolTarget(poolData);
+				var entGo = MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
+				var ent = entGo.GetComponent<EiEntity> ();
+				if (ent)
+					ent.AssignPoolTarget (poolData);
 				return entGo;
 			}
 #endif
 
-			return MonoBehaviour.Instantiate(GameObject, position, rotation, parent);
+			return MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale) {
+		public GameObject Instantiate (Vector3 position, Quaternion rotation, Vector3 scale)
+		{
 #if EITRUM_POOLING
-			if (poolData.HasPooling)
-			{
-				var poolObj = poolData.Get();
-				if (poolObj)
-				{
-					EiPoolData.OnPoolInstantiateHelper(poolObj, position, rotation, scale, null);
+			if (poolData.HasPooling) {
+				var poolObj = poolData.Get ();
+				if (poolObj) {
+					EiPoolData.OnPoolInstantiateHelper (poolObj, position, rotation, scale, null);
 					return poolObj.gameObject;
 				}
-				var entGo = MonoBehaviour.Instantiate(GameObject, position, rotation);
+				var entGo = MonoBehaviour.Instantiate (GameObject, position, rotation);
 				var entGoScale = entGo.transform.localScale;
-				entGoScale.Scale(scale);
+				entGoScale.Scale (scale);
 				entGo.transform.localScale = entGoScale;
-				var ent = entGo.GetComponent<EiEntity>();
-				if (ent) ent.AssignPoolTarget(poolData);
+				var ent = entGo.GetComponent<EiEntity> ();
+				if (ent)
+					ent.AssignPoolTarget (poolData);
 				return entGo;
 			}
 #endif
 
-			var go = MonoBehaviour.Instantiate(GameObject, position, rotation);
+			var go = MonoBehaviour.Instantiate (GameObject, position, rotation);
 			var goScale = go.transform.localScale;
-			goScale.Scale(scale);
+			goScale.Scale (scale);
 			go.transform.localScale = goScale;
 			return go;
 		}
 
-		public GameObject Instantiate(Vector3 position, Quaternion rotation, Vector3 scale, Transform parent) {
+		public GameObject Instantiate (Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
+		{
 #if EITRUM_POOLING
-			if (poolData.HasPooling)
-			{
-				var poolObj = poolData.Get();
-				if (poolObj)
-				{
-					EiPoolData.OnPoolInstantiateHelper(poolObj, position, rotation, scale, parent);
+			if (poolData.HasPooling) {
+				var poolObj = poolData.Get ();
+				if (poolObj) {
+					EiPoolData.OnPoolInstantiateHelper (poolObj, position, rotation, scale, parent);
 					return poolObj.gameObject;
 				}
-				var entGo = MonoBehaviour.Instantiate(GameObject, position, rotation, parent);
+				var entGo = MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
 				var entGoScale = entGo.transform.localScale;
-				entGoScale.Scale(scale);
+				entGoScale.Scale (scale);
 				entGo.transform.localScale = entGoScale;
-				var ent = entGo.GetComponent<EiEntity>();
-				if (ent) ent.AssignPoolTarget(poolData);
+				var ent = entGo.GetComponent<EiEntity> ();
+				if (ent)
+					ent.AssignPoolTarget (poolData);
 				return entGo;
 			}
 #endif
-			var go = MonoBehaviour.Instantiate(GameObject, position, rotation, parent);
+			var go = MonoBehaviour.Instantiate (GameObject, position, rotation, parent);
 			var goScale = go.transform.localScale;
-			goScale.Scale(scale);
+			goScale.Scale (scale);
 			go.transform.localScale = goScale;
 			return go;
 		}
@@ -217,10 +213,11 @@ namespace Eitrum {
 		/// Fills the pool to its maximum by 1 object a frame
 		/// ONLY WORKS WHEN POOLING IS ENABLED
 		/// </summary>
-		[System.Diagnostics.Conditional("EITRUM_POOLING")]
-		public void PoolFill() {
+		[System.Diagnostics.Conditional ("EITRUM_POOLING")]
+		public void PoolFill ()
+		{
 #if EITRUM_POOLING
-			poolData.Fill();
+			poolData.Fill ();
 #endif
 		}
 
@@ -228,10 +225,11 @@ namespace Eitrum {
 		/// Pre loads the pool with 1 object during this frame
 		/// ONLY WORKS WHEN POOLING IS ENABLED
 		/// </summary>
-		[System.Diagnostics.Conditional("EITRUM_POOLING")]
-		public void PoolPreLoadObject() {
+		[System.Diagnostics.Conditional ("EITRUM_POOLING")]
+		public void PoolPreLoadObject ()
+		{
 #if EITRUM_POOLING
-			poolData.PreLoadObject();
+			poolData.PreLoadObject ();
 #endif
 		}
 
@@ -241,10 +239,11 @@ namespace Eitrum {
 		/// </summary>
 		/// <param name="amount"></param>
 		/// <param name="time"></param>
-		[System.Diagnostics.Conditional("EITRUM_POOLING")]
-		public void PoolPreLoadObjects(int amount, float time) {
+		[System.Diagnostics.Conditional ("EITRUM_POOLING")]
+		public void PoolPreLoadObjects (int amount, float time)
+		{
 #if EITRUM_POOLING
-			poolData.PreLoadObjects(amount, time);
+			poolData.PreLoadObjects (amount, time);
 #endif
 		}
 
@@ -253,10 +252,11 @@ namespace Eitrum {
 		/// ONLY WORKS WHEN POOLING IS ENABLED
 		/// </summary>
 		/// <param name="amount"></param>
-		[System.Diagnostics.Conditional("EITRUM_POOLING")]
-		public void PoolPreLoadObjects(int amount) {
+		[System.Diagnostics.Conditional ("EITRUM_POOLING")]
+		public void PoolPreLoadObjects (int amount)
+		{
 #if EITRUM_POOLING
-			poolData.PreLoadObjects(amount);
+			poolData.PreLoadObjects (amount);
 #endif
 		}
 
@@ -265,12 +265,23 @@ namespace Eitrum {
 		/// ONLY WORKS WHEN POOLING IS ENABLED
 		/// </summary>
 		/// <param name="amount"></param>
-		[System.Diagnostics.Conditional("EITRUM_POOLING")]
-		public void PoolClear() {
+		[System.Diagnostics.Conditional ("EITRUM_POOLING")]
+		public void PoolClear ()
+		{
 #if EITRUM_POOLING
-			poolData.ClearObjects();
+			poolData.ClearObjects ();
 #endif
 		}
+
+		#endregion
+
+		#region Editor
+
+		#if UNITY_EDITOR
+
+		public string editorPathName = "null";
+
+		#endif
 
 		#endregion
 	}

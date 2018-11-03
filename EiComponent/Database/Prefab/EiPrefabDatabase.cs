@@ -7,7 +7,7 @@ namespace Eitrum.Database
 	{
 		#region Singleton
 
-		public override bool KeepInResources()
+		public override bool KeepInResources ()
 		{
 			return true;
 		}
@@ -16,29 +16,44 @@ namespace Eitrum.Database
 
 		#region Variables
 
-#pragma warning disable
 		[SerializeField]
-		private List<EiPrefabSubCategory> subCategories = new List<EiPrefabSubCategory>();
+		private List<EiPrefab> cachedItems = new List<EiPrefab> ();
 
-		[SerializeField]
-		private List<EiPrefab> cachedItems = new List<EiPrefab>();
+		#endregion
+
+		#region Properties
+
+		public int Length {
+			get {
+				return cachedItems.Count;
+			}
+		}
+
+		public EiPrefab this [int index] {
+			get {
+				return cachedItems [index];
+			}
+		}
 
 		#endregion
 
 		#region Core
 
-		public EiPrefab _Get(int index)
+		void Awake ()
 		{
-			return cachedItems[index];
+			if (instance) {
+				DestroyImmediate (this.gameObject);
+			}
+			instance = this;
 		}
 
 		#endregion
 
-		#region Static Getters
+		#region Get
 
-		public EiPrefab Get(int index)
+		public EiPrefab Get (int index)
 		{
-			return Instance._Get(index);
+			return cachedItems [index];
 		}
 
 		#endregion

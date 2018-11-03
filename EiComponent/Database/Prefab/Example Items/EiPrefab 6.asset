@@ -13,9 +13,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Default Quad
   item: {fileID: 1141562488798734, guid: eba656c9657a2af4389180ceea0458d5, type: 2}
-  uniqueId: 6
+  uniqueId: 5
   database: {fileID: 114053056546841476, guid: 1898f6a03563a574d80fddca61a5f193, type: 2}
   poolData:
     poolSize: 0
     keepPoolAlive: 0
     prefab: {fileID: 11400000}
+  editorPathName: Default/FBX/Mesh/Data
