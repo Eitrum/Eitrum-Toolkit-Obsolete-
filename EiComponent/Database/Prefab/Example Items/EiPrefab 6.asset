@@ -19,4 +19,4 @@ MonoBehaviour:
     poolSize: 0
     keepPoolAlive: 0
     prefab: {fileID: 11400000}
-  editorPathName: Default/FBX/Mesh/Data
+  editorPathName: Default
