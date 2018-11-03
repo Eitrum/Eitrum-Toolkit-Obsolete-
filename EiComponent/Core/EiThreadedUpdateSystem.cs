@@ -32,7 +32,7 @@ namespace Eitrum
 
 			EiLLNode<ThreadContainer> node;
 			Thread thread;
-			EiLinkedList<EiUpdateInterface> components = new EiLinkedList<EiUpdateInterface> ();
+			EiLinkedList<EiThreadedUpdateInterface> components = new EiLinkedList<EiThreadedUpdateInterface> ();
 
 			long targetFpsInTicks = 0;
 			long ticks = 0;
@@ -110,7 +110,7 @@ namespace Eitrum
 					#region EiComponent Update
 
 					try {
-						EiLLNode<EiUpdateInterface> component;
+						EiLLNode<EiThreadedUpdateInterface> component;
 						var iterator = components.GetIterator ();
 						while (iterator.Next (out component)) {
 							try {
@@ -157,12 +157,12 @@ namespace Eitrum
 				}
 			}
 
-			public EiLLNode<EiUpdateInterface> Subscribe (EiUpdateInterface component)
+			public EiLLNode<EiThreadedUpdateInterface> Subscribe (EiThreadedUpdateInterface component)
 			{
 				return components.Add (component);
 			}
 
-			public void Unsubscribe (EiLLNode<EiUpdateInterface> node)
+			public void Unsubscribe (EiLLNode<EiThreadedUpdateInterface> node)
 			{
 				components.Remove (node);
 			}
@@ -196,13 +196,13 @@ namespace Eitrum
 
 		#region Subscribe / Unsubscribe
 
-		public EiLLNode<EiUpdateInterface> Subscribe (EiUpdateInterface component)
+		public EiLLNode<EiThreadedUpdateInterface> Subscribe (EiThreadedUpdateInterface component)
 		{
 			threads.ShiftNext ();
 			return threads.First ().Subscribe (component);
 		}
 
-		public void Unsubscribe (EiLLNode<EiUpdateInterface> node)
+		public void Unsubscribe (EiLLNode<EiThreadedUpdateInterface> node)
 		{
 			if (node.List != null)
 				node.List.Remove (node);

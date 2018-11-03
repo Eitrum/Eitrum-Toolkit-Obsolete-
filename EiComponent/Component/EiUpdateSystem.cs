@@ -50,10 +50,10 @@ namespace Eitrum
 		#region Variables
 
 		EiLinkedList<TimerUpdateData> timerUpdateList = new EiLinkedList<TimerUpdateData> ();
-		EiLinkedList<EiUpdateInterface> preUpdateList = new Eitrum.EiLinkedList<EiUpdateInterface> ();
+		EiLinkedList<EiPreUpdateInterface> preUpdateList = new EiLinkedList<EiPreUpdateInterface> ();
 		EiLinkedList<EiUpdateInterface> updateList = new EiLinkedList<EiUpdateInterface> ();
-		EiLinkedList<EiUpdateInterface> lateUpdateList = new EiLinkedList<EiUpdateInterface> ();
-		EiLinkedList<EiUpdateInterface> fixedUpdateList = new EiLinkedList<EiUpdateInterface> ();
+		EiLinkedList<EiLateUpdateInterface> lateUpdateList = new EiLinkedList<EiLateUpdateInterface> ();
+		EiLinkedList<EiFixedUpdateInterface> fixedUpdateList = new EiLinkedList<EiFixedUpdateInterface> ();
 
 		static bool isRunningUnityThreadCallback = false;
 		static EiLinkedList<EiUnityThreadCallbackInterface> unityThreadQueue = new EiLinkedList<EiUnityThreadCallbackInterface> ();
@@ -92,7 +92,7 @@ namespace Eitrum
 
 			#region Pre Update Loop
 
-			EiLLNode<EiUpdateInterface> pre;
+			EiLLNode<EiPreUpdateInterface> pre;
 			var preiterator = preUpdateList.GetIterator ();
 			while (preiterator.Next (out pre)) {
 				if (pre.Value.IsNull)
@@ -120,7 +120,7 @@ namespace Eitrum
 
 		void LateUpdate ()
 		{
-			EiLLNode<EiUpdateInterface> comp;
+			EiLLNode<EiLateUpdateInterface> comp;
 			var time = UnityEngine.Time.deltaTime;
 			var iterator = lateUpdateList.GetIterator ();
 			while (iterator.Next (out comp)) {
@@ -133,7 +133,7 @@ namespace Eitrum
 
 		void FixedUpdate ()
 		{
-			EiLLNode<EiUpdateInterface> comp;
+			EiLLNode<EiFixedUpdateInterface> comp;
 			var time = UnityEngine.Time.fixedDeltaTime;
 			var iterator = fixedUpdateList.GetIterator ();
 			while (iterator.Next (out comp)) {
@@ -162,7 +162,7 @@ namespace Eitrum
 
 		#region Subscribe/Unsubscribe
 
-		public EiLLNode<EiUpdateInterface> SubscribePreUpdate (EiUpdateInterface component)
+		public EiLLNode<EiPreUpdateInterface> SubscribePreUpdate (EiPreUpdateInterface component)
 		{
 			return preUpdateList.Add (component);
 		}
@@ -172,17 +172,17 @@ namespace Eitrum
 			return updateList.Add (component);
 		}
 
-		public EiLLNode<EiUpdateInterface> SubscribeLateUpdate (EiUpdateInterface component)
+		public EiLLNode<EiLateUpdateInterface> SubscribeLateUpdate (EiLateUpdateInterface component)
 		{
 			return lateUpdateList.Add (component);
 		}
 
-		public EiLLNode<EiUpdateInterface> SubscribeFixedUpdate (EiUpdateInterface component)
+		public EiLLNode<EiFixedUpdateInterface> SubscribeFixedUpdate (EiFixedUpdateInterface component)
 		{
 			return fixedUpdateList.Add (component);
 		}
 
-		public void UnsubscribePreUpdate (EiLLNode<EiUpdateInterface> component)
+		public void UnsubscribePreUpdate (EiLLNode<EiPreUpdateInterface> component)
 		{
 			preUpdateList.Remove (component);
 		}
@@ -192,12 +192,12 @@ namespace Eitrum
 			updateList.Remove (component);
 		}
 
-		public void UnsubscribeLateUpdate (EiLLNode<EiUpdateInterface> component)
+		public void UnsubscribeLateUpdate (EiLLNode<EiLateUpdateInterface> component)
 		{
 			lateUpdateList.Remove (component);
 		}
 
-		public void UnsubscribeFixedUpdate (EiLLNode<EiUpdateInterface> component)
+		public void UnsubscribeFixedUpdate (EiLLNode<EiFixedUpdateInterface> component)
 		{
 			fixedUpdateList.Remove (component);
 		}

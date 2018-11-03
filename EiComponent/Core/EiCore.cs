@@ -3,18 +3,18 @@ using System.Diagnostics;
 
 namespace Eitrum
 {
-	public class EiCore : EiUpdateInterface
+	public class EiCore : EiPreUpdateInterface, EiUpdateInterface, EiLateUpdateInterface, EiFixedUpdateInterface, EiThreadedUpdateInterface
 	{
 		#region Variables
 
 		bool isDestroyed = false;
 
 		// Should Not ever be touched by anything!!! Used by core engine for performance
-		public EiLLNode<EiUpdateInterface> preUpdateNode;
+		public EiLLNode<EiPreUpdateInterface> preUpdateNode;
 		public EiLLNode<EiUpdateInterface> updateNode;
-		public EiLLNode<EiUpdateInterface> lateUpdateNode;
-		public EiLLNode<EiUpdateInterface> fixedUpdateNode;
-		public EiLLNode<EiUpdateInterface> threadedUpdateNode;
+		public EiLLNode<EiLateUpdateInterface> lateUpdateNode;
+		public EiLLNode<EiFixedUpdateInterface> fixedUpdateNode;
+		public EiLLNode<EiThreadedUpdateInterface> threadedUpdateNode;
 
 		#endregion
 
