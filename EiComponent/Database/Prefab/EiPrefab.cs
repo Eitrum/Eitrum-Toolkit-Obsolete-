@@ -69,6 +69,7 @@ namespace Eitrum
 				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
 					ent.AssignPoolTarget (poolData);
+				EiPoolData.OnPoolInstantiateHelper (ent);
 				return entGo;
 			}
 #endif
@@ -88,6 +89,7 @@ namespace Eitrum
 				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
 					ent.AssignPoolTarget (poolData);
+				EiPoolData.OnPoolInstantiateHelper (ent);
 				return entGo;
 			}
 #endif
@@ -107,6 +109,7 @@ namespace Eitrum
 				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
 					ent.AssignPoolTarget (poolData);
+				EiPoolData.OnPoolInstantiateHelper (ent);
 				return entGo;
 			}
 #endif
@@ -126,6 +129,7 @@ namespace Eitrum
 				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
 					ent.AssignPoolTarget (poolData);
+				EiPoolData.OnPoolInstantiateHelper (ent);
 				return entGo;
 			}
 #endif
@@ -145,6 +149,7 @@ namespace Eitrum
 				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
 					ent.AssignPoolTarget (poolData);
+				EiPoolData.OnPoolInstantiateHelper (ent);
 				return entGo;
 			}
 #endif
@@ -168,6 +173,7 @@ namespace Eitrum
 				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
 					ent.AssignPoolTarget (poolData);
+				EiPoolData.OnPoolInstantiateHelper (ent);
 				return entGo;
 			}
 #endif
@@ -195,6 +201,7 @@ namespace Eitrum
 				var ent = entGo.GetComponent<EiEntity> ();
 				if (ent)
 					ent.AssignPoolTarget (poolData);
+				EiPoolData.OnPoolInstantiateHelper (ent);
 				return entGo;
 			}
 #endif

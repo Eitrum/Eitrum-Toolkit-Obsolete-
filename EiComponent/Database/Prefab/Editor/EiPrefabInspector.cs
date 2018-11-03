@@ -5,18 +5,33 @@ using UnityEngine;
 namespace Eitrum.Database.Prefab
 {
 	[CustomEditor (typeof(EiPrefab))]
+	[CanEditMultipleObjects]
 	public class EiPrefabInspector : Editor
 	{
 		public override void OnInspectorGUI ()
 		{
-			var prefab = (EiPrefab)target;
+			var amount = targets.Length;
+			if (amount > 1) {
+				for (int i = 0; i < amount; i++) {
+					var prefab = (EiPrefab)targets [i];
+					Header ("------------------Editing Object (" + i + ")------------------");
+					if (prefab.Database == null) {
+						EditorGUILayout.LabelField ("WARNING - NO DATABASE REFERENCE");
+					}
+					// Base Editor
+					DrawBase (prefab);
+					DrawPool (prefab);
+				}
+			} else {
+				var prefab = (EiPrefab)target;
 
-			if (prefab.Database == null) {
-				EditorGUILayout.LabelField ("WARNING - NO DATABASE REFERENCE");
+				if (prefab.Database == null) {
+					EditorGUILayout.LabelField ("WARNING - NO DATABASE REFERENCE");
+				}
+				// Base Editor
+				DrawBase (prefab);
+				DrawPool (prefab);
 			}
-			// Base Editor
-			DrawBase (prefab);
-			DrawPool (prefab);
 		}
 
 		private void DrawBase (EiPrefab prefab)
@@ -37,6 +52,14 @@ namespace Eitrum.Database.Prefab
 		{
 			EditorGUILayout.Space ();
 			Header ("Pool Settings");
+			if (!prefab.Item) {
+				EditorGUILayout.LabelField ("Warning: Object must have an Item selected");
+				return;
+			}
+			if (prefab.Item.GetComponent<EiEntity> () == null) {
+				EditorGUILayout.LabelField ("Warning: Item must have a 'Entity' component attached");
+				return;
+			}
 			var pool = (EiPoolData)typeof(EiPrefab).GetField ("poolData", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue (prefab);
 			pool.KeepPoolAlive = EditorGUILayout.ToggleLeft ("Keep Pool Alive", pool.KeepPoolAlive);
 			pool.PoolSize = EditorGUILayout.IntField ("Pool Size", pool.PoolSize);

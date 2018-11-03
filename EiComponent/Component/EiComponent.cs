@@ -20,6 +20,10 @@ namespace Eitrum
 
 
 
+
+
+
+
 #pragma warning disable
 		private EiNetworkView netView;
 #endif
@@ -324,30 +328,28 @@ namespace Eitrum
 
 		#region Editor
 
-		#if UNITY_EDITOR
-
 		[ContextMenu ("Attach All Components On Entity")]
 		public void AttachAllComponentsOnEntity ()
 		{
 			var objs = GetComponentsInChildren<EiComponent> (true);
 			foreach (var obj in objs)
-				obj.AttachComponents ();
+				obj.AttachComponentContextMenu ();
 		}
 
 		[ContextMenu ("Attach Components")]
 		private void AttachComponentContextMenu ()
 		{
+			entity = GetComponentInParent<EiEntity> ();
+			#if EITRUM_NETWORKING
+			netView = GetComponent<EiNetworkView>();
+			#endif
 			AttachComponents ();
 		}
 
 		protected virtual void AttachComponents ()
 		{
-			entity = GetComponentInParent<EiEntity> ();
-#if EITRUM_NETWORKING
-			netView = GetComponent<EiNetworkView>();
-#endif
 		}
-		#endif
+
 		#endregion
 	}
 }

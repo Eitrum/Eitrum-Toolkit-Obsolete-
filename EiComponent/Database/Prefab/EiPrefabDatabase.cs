@@ -57,5 +57,19 @@ namespace Eitrum.Database
 		}
 
 		#endregion
+
+		#region Editor
+
+		[ContextMenu ("Build And Prefill database")]
+		private void BuildAndPrefillDatabase ()
+		{
+			if (!gameObject.scene.IsValid ()) {
+				Debug.Log ("Has to be in scene");
+				return;
+			}
+
+		}
+
+		#endregion
 	}
 }

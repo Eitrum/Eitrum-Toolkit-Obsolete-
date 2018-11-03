@@ -35,10 +35,6 @@ namespace Eitrum.Database.Prefab
 
 			List<string> items = new List<string> ();
 			List<EiPrefab> references = new List<EiPrefab> ();
-			if (currentSelectedObject != null) {
-				items.Add (currentSelectedObject.ItemName);
-				references.Add (currentSelectedObject);
-			}
 			items.Add ("None");
 			references.Add (null);
 
@@ -59,11 +55,13 @@ namespace Eitrum.Database.Prefab
 					if (filter != null && !filter.IsCorrect (item, itemPath))
 						continue;
 
-
 					if (objectPicker && item.GameObject == objectPicker) {
 						currentSelectedObject = item;
 						objectPicker = null;
 					}
+
+					if (currentSelectedObject == item)
+						index = items.Count;
 
 					int iterations = 0;
 					while (items.Contains (path))
