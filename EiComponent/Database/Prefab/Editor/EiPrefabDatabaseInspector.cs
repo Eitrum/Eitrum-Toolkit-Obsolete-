@@ -50,7 +50,7 @@ namespace Eitrum.Database.Prefab
 			if (GUILayout.Button ("Select", GUILayout.Width (50))) {
 				Selection.activeObject = prefab;
 			}
-			if (GUILayout.Button ("Remove", GUILayout.Width (60))) {
+			if (GUILayout.Button ("X", GUILayout.Width (18))) {
 				if (EditorUtility.DisplayDialog ("Remove", "You sure you want to remove prefab from the database list?", "Yes", "Cancel")) {
 					EditorGUILayout.EndHorizontal ();
 					return false;
