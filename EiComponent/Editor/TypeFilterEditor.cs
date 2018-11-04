@@ -35,5 +35,14 @@ namespace Eitrum
 				return false;
 		}
 	}
-}
 
+	[CustomPropertyDrawer (typeof(TypeFilterScene))]
+	public class TypeFilterSceneEditor : PropertyDrawer
+	{
+		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
+		{
+			var typeFilter = typeof(SceneAsset);
+			property.objectReferenceValue = EditorGUI.ObjectField (position, label.text, property.objectReferenceValue, typeFilter, false);
+		}
+	}
+}

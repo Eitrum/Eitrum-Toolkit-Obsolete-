@@ -1,23 +1,25 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Eitrum
 {
-	[Serializable]
+	[CreateAssetMenu (fileName = "Scene", menuName = "Eitrum/Database/Scene", order = 10)]
 	public class EiScene : EiScriptableObject<EiScene>
 	{
-		public UnityEngine.Object sceneObject;
+		#region Variables
 
-		public string SceneName
-		{
-			get
-			{
-				return sceneObject.name;
+		public EiSceneObject scene;
+
+		#endregion
+
+		#region Properties
+
+		public string SceneName {
+			get {
+				return scene;
 			}
 		}
 
-		public void Load()
-		{
-			Loading.EiLoadingScreen.Instance.LoadLevel(SceneName);
-		}
+		#endregion
 	}
 }
