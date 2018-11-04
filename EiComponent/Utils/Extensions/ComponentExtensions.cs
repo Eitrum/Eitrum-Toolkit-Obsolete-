@@ -1,10 +1,14 @@
 ﻿using System;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace Eitrum
 {
 	public static class ComponentExtensions
 	{
+		#region Get Or Add extensions for components
+
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static T GetOrAddComponent<T> (this Component component) where T : Component
 		{
 			if (!component) {
@@ -16,6 +20,7 @@ namespace Eitrum
 			return comp;
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static T AddComponent<T> (this Component component) where T : Component
 		{
 			if (!component) {
@@ -23,5 +28,17 @@ namespace Eitrum
 			}
 			return component.gameObject.AddComponent<T> ();
 		}
+
+		#endregion
+
+		#region SetActive
+
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
+		public static void SetActive (this Component component, bool value)
+		{
+			component.gameObject.SetActive (value);
+		}
+
+		#endregion
 	}
 }

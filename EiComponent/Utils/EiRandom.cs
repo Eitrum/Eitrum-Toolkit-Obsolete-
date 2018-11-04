@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace Eitrum
 {
-	public class EiRandom : EiCoreSingleton<EiRandom>
+	public sealed class EiRandom : EiCoreSingleton<EiRandom>
 	{
 		#region Variables
 
-		protected System.Random random;
-		protected int seed = 0;
+		private System.Random random;
+		private int seed = 0;
 
 		#endregion
 
@@ -24,7 +25,7 @@ namespace Eitrum
 			}
 		}
 
-		public virtual int _Seed {
+		public int _Seed {
 			get {
 				return seed;
 			}
@@ -161,27 +162,32 @@ namespace Eitrum
 
 		#region Helper
 
-		public virtual void SetSeed (int seed)
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
+		public void SetSeed (int seed)
 		{
 			this.seed = seed;
 			random = new System.Random (seed);
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public T _Element<T> (IList<T> list)
 		{
 			return list [_Range (list.Count)];
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public T _Element<T> (T[] array)
 		{
 			return array [_Range (array.Length)];
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static T Element<T> (IList<T> list)
 		{
 			return list [Range (list.Count)];
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static T Element<T> (T[] array)
 		{
 			return array [Range (array.Length)];
@@ -196,6 +202,7 @@ namespace Eitrum
 		/// </summary>
 		/// <param name="min">Minimum.</param>
 		/// <param name="max">Max.</param>
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public int _Range (int count)
 		{
 			return random.Next (count);
@@ -206,6 +213,7 @@ namespace Eitrum
 		/// </summary>
 		/// <param name="min">Minimum.</param>
 		/// <param name="max">Max.</param>
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public int _Range (int min, int max)
 		{
 			return random.Next (min, max);
@@ -216,6 +224,7 @@ namespace Eitrum
 		/// </summary>
 		/// <param name="min">Minimum.</param>
 		/// <param name="max">Max.</param>
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static int Range (int count)
 		{
 			return Instance.random.Next (count);
@@ -226,11 +235,13 @@ namespace Eitrum
 		/// </summary>
 		/// <param name="min">Minimum.</param>
 		/// <param name="max">Max.</param>
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static int Range (int min, int max)
 		{
 			return Instance.random.Next (min, max);
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public float _Range (float min, float max)
 		{
 			if (min > max) {
@@ -243,11 +254,13 @@ namespace Eitrum
 			return min + val * range;
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static float Range (float min, float max)
 		{
 			return Instance._Range (min, max);
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public double _Range (double min, double max)
 		{
 			if (min > max) {
@@ -259,6 +272,7 @@ namespace Eitrum
 			return min + _Double * range;
 		}
 
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static double Range (double min, double max)
 		{
 			return Instance._Range (min, max);

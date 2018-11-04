@@ -1,13 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Eitrum
 {
 	public static class ArrayExtensions
 	{
+		#region Random
+
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
 		public static T RandomElement<T> (this T[] array)
 		{
 			return EiRandom.Element (array);
 		}
+
+		#endregion
+
+		#region Add / Remove
 
 		public static T[] Add<T> (this T[] array, T element)
 		{
@@ -48,7 +57,7 @@ namespace Eitrum
 		{
 			if (array == null || array.Length == 0)
 				return array;
-			if (index > 0 && index < array.Length) {
+			if (index >= 0 && index < array.Length) {
 				T[] newArray = new T [array.Length - 1];
 				for (int i = 0; i < newArray.Length; i++) {
 					if (i >= index) {
@@ -60,6 +69,28 @@ namespace Eitrum
 			}
 			return array;
 		}
+
+		#endregion
+
+		#region List Dequeue/Enqueue
+
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
+		public static T Dequeue<T> (this List<T> list)
+		{
+			if (list.Count == 0)
+				return default(T);
+			var item = list [0];
+			list.RemoveAt (0);
+			return item;
+		}
+
+		[MethodImpl (MethodImplOptions.AggressiveInlining)]
+		public static void Enqueue<T> (this List<T> list, T item)
+		{
+			list.Add (item);
+		}
+
+		#endregion
 	}
 }
 

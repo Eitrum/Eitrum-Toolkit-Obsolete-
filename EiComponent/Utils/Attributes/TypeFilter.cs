@@ -12,5 +12,9 @@ namespace Eitrum
 			this.type = type;
 		}
 	}
-}
 
+	public class TypeFilterScene : PropertyAttribute
+	{
+
+	}
+}
