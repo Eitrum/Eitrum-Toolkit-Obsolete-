@@ -1,121 +1,75 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Eitrum.Networking.Internal {
+namespace Eitrum.Networking.Internal
+{
+	public class EiNetworkInternal : EiNetwork, EiPreUpdateInterface
+	{
 
-	public class EiNetworkInternal {
 		#region Variables
 
-		public static EiNetworkRegion currentRegion = EiNetworkRegion.None;
-		public static EiNetworkRoom currentRoom = null;
-		public static EiNetworkLobby currentLobby = null;
-		public static EiNetworkPlayer localPlayer = new EiNetworkPlayer();
-		public static float serverTime = 0f;
+		#endregion
+
+		#region Properties
+
+		
 
 		#endregion
 
-		#region Bridge Functions
+		#region Constructor
 
-		public static EiNetworkInternalRequest<EiNetworkRegion> requestRegionSwitch = new EiNetworkInternalRequest<EiNetworkRegion>(OnRegionSwitchResponse);
+		public EiNetworkInternal (INetwork network)
+		{
+			Load (network);
+		}
+
+		public EiNetworkInternal (EiNetworkType type)
+		{
+			switch (type) {
+			case EiNetworkType.Singleplayer:
+				Load (new NetworkSingleplayer ());
+				break;
+			}
+			throw new ArgumentException ("The network type provided is not supported by current setup of network, please provide a supported network type");
+		}
+
+		void Load (INetwork network)
+		{
+			this.network = network;
+			network.Load (this);
+		}
+
+		~EiNetworkInternal ()
+		{
+			if (network != null && network.IsConnected) {
+				network.Disconnect ();
+			}
+		}
 
 		#endregion
 
-		#region Region Switching
+		#region EiPreUpdateInterface implementation
 
-		public static void RequestRegionSwitch(EiNetworkRegion networkRegion) {
-			if (currentRegion == networkRegion)
-				return;
-
-			if (requestRegionSwitch != null)
-				requestRegionSwitch.Request(networkRegion);
-		}
-
-		private static void OnRegionSwitchResponse(EiNetworkInternalResponse<EiNetworkRegion> response) {
-			if (response.Failed) {
-				UnityEngine.Debug.LogError(response.ErrorMessage);
-				return;
-			}
-			var newRegion = response.Item;
-
-			if (newRegion == EiNetworkRegion.None) {
-				UnityEngine.Debug.LogWarning("Could not switch region");
-				return;
-			}
-
-			currentRegion = newRegion;
+		void EiPreUpdateInterface.PreUpdateComponent (float time)
+		{
+			throw new NotImplementedException ();
 		}
 
 		#endregion
 
-		public static void Publish<T>(T message) where T : EiCore {
-			EiCore.Publish(message);
-		}
-	}
+		#region EiBaseInterface implementation
 
-	public class EiNetworkInternalRequest<T> {
-		private Action<T> request;
-		private Action<EiNetworkInternalResponse<T>> response;
-
-		public void Request(T item) {
-			request(item);
-		}
-
-		public void Response(EiNetworkInternalResponse<T> responseMessage) {
-			if (this.response != null)
-				this.response(responseMessage);
-		}
-
-		public EiNetworkInternalRequest(Action<EiNetworkInternalResponse<T>> response) {
-			this.response = response;
-		}
-
-		public void AddRequestMethod(Action<T> request) {
-			this.request = request;
-		}
-	}
-
-	public class EiNetworkInternalResponse<T> {
-		private T item;
-		private bool succeded = false;
-		private string errorMessage = "";
-
-		public T Item {
+		object EiBaseInterface.This {
 			get {
-				return item;
+				return this;
 			}
 		}
 
-		public bool Succeded {
+		bool EiBaseInterface.IsNull {
 			get {
-				return succeded;
+				return false;
 			}
 		}
 
-		public bool Failed {
-			get {
-				return !succeded;
-			}
-		}
-
-		public string ErrorMessage {
-			get {
-				return errorMessage;
-			}
-		}
-
-		public EiNetworkInternalResponse(T item) {
-			this.item = item;
-			succeded = item != null;
-			if (item == null)
-				errorMessage = "Returned Item is Null";
-		}
-
-		public EiNetworkInternalResponse(string errorMessage) {
-			item = default(T);
-			succeded = false;
-			this.errorMessage = errorMessage;
-		}
+		#endregion
 	}
 }

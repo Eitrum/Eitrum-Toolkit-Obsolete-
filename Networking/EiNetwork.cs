@@ -1,67 +1,137 @@
 ﻿using System;
 using UnityEngine;
 using Eitrum.Networking.Internal;
+using System.Collections.Generic;
 
-namespace Eitrum.Networking {
-	public class EiNetwork : EiComponentSingleton<EiNetwork> {
-		#region Singleton
+namespace Eitrum.Networking
+{
+	public abstract class EiNetwork
+	{
+		#region Variables
 
-		public override void SingletonCreation() {
-			KeepAlive();
-		}
+		protected INetwork network;
+		protected int defaultPort = 7777;
+		protected int defaultMaxPlayers = 1000;
+
+		protected EiNetworkPlayerInternal localPlayer;
+		protected EiNetworkServerInternal currentServer;
+
+		protected List<EiNetworkPlayerInternal> playerList = new List<EiNetworkPlayerInternal> ();
+		protected List<EiNetworkServerInternal> serverList = new List<EiNetworkServerInternal> ();
 
 		#endregion
 
 		#region Properties
 
-		public static EiNetworkRegion CurrentRegion {
+		public bool IsConnected {
 			get {
-				return EiNetworkInternal.currentRegion;
+				return network.IsConnected;
 			}
 		}
 
-		public static EiNetworkRoom CurrentRoom {
+		public bool InServer {
 			get {
-				return EiNetworkInternal.currentRoom;
+				return network.InServer;
 			}
 		}
 
-		public static EiNetworkLobby CurrentLobby {
+		public EiNetworkPlayer LocalPlayer {
 			get {
-				return EiNetworkInternal.currentLobby;
+				return localPlayer;
 			}
 		}
 
-		public static EiNetworkRoom[] RoomList {
+		public EiNetworkServer Server {
 			get {
-				return EiNetworkInternal.currentLobby.Rooms;
+				return currentServer;
 			}
 		}
 
-		public static EiNetworkPlayer LocalPlayer {
-			get {
-				return EiNetworkInternal.localPlayer;
-			}
+		#endregion
+
+		#region Base Connect Methods
+
+		public void Connect ()
+		{
+			//network.Connect();
 		}
 
-		public static bool IsConnecting {
-			get {
-				return false;
-			}
+		public void Disconnect ()
+		{
+			network.Disconnect ();
 		}
 
-		public static bool IsConnected {
-			get {
-				return false;
-			}
+		#endregion
+
+		#region Create Server
+
+		public void CreateServer ()
+		{
+			//generate name, use it
+			//network.CreateServer(name, defaultPort,defaultMaxPlayers, 0);
 		}
 
-		public static float ServerTime {
-			get {
-				if (IsConnected && CurrentRoom != null)
-					return EiNetworkInternal.serverTime;
-				return -1f;
-			}
+		public void CreateServer (string name)
+		{
+			//network.CreateServer(name, defaultPort,defaultMaxPlayers, 0);
+		}
+
+		public void CreateServer (string name, int port, int maxPlayers)
+		{
+			//network.CreateServer(name, port, maxPlayers, 0);
+		}
+
+		public void CreateServer (string name, int port, int maxPlayers, int password)
+		{
+			//network.CreateServer(name, port, maxPlayers, password);
+		}
+
+		#endregion
+
+		#region Join Server
+
+		public void JoinServer ()
+		{
+			//take random server, join it
+			//network.JoinServer(name, port, password);
+		}
+
+		public void JoinServer (string name)
+		{
+			//network.JoinServer(name, defaultPort, 0);
+		}
+
+		public void JoinServer (string name, int port, int password)
+		{
+			//network.JoinServer(name, port, password);
+		}
+
+		#endregion
+
+		#region Name
+
+		public void SetName (string name)
+		{
+			//assign name to local player
+		}
+
+		#endregion
+
+		#region Server List
+
+		public void UpdateServerList ()
+		{
+
+		}
+
+		#endregion
+
+		#region Static Creation
+
+		public static EiNetwork Create (EiNetworkType type)
+		{
+			var netInternal = new EiNetworkInternal (type);
+			return netInternal as EiNetwork;
 		}
 
 		#endregion
