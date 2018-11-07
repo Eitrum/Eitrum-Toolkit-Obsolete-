@@ -4,9 +4,7 @@ namespace Eitrum
 {
 	public interface EiBaseInterface
 	{
-		EiComponent Component{ get; }
-
-		EiCore Core{ get; }
+		object This{ get; }
 
 		bool IsNull{ get; }
 	}

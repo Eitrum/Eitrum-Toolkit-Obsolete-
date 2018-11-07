@@ -173,15 +173,9 @@ namespace Eitrum
 
 		#region Update system Implementations
 
-		EiComponent EiBaseInterface.Component {
+		object EiBaseInterface.This {
 			get {
-				return null;
-			}
-		}
-
-		EiCore EiBaseInterface.Core {
-			get {
-				return null;
+				return this;
 			}
 		}
 

@@ -1,9 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Eitrum {
+namespace Eitrum
+{
 	[Serializable]
-	public class EiSerializeInterface<T> : ISerializationCallbackReceiver where T : EiBaseInterface {
+	public class EiSerializeInterface<T> : ISerializationCallbackReceiver where T : EiBaseInterface
+	{
 		#region Variables
 
 		[SerializeField]
@@ -36,12 +38,14 @@ namespace Eitrum {
 
 		#region Constructors
 
-		public EiSerializeInterface() {
+		public EiSerializeInterface ()
+		{
 
 		}
 
-		public EiSerializeInterface(T interf) {
-			component = interf.Component;
+		public EiSerializeInterface (T interf)
+		{
+			component = interf.This as EiComponent;
 			targetInterface = interf;
 		}
 
@@ -49,15 +53,17 @@ namespace Eitrum {
 
 		#region ISerializationCallbackReceiver Implementation
 
-		public void OnAfterDeserialize() {
-			if (component && component.GetType().GetInterface(typeof(T).Name) == null)
+		public void OnAfterDeserialize ()
+		{
+			if (component && component.GetType ().GetInterface (typeof(T).Name) == null)
 				component = null;
 			if (component)
 				targetInterface = (T)((object)component);
 		}
 
-		public void OnBeforeSerialize() {
-			if (component && component.GetType().GetInterface(typeof(T).Name) == null)
+		public void OnBeforeSerialize ()
+		{
+			if (component && component.GetType ().GetInterface (typeof(T).Name) == null)
 				component = null;
 			if (component)
 				targetInterface = (T)((object)component);

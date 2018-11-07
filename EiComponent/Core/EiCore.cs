@@ -30,13 +30,7 @@ namespace Eitrum
 			}
 		}
 
-		public EiComponent Component {
-			get {
-				return null;
-			}
-		}
-
-		public EiCore Core {
+		public object This {
 			get {
 				return this;
 			}
@@ -210,14 +204,14 @@ namespace Eitrum
 
 		#region Message System
 
-		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T>(Action<T> action)
+		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (Action<T> action)
 		{
-			return EiMessage.Subscribe(this, action);
+			return EiMessage.Subscribe (this, action);
 		}
 
-		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T>(EiCore core, Action<T> action)
+		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (EiCore core, Action<T> action)
 		{
-			return EiMessage.Subscribe(core, action);
+			return EiMessage.Subscribe (core, action);
 		}
 
 		public static void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
@@ -225,11 +219,11 @@ namespace Eitrum
 			EiMessage.Unsubscribe (subscriber);
 		}
 
-		public static void Publish<T>(T message) where T : EiCore
+		public static void Publish<T> (T message) where T : EiCore
 		{
-			EiMessage<T>.Publish(message);
+			EiMessage<T>.Publish (message);
 		}
-		
+
 		#endregion
 
 		#endregion

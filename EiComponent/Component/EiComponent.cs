@@ -24,6 +24,8 @@ namespace Eitrum
 
 
 
+
+
 #pragma warning disable
 		private EiNetworkView netView;
 #endif
@@ -74,15 +76,9 @@ namespace Eitrum
 		}
 #endif
 
-		public EiComponent Component {
+		public object This {
 			get {
 				return this;
-			}
-		}
-
-		public EiCore Core {
-			get {
-				return null;
 			}
 		}
 

@@ -9,5 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d2e7bb9ed502f04e89d3ccc34ad848e, type: 3}
-  m_Name: Intro
+  m_Name: Empty Scene
   m_EditorClassIdentifier: 
+  scene:
+    sceneAssetObject: {fileID: 102900000, guid: 523fd67efcfeaf74bb544a19126c9649,
+      type: 3}
+    sceneName: Empty Scene

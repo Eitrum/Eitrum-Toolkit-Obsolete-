@@ -4,17 +4,17 @@ namespace Eitrum
 {
 	public interface EiPoolableInterface : EiBaseInterface
 	{
-		void OnPoolInstantiate();
+		void OnPoolInstantiate ();
 
-		void OnPoolDestroy();
+		void OnPoolDestroy ();
 	}
 
 	[Serializable]
 	public class EiPoolableComponent : EiSerializeInterface<EiPoolableInterface>
 	{
-		public EiPoolableComponent(EiPoolableInterface interf)
+		public EiPoolableComponent (EiPoolableInterface interf)
 		{
-			base.component = interf.Component;
+			base.component = interf.This as EiComponent;
 			base.targetInterface = interf;
 		}
 	}

@@ -40,15 +40,9 @@ namespace Eitrum
 
 		#region EiBaseInterface implementation
 
-		public EiComponent Component {
+		public object This {
 			get {
-				throw new NotImplementedException ();
-			}
-		}
-
-		public EiCore Core {
-			get {
-				throw new NotImplementedException ();
+				return this;
 			}
 		}
 
