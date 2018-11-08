@@ -49,7 +49,7 @@ namespace Eitrum.Utility.GravityGun
 			}
 		}
 
-		public EiEntity Target {
+		public new EiEntity Target {
 			get {
 				return targetObject;
 			}

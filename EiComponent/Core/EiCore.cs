@@ -30,7 +30,7 @@ namespace Eitrum
 			}
 		}
 
-		public object This {
+		public object Target {
 			get {
 				return this;
 			}

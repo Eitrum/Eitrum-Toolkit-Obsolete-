@@ -15,7 +15,7 @@ namespace Eitrum.Database.Prefab
 			if (amount > 1) {
 				for (int i = 0; i < amount; i++) {
 					var prefab = (EiPrefab)targets [i];
-					Header ("------------------Editing Object (" + i + ")------------------");
+					Header ("------------------(" + prefab.ItemName + ")------------------");
 					if (prefab.Database == null) {
 						EditorGUILayout.LabelField ("WARNING - NO DATABASE REFERENCE");
 					}

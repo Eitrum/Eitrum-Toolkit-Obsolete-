@@ -4,7 +4,7 @@ namespace Eitrum
 {
 	public interface EiBaseInterface
 	{
-		object This{ get; }
+		object Target{ get; }
 
 		bool IsNull{ get; }
 	}

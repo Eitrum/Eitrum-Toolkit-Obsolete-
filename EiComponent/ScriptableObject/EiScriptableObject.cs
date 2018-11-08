@@ -40,7 +40,7 @@ namespace Eitrum
 
 		#region EiBaseInterface implementation
 
-		public object This {
+		public object Target {
 			get {
 				return this;
 			}

@@ -38,14 +38,9 @@ namespace Eitrum
 
 		#region Constructors
 
-		public EiSerializeInterface ()
-		{
-
-		}
-
 		public EiSerializeInterface (T interf)
 		{
-			obj = interf.This as UnityEngine.Object;
+			obj = interf.Target as UnityEngine.Object;
 			targetInterface = interf;
 		}
 

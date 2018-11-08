@@ -30,7 +30,6 @@ namespace Eitrum.Database.Prefab
 			EditorGUILayout.EndHorizontal ();
 
 			if (editMode) {
-				int index = 0;
 				for (int i = 0; i < list.Count; i++) {
 					var prefab = list [i];
 					if (prefab.editorPathName.Contains (pathFilter) || prefab.ItemName.Contains (pathFilter)) {

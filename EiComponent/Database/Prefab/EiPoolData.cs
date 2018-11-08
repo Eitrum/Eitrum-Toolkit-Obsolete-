@@ -173,7 +173,7 @@ namespace Eitrum
 
 		#region Update system Implementations
 
-		object EiBaseInterface.This {
+		object EiBaseInterface.Target {
 			get {
 				return this;
 			}
