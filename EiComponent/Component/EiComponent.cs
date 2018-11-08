@@ -7,7 +7,7 @@ using Eitrum.Networking;
 
 namespace Eitrum
 {
-	public class EiComponent : MonoBehaviour,EiPreUpdateInterface, EiUpdateInterface, EiLateUpdateInterface, EiFixedUpdateInterface, EiThreadedUpdateInterface
+	public class EiComponent : MonoBehaviour, EiPreUpdateInterface, EiUpdateInterface, EiLateUpdateInterface, EiFixedUpdateInterface, EiThreadedUpdateInterface
 	{
 		#region Variables
 
@@ -17,6 +17,7 @@ namespace Eitrum
 		#if EITRUM_NETWORKING
 		[SerializeField]
 		[HideInInspector]
+
 
 
 

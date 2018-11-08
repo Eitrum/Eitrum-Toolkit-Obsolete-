@@ -219,7 +219,7 @@ namespace Eitrum
 			EiMessage.Unsubscribe (subscriber);
 		}
 
-		public static void Publish<T> (T message) where T : EiCore
+		public static void Publish<T> (T message)
 		{
 			EiMessage<T>.Publish (message);
 		}
