@@ -38,10 +38,28 @@ namespace Eitrum
 
 		#region Constructors
 
+		public EiSerializeInterface ()
+		{
+
+		}
+
 		public EiSerializeInterface (T interf)
 		{
 			obj = interf.Target as UnityEngine.Object;
 			targetInterface = interf;
+		}
+
+		#endregion
+
+		#region Static Constructor
+
+		public static TObject Create<TObject> (T interf)
+			where TObject : EiSerializeInterface<T>
+		{
+			var tObj = Activator.CreateInstance<TObject> ();
+			tObj.obj = interf.Target as UnityEngine.Object;
+			tObj.targetInterface = interf;
+			return tObj;
 		}
 
 		#endregion
@@ -58,6 +76,36 @@ namespace Eitrum
 		{
 			if (obj && obj.GetType ().GetInterface (typeof(T).Name) == null)
 				obj = null;
+		}
+
+		#endregion
+	}
+
+	public static class EiSerializeInterfaceExtension
+	{
+		#region To Serializable Arrays
+
+		public static TObject[] ToSerializableArray<TObject, TInterface> (this TInterface[] oldList) 
+			where TObject : EiSerializeInterface<TInterface>
+			where TInterface : EiBaseInterface
+		{
+			TObject[] array = new TObject[oldList.Length];
+			for (int i = 0; i < array.Length; i++) {
+				array [i] = EiSerializeInterface<TInterface>.Create<TObject> (oldList [i]);
+			}
+
+			return array;
+		}
+
+		public static void ToSerializableArray<TObject, TInterface> (this TInterface[] oldList, ref TObject[] array) 
+			where TObject : EiSerializeInterface<TInterface>
+			where TInterface : EiBaseInterface
+		{
+
+			array = new TObject[oldList.Length];
+			for (int i = 0; i < array.Length; i++) {
+				array [i] = EiSerializeInterface<TInterface>.Create<TObject> (oldList [i]);
+			}
 		}
 
 		#endregion

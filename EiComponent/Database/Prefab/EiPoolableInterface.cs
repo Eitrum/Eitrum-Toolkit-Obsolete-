@@ -12,8 +12,6 @@ namespace Eitrum
 	[Serializable]
 	public class EiPoolableComponent : EiSerializeInterface<EiPoolableInterface>
 	{
-		public EiPoolableComponent (EiPoolableInterface interf) : base (interf)
-		{
-		}
+		
 	}
 }

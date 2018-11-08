@@ -9,8 +9,5 @@ namespace Eitrum.Networking
 
 	public class EiNetworkObservables : EiSerializeInterface<EiObserverInterface>
 	{
-		public EiNetworkObservables (EiObserverInterface observer) : base (observer)
-		{
-		}
 	}
 }

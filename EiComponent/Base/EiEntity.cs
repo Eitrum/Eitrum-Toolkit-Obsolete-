@@ -47,7 +47,7 @@ namespace Eitrum
 		#if EITRUM_POOLING
 		[Header ("Pool Settings")]
 		[SerializeField]
-		private EiPoolableComponent[] poolableInterfaces;
+		private EiPoolableComponent[] poolableComponents;
 		private EiPoolData poolTarget;
 		private bool isPooled = false;
 		#endif
@@ -124,9 +124,9 @@ namespace Eitrum
 		}
 
 		#if EITRUM_POOLING
-		public EiPoolableComponent[] PoolableInterfaces {
+		public EiPoolableComponent[] PoolableComponents {
 			get {
-				return poolableInterfaces;
+				return poolableComponents;
 			}
 		}
 
@@ -292,11 +292,7 @@ namespace Eitrum
 			audioComponent = GetComponentInChildren<AudioSource> ();
 			input = GetComponentInChildren<EiInput> ();
 #if EITRUM_POOLING
-			var interfaces = GetComponentsInChildren<EiPoolableInterface> ();
-			poolableInterfaces = new EiPoolableComponent[interfaces.Length];
-			for (int i = 0; i < interfaces.Length; i++) {
-				poolableInterfaces [i] = new EiPoolableComponent (interfaces [i]);
-			}
+			GetComponentsInChildren<EiPoolableInterface> ().ToSerializableArray (ref poolableComponents);
 #endif
 		}
 
