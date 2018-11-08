@@ -9,7 +9,7 @@ namespace Eitrum
 		#region Variables
 
 		[SerializeField]
-		protected EiComponent component;
+		protected UnityEngine.Object obj;
 		protected T targetInterface;
 
 		#endregion
@@ -28,9 +28,9 @@ namespace Eitrum
 			}
 		}
 
-		public EiComponent Component {
+		public UnityEngine.Object Object {
 			get {
-				return component;
+				return obj;
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace Eitrum
 
 		public EiSerializeInterface (T interf)
 		{
-			component = interf.This as EiComponent;
+			obj = interf.This as UnityEngine.Object;
 			targetInterface = interf;
 		}
 
@@ -55,18 +55,14 @@ namespace Eitrum
 
 		public void OnAfterDeserialize ()
 		{
-			if (component && component.GetType ().GetInterface (typeof(T).Name) == null)
-				component = null;
-			if (component)
-				targetInterface = (T)((object)component);
+			if (obj)
+				targetInterface = (T)((object)obj);
 		}
 
 		public void OnBeforeSerialize ()
 		{
-			if (component && component.GetType ().GetInterface (typeof(T).Name) == null)
-				component = null;
-			if (component)
-				targetInterface = (T)((object)component);
+			if (obj && obj.GetType ().GetInterface (typeof(T).Name) == null)
+				obj = null;
 		}
 
 		#endregion

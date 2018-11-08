@@ -12,10 +12,8 @@ namespace Eitrum
 	[Serializable]
 	public class EiPoolableComponent : EiSerializeInterface<EiPoolableInterface>
 	{
-		public EiPoolableComponent (EiPoolableInterface interf)
+		public EiPoolableComponent (EiPoolableInterface interf) : base (interf)
 		{
-			base.component = interf.This as EiComponent;
-			base.targetInterface = interf;
 		}
 	}
 }
