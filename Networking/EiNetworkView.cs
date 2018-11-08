@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Eitrum.Networking
 {
@@ -8,9 +9,12 @@ namespace Eitrum.Networking
 	{
 		#region Variables
 
-		private int viewId = 0;
-		private int ownerId = 0;
+		[SerializeField][Readonly] private int viewId = 0;
+		[SerializeField][Readonly] private int ownerId = 0;
+		[SerializeField] private List<EiNetworkObservables> observables;
+
 		private Eitrum.Networking.Internal.EiNetworkInternal network;
+		private Action<EiNetworkView> onUpdate;
 
 		#endregion
 
@@ -30,8 +34,23 @@ namespace Eitrum.Networking
 
 		public EiNetworkPlayer Owner {
 			get {
-				return null;
+				return network.GetPlayerById (ownerId);
 			}
+		}
+
+		#endregion
+
+		#region Subscribe
+
+		public void Susbcribe (Action<EiNetworkView> method)
+		{
+			onUpdate += method;
+		}
+
+		public void Unsubscribe (Action<EiNetworkView> method)
+		{
+			if (onUpdate != null)
+				onUpdate -= method;
 		}
 
 		#endregion
@@ -43,19 +62,39 @@ namespace Eitrum.Networking
 			return null;
 		}
 
+		public static void Set (EiNetworkView view, int viewId, int ownerId, Eitrum.Networking.Internal.EiNetworkInternal network)
+		{
+			view.viewId = viewId;
+			view.ownerId = ownerId;
+			view.network = network;
+			view.onUpdate?.Invoke (view);
+		}
+
 		public static void SetViewId (EiNetworkView view, int viewId)
 		{
 			view.viewId = viewId;
+			view.onUpdate?.Invoke (view);
 		}
 
 		public static void SetOwnerId (EiNetworkView view, int ownerId)
 		{
 			view.ownerId = ownerId;
+			view.onUpdate?.Invoke (view);
 		}
 
 		public static void SetNetwork (EiNetworkView view, Eitrum.Networking.Internal.EiNetworkInternal network)
 		{
 			view.network = network;
+			view.onUpdate?.Invoke (view);
+		}
+
+		#endregion
+
+		#region Editor
+
+		protected override void AttachComponents ()
+		{
+			
 		}
 
 		#endregion

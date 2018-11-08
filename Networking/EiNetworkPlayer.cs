@@ -6,8 +6,9 @@ namespace Eitrum.Networking
 	{
 		#region Variables
 
-		protected string playerName;
+		protected string playerName = "";
 		protected int playerId;
+		protected Action<EiNetworkPlayer> onUpdate;
 		protected EiNetwork network;
 
 		#endregion
@@ -33,6 +34,22 @@ namespace Eitrum.Networking
 		}
 
 		#endregion
+
+		#region Subscribe
+
+		public void Subscribe (Action<EiNetworkPlayer> method)
+		{
+			onUpdate += method;
+		}
+
+		public void Unsubscribe (Action<EiNetworkPlayer> method)
+		{
+			if (onUpdate != null) {
+				onUpdate -= method;
+			}
+		}
+
+		#endregion
 	}
 }
 
@@ -48,6 +65,7 @@ namespace Eitrum.Networking.Internal
 			}
 			set {
 				playerName = value;
+				onUpdate?.Invoke (this);
 			}
 		}
 
@@ -57,6 +75,7 @@ namespace Eitrum.Networking.Internal
 			}
 			set {
 				playerId = value;
+				onUpdate?.Invoke (this);
 			}
 		}
 
@@ -64,9 +83,11 @@ namespace Eitrum.Networking.Internal
 
 		#region Constructor
 
-		public EiNetworkPlayerInternal (EiNetwork network)
+		public EiNetworkPlayerInternal (EiNetwork network, string name, int id)
 		{
 			this.network = network;
+			this.playerName = name;
+			this.playerId = id;
 		}
 
 		#endregion

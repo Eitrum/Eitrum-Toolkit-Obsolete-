@@ -44,7 +44,7 @@ namespace Eitrum.Networking.Internal
 
 		~EiNetworkInternal ()
 		{
-			if (network != null && network.IsConnected) {
+			if (network != null && network.IsConnected && EiComponent.GameRunning) {
 				network.Disconnect ();
 			}
 		}
@@ -122,6 +122,9 @@ namespace Eitrum.Networking.Internal
 		{
 			Log ("Disconnected from service successfully");
 			Publish (new NetworkDisconnectedMessage ());
+			playerList.Clear ();
+			serverList.Clear ();
+			localPlayer = null;
 		}
 
 		public void OnDisconnectedError (string errorCode)
@@ -158,11 +161,29 @@ namespace Eitrum.Networking.Internal
 		{
 			Log ("Left Server successfully");
 			Publish (new NetworkServerLeftMessage ());
+			playerList.Clear ();
+			serverList.Clear ();
+			localPlayer = null;
+		}
+
+		#endregion
+
+		#region Player Sync
+
+		public void OnPlayerJoined ()
+		{
+
 		}
 
 		#endregion
 
 		#region Internal Add/Remove
+
+		public void AssignLocalPlayer (EiNetworkPlayerInternal player)
+		{
+			localPlayer = player;
+			Add (player);
+		}
 
 		public void Add (EiNetworkPlayerInternal player)
 		{
@@ -170,16 +191,6 @@ namespace Eitrum.Networking.Internal
 		}
 
 		public void Add (EiNetworkServerInternal server)
-		{
-
-		}
-
-		public void Update (EiNetworkPlayerInternal playerCopy)
-		{
-
-		}
-
-		public void Update (EiNetworkServerInternal serverCopy)
 		{
 
 		}

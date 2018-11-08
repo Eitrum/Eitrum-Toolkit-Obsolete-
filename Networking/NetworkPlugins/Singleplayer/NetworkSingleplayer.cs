@@ -92,6 +92,8 @@ namespace Eitrum.Networking.Internal
 		void INetwork.CreateServer (string name, int port, int maxPlayers, int password)
 		{
 			inServer = true;
+			var localPlayer = new EiNetworkPlayerInternal (networkInternal, "Local Player", 0);
+			networkInternal.AssignLocalPlayer (localPlayer);
 			networkInternal.OnCreatedServer (new EiNetworkServerInternal (networkInternal));
 		}
 
