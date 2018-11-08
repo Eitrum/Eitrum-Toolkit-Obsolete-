@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor.VersionControl;
 
 namespace Eitrum.Database.Prefab
 {
@@ -9,6 +10,8 @@ namespace Eitrum.Database.Prefab
 	public class EiPrefabDatabaseInspector : Editor
 	{
 		static bool[] folded;
+		static bool editMode = false;
+		static string pathFilter = "";
 
 		EiPrefab objPicker;
 
@@ -17,30 +20,51 @@ namespace Eitrum.Database.Prefab
 			var db = (EiPrefabDatabase)target;
 			var list = GetPrefabList (db);
 
-			if (EditorGUIUtility.GetObjectPickerControlID () == 129) {
-				objPicker = EditorGUIUtility.GetObjectPickerObject () as EiPrefab;
-			} else {
-				if (objPicker) {
-					if (!list.Contains (objPicker) || EditorUtility.DisplayDialog ("Add Prefab Warning", "You are about to add a prefab that is already in the database, do you want to proceed?", "Yes", "Cancel")) {
-						typeof(EiPrefab).GetField ("database", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue (objPicker, db);
-						list.Add (objPicker);
+			EditorGUILayout.BeginHorizontal ();
+
+			if (GUILayout.Button (editMode ? "List" : "Edit", GUILayout.Width (50))) {
+				editMode = !editMode;
+			}
+			pathFilter = EditorGUILayout.TextField ("Search Filter", pathFilter);
+
+			EditorGUILayout.EndHorizontal ();
+
+			if (editMode) {
+				int index = 0;
+				for (int i = 0; i < list.Count; i++) {
+					var prefab = list [i];
+					if (prefab.editorPathName.Contains (pathFilter) || prefab.ItemName.Contains (pathFilter)) {
+						EiPrefabInspector.DrawPrefab (prefab);
 					}
-					objPicker = null;
 				}
-			}
-			if (folded == null || folded.Length != list.Count) {
-				folded = new bool[list.Count];
-			}
-			for (int i = 0; i < list.Count; i++) {
-				var prefab = list [i];
-				var toRemove = !Render (prefab, i, folded [i]);
-				if (toRemove) {
-					list.RemoveAt (i);
-					i--;
+			} else {
+				if (EditorGUIUtility.GetObjectPickerControlID () == 129) {
+					objPicker = EditorGUIUtility.GetObjectPickerObject () as EiPrefab;
+				} else {
+					if (objPicker) {
+						if (!list.Contains (objPicker) || EditorUtility.DisplayDialog ("Add Prefab Warning", "You are about to add a prefab that is already in the database, do you want to proceed?", "Yes", "Cancel")) {
+							typeof(EiPrefab).GetField ("database", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue (objPicker, db);
+							list.Add (objPicker);
+						}
+						objPicker = null;
+					}
 				}
-			}
-			if (GUILayout.Button ("Add Item", GUILayout.Width (100))) {
-				EditorGUIUtility.ShowObjectPicker<EiPrefab> (null, false, "", 129);
+				if (folded == null || folded.Length != list.Count) {
+					folded = new bool[list.Count];
+				}
+				for (int i = 0; i < list.Count; i++) {
+					var prefab = list [i];
+					if (prefab.editorPathName.Contains (pathFilter) || prefab.ItemName.Contains (pathFilter)) {
+						var toRemove = !Render (prefab, i, folded [i]);
+						if (toRemove) {
+							list.RemoveAt (i);
+							i--;
+						}
+					}
+				}
+				if (GUILayout.Button ("Add Item", GUILayout.Width (100))) {
+					EditorGUIUtility.ShowObjectPicker<EiPrefab> (null, false, "", 129);
+				}
 			}
 		}
 
@@ -59,7 +83,19 @@ namespace Eitrum.Database.Prefab
 			if (prefab == null) {
 				EditorGUILayout.LabelField ("Null Object");
 			} else {
-				ApplyUniqueId (prefab, i);
+				if (prefab.UniqueId != i) {
+					if (Provider.enabled && Provider.isActive) {
+						var asset = Provider.GetAssetByPath (AssetDatabase.GetAssetPath (prefab));
+						if (asset.locked && Provider.CheckoutIsValid (asset)) {
+							Provider.Checkout (asset, CheckoutMode.Both);
+						}
+						if (!asset.locked) {
+							ApplyUniqueId (prefab, i);
+						}
+					} else {
+						ApplyUniqueId (prefab, i);
+					}
+				}
 				var text = new GUIContent (prefab.editorPathName.Replace ("/", " / ") + " /");
 				var size = EditorStyles.label.CalcSize (text);
 				EditorGUILayout.LabelField (text, GUILayout.Width (size.x));

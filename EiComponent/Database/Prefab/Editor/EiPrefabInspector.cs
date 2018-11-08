@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.VersionControl;
 
 namespace Eitrum.Database.Prefab
 {
@@ -34,7 +35,26 @@ namespace Eitrum.Database.Prefab
 			}
 		}
 
-		private void DrawBase (EiPrefab prefab)
+		public static void DrawPrefab (EiPrefab prefab)
+		{
+			Header ("------------------(" + prefab.ItemName + ")------------------");
+
+			if (Provider.enabled && Provider.isActive) {
+				var asset = Provider.GetAssetByPath (AssetDatabase.GetAssetPath (prefab));
+				if (Provider.CheckoutIsValid (asset)) {
+					if (GUILayout.Button ("Checkout")) {
+						Provider.Checkout (asset, CheckoutMode.Both);
+					}
+				}
+				GUI.enabled = !asset.locked;
+			}
+
+			DrawBase (prefab);
+			DrawPool (prefab);
+			GUI.enabled = true;
+		}
+
+		private static void DrawBase (EiPrefab prefab)
 		{
 			Header ("Settings");
 			EditorGUILayout.BeginHorizontal ();
@@ -48,7 +68,7 @@ namespace Eitrum.Database.Prefab
 		}
 
 		[System.Diagnostics.Conditional ("EITRUM_POOLING")]
-		private void DrawPool (EiPrefab prefab)
+		private static void DrawPool (EiPrefab prefab)
 		{
 			EditorGUILayout.Space ();
 			Header ("Pool Settings");
@@ -66,7 +86,7 @@ namespace Eitrum.Database.Prefab
 			pool.Prefab = prefab;
 		}
 
-		private void Header (string label)
+		private static void Header (string label)
 		{
 			EditorGUILayout.LabelField (label, EditorStyles.boldLabel);
 		}
