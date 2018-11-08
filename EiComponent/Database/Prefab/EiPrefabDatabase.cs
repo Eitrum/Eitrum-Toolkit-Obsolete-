@@ -45,6 +45,7 @@ namespace Eitrum.Database
 				DestroyImmediate (this.gameObject);
 			}
 			instance = this;
+			DontDestroyOnLoad (gameObject);
 		}
 
 		#endregion

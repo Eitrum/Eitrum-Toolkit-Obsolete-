@@ -304,11 +304,6 @@ namespace Eitrum
 			return EiMessage.Subscribe<T> (this, action);
 		}
 
-		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (EiComponent component, Action<T> action)
-		{
-			return EiMessage.Subscribe<T> (component, action);
-		}
-
 		public static void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
 		{
 			EiMessage.Unsubscribe<T> (subscriber);

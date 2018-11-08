@@ -42,6 +42,12 @@ namespace Eitrum
 			}
 		}
 
+		public static bool GameRunning {
+			get {
+				return EiUnityThreading.gameRunning;
+			}
+		}
+
 		#endregion
 
 		#region Core
@@ -207,11 +213,6 @@ namespace Eitrum
 		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (Action<T> action)
 		{
 			return EiMessage.Subscribe (this, action);
-		}
-
-		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (EiCore core, Action<T> action)
-		{
-			return EiMessage.Subscribe (core, action);
 		}
 
 		public static void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)

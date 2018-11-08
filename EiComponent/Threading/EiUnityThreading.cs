@@ -1,12 +1,15 @@
 ﻿using System.Threading;
 
-namespace Eitrum {
-	public class EiUnityThreading : EiComponentSingleton<EiUnityThreading> {
-		public override void SingletonCreation() {
-			KeepAlive();
+namespace Eitrum
+{
+	public class EiUnityThreading : EiComponentSingleton<EiUnityThreading>
+	{
+		public override void SingletonCreation ()
+		{
+			KeepAlive ();
 		}
 
-		public static EiPropertyEvent<bool> CloseThreads = new EiPropertyEvent<bool>(false);
+		public static EiPropertyEvent<bool> CloseThreads = new EiPropertyEvent<bool> (false);
 		public static bool gameRunning = true;
 
 		static Thread mainThread = Thread.CurrentThread;
@@ -23,7 +26,8 @@ namespace Eitrum {
 			}
 		}
 
-		void OnDestroy() {
+		void OnDestroy ()
+		{
 			gameRunning = false;
 			CloseThreads.Value = true;
 		}

@@ -52,9 +52,7 @@ namespace Eitrum
 		#region Variables
 
 		Action<T> method;
-
-		EiCore core;
-		EiComponent comp;
+		EiBaseInterface baseInterface;
 
 		public int calls = 0;
 		public int channel = 0;
@@ -63,15 +61,9 @@ namespace Eitrum
 
 		#region Constructors
 
-		public EiMessageSubscriber (EiComponent component, Action<T> method)
+		public EiMessageSubscriber (EiBaseInterface baseInterface, Action<T> method)
 		{
-			this.comp = component;
-			this.method = method;
-		}
-
-		public EiMessageSubscriber (EiCore core, Action<T> method)
-		{
-			this.core = core;
+			this.baseInterface = baseInterface;
 			this.method = method;
 		}
 
@@ -81,7 +73,7 @@ namespace Eitrum
 
 		public new bool IsDestroyed {
 			get {
-				return comp == null || (core == null || core.IsDestroyed) || base.IsDestroyed;
+				return baseInterface == null || baseInterface.IsNull;
 			}
 		}
 
@@ -89,30 +81,6 @@ namespace Eitrum
 		{
 			method (obj);
 			calls++;
-		}
-
-		#endregion
-
-		#region Helper
-
-		public bool IsCore ()
-		{
-			return core != null;
-		}
-
-		public bool IsComponent ()
-		{
-			return comp != null;
-		}
-
-		public EiCore GetCore ()
-		{
-			return core;
-		}
-
-		public EiComponent GetComponent ()
-		{
-			return comp;
 		}
 
 		#endregion
