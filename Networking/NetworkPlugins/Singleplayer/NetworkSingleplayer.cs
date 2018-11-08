@@ -77,24 +77,27 @@ namespace Eitrum.Networking.Internal
 			this.networkInternal = networkInternal;
 		}
 
-		void INetwork.Disconnect ()
-		{
-			isConnected = false;
-		}
-
 		void INetwork.Connect ()
 		{
 			isConnected = true;
+			networkInternal.OnConnected ();
+		}
+
+		void INetwork.Disconnect ()
+		{
+			isConnected = false;
+			networkInternal.OnDisconnected ();
 		}
 
 		void INetwork.CreateServer (string name, int port, int maxPlayers, int password)
 		{
 			inServer = true;
+			networkInternal.OnCreatedServer (new EiNetworkServerInternal (networkInternal));
 		}
 
-		void INetwork.JoinServer (string name, int port, int password)
+		void INetwork.JoinServer (string address, int port, int password)
 		{
-			//Error ("Can't join a server in single player");
+			UnityEngine.Debug.LogError ("Can't join a server in single player");
 		}
 
 		#endregion
@@ -103,10 +106,20 @@ namespace Eitrum.Networking.Internal
 
 		void INetwork.Instantiate (byte[] instantiateData)
 		{
-			throw new NotImplementedException ();
+			networkInternal.Instantiate (instantiateData);
 		}
 
-		void INetwork.Destroy (ushort viewId)
+		void INetwork.Destroy (int viewId)
+		{
+
+		}
+
+		void INetwork.DestroyPlayerViews (int ownerId)
+		{
+			
+		}
+
+		void INetwork.DestroyAll ()
 		{
 
 		}

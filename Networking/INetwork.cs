@@ -37,7 +37,7 @@ namespace Eitrum.Networking.Internal
 
 		void CreateServer (string name, int port, int maxPlayers, int password);
 
-		void JoinServer (string name, int port, int password);
+		void JoinServer (string address, int port, int password);
 
 		#endregion
 
@@ -45,7 +45,11 @@ namespace Eitrum.Networking.Internal
 
 		void Instantiate (byte[] instantiateData);
 
-		void Destroy (ushort viewId);
+		void Destroy (int viewId);
+
+		void DestroyPlayerViews (int ownerId);
+
+		void DestroyAll ();
 
 		void RPC (byte[] rpcData, EiNetworkTarget target);
 

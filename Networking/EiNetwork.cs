@@ -5,10 +5,11 @@ using System.Collections.Generic;
 
 namespace Eitrum.Networking
 {
-	public abstract class EiNetwork
+	public abstract class EiNetwork : EiCore
 	{
 		#region Variables
 
+		protected EiNetworkLogLevel logLevel;
 		protected INetwork network;
 		protected int defaultPort = 7777;
 		protected int defaultMaxPlayers = 1000;
@@ -18,6 +19,12 @@ namespace Eitrum.Networking
 
 		protected List<EiNetworkPlayerInternal> playerList = new List<EiNetworkPlayerInternal> ();
 		protected List<EiNetworkServerInternal> serverList = new List<EiNetworkServerInternal> ();
+
+		protected Dictionary<int, EiNetworkView> allocatedViews = new Dictionary<int, EiNetworkView> ();
+		protected int allocateViewId = 0;
+		protected Queue<int> freeViewId = new Queue<int> ();
+
+		protected EiBuffer buffer = new EiBuffer (true);
 
 		#endregion
 
@@ -35,6 +42,18 @@ namespace Eitrum.Networking
 			}
 		}
 
+		public bool IsServer {
+			get {
+				return network.IsServer;
+			}
+		}
+
+		public bool IsClient {
+			get {
+				return network.IsClient;
+			}
+		}
+
 		public EiNetworkPlayer LocalPlayer {
 			get {
 				return localPlayer;
@@ -47,18 +66,41 @@ namespace Eitrum.Networking
 			}
 		}
 
+		public int AllocateViewId {
+			get {
+				if (freeViewId.Count > 0) {
+					return freeViewId.Dequeue ();
+				}
+				return ++allocateViewId;
+			}
+		}
+
+		public int ServerTime {
+			get {
+				return network.ServerTime;
+			}
+		}
+
 		#endregion
 
 		#region Base Connect Methods
 
 		public void Connect ()
 		{
-			//network.Connect();
+			if (network.IsConnected) {
+				Debug.LogWarning ("Can connect when you already connected");
+			} else {
+				network.Connect ();
+			}
 		}
 
 		public void Disconnect ()
 		{
-			network.Disconnect ();
+			if (network.IsConnected) {
+				network.Disconnect ();
+			} else {
+				Debug.LogWarning ("Can't disconnect when you already disconnected");
+			}
 		}
 
 		#endregion
@@ -67,43 +109,64 @@ namespace Eitrum.Networking
 
 		public void CreateServer ()
 		{
-			//generate name, use it
-			//network.CreateServer(name, defaultPort,defaultMaxPlayers, 0);
+			string name = "ServerRandom" + EiRandom.Range (100000, 999999);
+			network.CreateServer (name, defaultPort, defaultMaxPlayers, 0);
 		}
 
 		public void CreateServer (string name)
 		{
-			//network.CreateServer(name, defaultPort,defaultMaxPlayers, 0);
+			network.CreateServer (name, defaultPort, defaultMaxPlayers, 0);
 		}
 
 		public void CreateServer (string name, int port, int maxPlayers)
 		{
-			//network.CreateServer(name, port, maxPlayers, 0);
+			network.CreateServer (name, port, maxPlayers, 0);
 		}
 
 		public void CreateServer (string name, int port, int maxPlayers, int password)
 		{
-			//network.CreateServer(name, port, maxPlayers, password);
+			network.CreateServer (name, port, maxPlayers, password);
 		}
 
 		#endregion
 
 		#region Join Server
 
-		public void JoinServer ()
+		public bool JoinServer ()
 		{
-			//take random server, join it
-			//network.JoinServer(name, port, password);
+			int attempt = 0;
+			EiNetworkServer server;
+			do {
+				server = EiRandom.Element (serverList);
+				if (++attempt > 20)
+					break;
+			} while(server.IsPasswordProtected);
+
+			if (!server.IsPasswordProtected) {
+				network.JoinServer (server.Address, server.Port, 0);
+				return true;
+			}
+			return false;
 		}
 
-		public void JoinServer (string name)
+		public void JoinServer (EiNetworkServer server)
 		{
-			//network.JoinServer(name, defaultPort, 0);
+			network.JoinServer (server.Address, server.Port, 0);
 		}
 
-		public void JoinServer (string name, int port, int password)
+		public void JoinServer (EiNetworkServer server, int password)
 		{
-			//network.JoinServer(name, port, password);
+			network.JoinServer (server.Address, server.Port, password);
+		}
+
+		public void JoinServer (string address)
+		{
+			network.JoinServer (address, defaultPort, 0);
+		}
+
+		public void JoinServer (string address, int port, int password)
+		{
+			network.JoinServer (address, port, password);
 		}
 
 		#endregion
@@ -126,11 +189,173 @@ namespace Eitrum.Networking
 
 		#endregion
 
+		#region Instantiate
+
+		public void Instantiate (EiPrefab prefab)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write ((byte)EiNetworkInstantiateMask.None);								/*01*/
+			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (AllocateViewId);													/*04*/
+			buffer.Write (localPlayer.Id);													/*04*/
+			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 13 bytes*/
+		}
+
+		public void Instantiate (EiPrefab prefab, Vector3 position)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write ((byte)EiNetworkInstantiateMask.Position);							/*01*/
+			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (AllocateViewId);													/*04*/
+			buffer.Write (localPlayer.Id);													/*04*/
+			buffer.Write (position);														/*12*/
+			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 25 bytes*/
+		}
+
+		public void Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotation);					/*01*/
+			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (AllocateViewId);													/*04*/
+			buffer.Write (localPlayer.Id);													/*04*/
+			buffer.Write (position);														/*12*/
+			buffer.Write (rotation);														/*12*/
+			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 37 bytes*/
+		}
+
+		public void Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation, EiNetworkView parent)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationParent);			/*01*/
+			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (AllocateViewId);													/*04*/
+			buffer.Write (localPlayer.Id);													/*04*/
+			buffer.Write (position);														/*12*/
+			buffer.Write (rotation);														/*12*/
+			buffer.Write (parent.ViewId);													/*04*/
+			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 41 bytes*/
+		}
+
+		public void Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation, float scale)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationScale);			/*01*/
+			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (AllocateViewId);													/*04*/
+			buffer.Write (localPlayer.Id);													/*04*/
+			buffer.Write (position);														/*12*/
+			buffer.Write (rotation);														/*12*/
+			buffer.Write (scale);															/*04*/
+			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 41 bytes*/
+		}
+
+		public void Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation, float scale, EiNetworkView parent)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationScaleParent);		/*01*/
+			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (AllocateViewId);													/*04*/
+			buffer.Write (localPlayer.Id);													/*04*/
+			buffer.Write (position);														/*12*/
+			buffer.Write (rotation);														/*12*/
+			buffer.Write (scale);															/*04*/
+			buffer.Write (parent.ViewId);													/*04*/
+			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 45 bytes*/
+		}
+
+		public void Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation, Vector3 scale3d, EiNetworkView parent)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationScale3DParent);	/*01*/
+			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (AllocateViewId);													/*04*/
+			buffer.Write (localPlayer.Id);													/*04*/
+			buffer.Write (position);														/*12*/
+			buffer.Write (rotation);														/*12*/
+			buffer.Write (scale3d);															/*12*/
+			buffer.Write (parent.ViewId);													/*04*/
+			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 53 bytes*/
+		}
+
+		#endregion
+
+		#region Destroy
+
+		public void Destroy (int viewId)
+		{
+			network.Destroy (viewId);
+		}
+
+		public void DestroyPlayerViews (int ownerId)
+		{
+			network.DestroyPlayerViews (ownerId);
+		}
+
+		public void DestroyAll ()
+		{
+			network.DestroyAll ();
+		}
+
+		#endregion
+
+		#region Help Methods
+
+		public EiNetworkPlayer GetPlayerById (int id)
+		{
+			for (int i = playerList.Count - 1; i >= 0; i--) {
+				if (playerList [i].Id == id) {
+					return playerList [i];
+				}
+			}
+			return null;
+		}
+
+		public EiNetworkPlayer GetPlayerByName (string name)
+		{
+			for (int i = playerList.Count - 1; i >= 0; i--) {
+				if (playerList [i].Name == name) {
+					return playerList [i];
+				}
+			}
+			return null;
+		}
+
+		public EiNetworkServer GetServerById (int id)
+		{
+			for (int i = serverList.Count - 1; i >= 0; i--) {
+				if (serverList [i].Id == id) {
+					return serverList [i];
+				}
+			}
+			return null;
+		}
+
+		public EiNetworkServer GetServerByName (string name)
+		{
+			for (int i = serverList.Count - 1; i >= 0; i--) {
+				if (serverList [i].Name == name) {
+					return serverList [i];
+				}
+			}
+			return null;
+		}
+
+		#endregion
+
 		#region Static Creation
 
-		public static EiNetwork Create (EiNetworkType type)
+		public static EiNetwork Create (INetwork network, EiNetworkLogLevel logLevel = EiNetworkLogLevel.None)
+		{
+			var netInternal = new EiNetworkInternal (network);
+			netInternal.logLevel = logLevel;
+			return netInternal as EiNetwork;
+		}
+
+		public static EiNetwork Create (EiNetworkType type, EiNetworkLogLevel logLevel = EiNetworkLogLevel.None)
 		{
 			var netInternal = new EiNetworkInternal (type);
+			netInternal.logLevel = logLevel;
 			return netInternal as EiNetwork;
 		}
 
