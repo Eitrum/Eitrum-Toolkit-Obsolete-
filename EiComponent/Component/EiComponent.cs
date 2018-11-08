@@ -27,6 +27,9 @@ namespace Eitrum
 
 
 
+
+
+
 #pragma warning disable
 		private EiNetworkView netView;
 #endif
@@ -336,6 +339,13 @@ namespace Eitrum
 			netView = GetComponent<EiNetworkView>();
 			#endif
 			AttachComponents ();
+			#if UNITY_EDITOR
+			if (gameObject.scene.isLoaded) {
+				UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty (gameObject.scene);
+			} else {
+				UnityEditor.EditorUtility.SetDirty (this);
+			}
+			#endif
 		}
 
 		protected virtual void AttachComponents ()

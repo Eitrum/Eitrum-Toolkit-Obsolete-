@@ -206,7 +206,7 @@ namespace Eitrum
 			transform.localPosition = Vector3.zero;
 			transform.localRotation = Quaternion.identity;
 #if EITRUM_POOLING
-			var interfaces = entity.PoolableInterfaces;
+			var interfaces = entity.PoolableComponents;
 			for (int i = 0; i < interfaces.Length; i++) {
 				interfaces [i].Get.OnPoolInstantiate ();
 			}
@@ -220,7 +220,7 @@ namespace Eitrum
 			transform.localPosition = position;
 			transform.localRotation = rotation;
 #if EITRUM_POOLING
-			var interfaces = entity.PoolableInterfaces;
+			var interfaces = entity.PoolableComponents;
 			for (int i = 0; i < interfaces.Length; i++) {
 				interfaces [i].Get.OnPoolInstantiate ();
 			}
@@ -238,7 +238,7 @@ namespace Eitrum
 			goScale.Scale (scale);
 			transform.localScale = goScale;
 #if EITRUM_POOLING
-			var interfaces = entity.PoolableInterfaces;
+			var interfaces = entity.PoolableComponents;
 			for (int i = 0; i < interfaces.Length; i++) {
 				interfaces [i].Get.OnPoolInstantiate ();
 			}
@@ -249,7 +249,7 @@ namespace Eitrum
 		{
 #if EITRUM_POOLING
 			if (entity.PoolTarget != null) {
-				var interfaces = entity.PoolableInterfaces;
+				var interfaces = entity.PoolableComponents;
 				for (int i = 0; i < interfaces.Length; i++) {
 					interfaces [i].Get.OnPoolDestroy ();
 				}

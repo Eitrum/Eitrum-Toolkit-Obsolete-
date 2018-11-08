@@ -7,6 +7,7 @@ namespace Eitrum.Networking
 		void Serialize (EiBuffer buffer, bool isWriting);
 	}
 
+	[Serializable]
 	public class EiNetworkObservables : EiSerializeInterface<EiObserverInterface>
 	{
 	}

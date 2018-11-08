@@ -66,13 +66,13 @@ namespace Eitrum
 
 		#region ISerializationCallbackReceiver Implementation
 
-		public void OnAfterDeserialize ()
+		void ISerializationCallbackReceiver.OnAfterDeserialize ()
 		{
 			if (obj)
 				targetInterface = (T)((object)obj);
 		}
 
-		public void OnBeforeSerialize ()
+		void ISerializationCallbackReceiver.OnBeforeSerialize ()
 		{
 			if (obj && obj.GetType ().GetInterface (typeof(T).Name) == null)
 				obj = null;
