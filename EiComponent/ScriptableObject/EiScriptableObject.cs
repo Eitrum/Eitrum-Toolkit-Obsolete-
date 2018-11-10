@@ -7,37 +7,8 @@ using UnityEditor;
 
 namespace Eitrum
 {
-	public class EiScriptableObject<T> : ScriptableObject, EiUpdateInterface, EiBaseInterface
+	public class EiScriptableObject<T> : ScriptableObject, EiBaseInterface
 	{
-		#region EiUpdateInterface implementation
-
-		public virtual void PreUpdateComponent (float time)
-		{
-			throw new NotImplementedException ("PreUpdateComponent");
-		}
-
-		public virtual void UpdateComponent (float time)
-		{
-			throw new NotImplementedException ("UpdateComponent");
-		}
-
-		public virtual void LateUpdateComponent (float time)
-		{
-			throw new NotImplementedException ("LateUpdateComponent");
-		}
-
-		public virtual void FixedUpdateComponent (float time)
-		{
-			throw new NotImplementedException ("FixedUpdateComponent");
-		}
-
-		public virtual void ThreadedUpdateComponent (float time)
-		{
-			throw new NotImplementedException ("ThreadedUpdateComponent");
-		}
-
-		#endregion
-
 		#region EiBaseInterface implementation
 
 		public object Target {
@@ -48,7 +19,7 @@ namespace Eitrum
 
 		public bool IsNull {
 			get {
-				throw new NotImplementedException ();
+				return this == null;
 			}
 		}
 

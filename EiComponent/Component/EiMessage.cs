@@ -6,12 +6,12 @@ namespace Eitrum
 	{
 		#region Publish
 
-		public static void Publish<T> (T message) where T : EiCore
+		public static void Publish<T> (T message) where T : class
 		{
 			EiMessage<T>.Publish (message);
 		}
 
-		public static void Publish<T> (T message, int channel) where T: EiCore
+		public static void Publish<T> (T message, int channel) where T: class
 		{
 			EiMessage<T>.Publish (message, channel);
 		}
@@ -20,17 +20,9 @@ namespace Eitrum
 
 		#region Subscribe
 
-		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (EiCore core, Action<T> method, int channel = 0)
+		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (EiBaseInterface target, Action<T> method, int channel = 0)
 		{
-			var newSub = new EiMessageSubscriber<T> (core, method);
-			newSub.channel = channel;
-			return EiMessage<T>.subscribers.Add (newSub);
-
-		}
-
-		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (EiComponent component, Action<T> method, int channel = 0)
-		{
-			var newSub = new EiMessageSubscriber <T> (component, method);
+			var newSub = new EiMessageSubscriber <T> (target, method);
 			newSub.channel = channel;
 			return EiMessage<T>.subscribers.Add (newSub);
 		}
@@ -47,7 +39,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiMessageSubscriber<T> : EiCore
+	public class EiMessageSubscriber<T>
 	{
 		#region Variables
 
@@ -71,7 +63,7 @@ namespace Eitrum
 
 		#region Core
 
-		public new bool IsDestroyed {
+		public bool IsDestroyed {
 			get {
 				return baseInterface == null || baseInterface.IsNull;
 			}
@@ -119,4 +111,3 @@ namespace Eitrum
 		#endregion
 	}
 }
-
