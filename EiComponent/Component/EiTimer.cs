@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Eitrum
 {
-	public class EiTimer
+	public sealed class EiTimer
 	{
 		#region Singleton
 
@@ -192,6 +192,65 @@ namespace Eitrum
 			coroutine = Instance._Animate<T> (duration, operation, animationData, onDone);
 		}
 
+		// ------------- return Coroutine ease function --------------
+
+		public static Coroutine Animate (float duration, Action<float> operation, Func<float, float> easeFunction)
+		{
+			return Instance._Animate (duration, operation, easeFunction);
+		}
+
+		public static Coroutine Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction)
+		{
+			return Instance._Animate<T> (duration, operation, animationData, easeFunction);
+		}
+
+		public static Coroutine Animate (float duration, Action<float> operation, Func<float, float> easeFunction, Action onDone)
+		{
+			return Instance._Animate (duration, operation, easeFunction, onDone);
+		}
+
+		public static Coroutine Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action onDone)
+		{
+			return Instance._Animate<T> (duration, operation, animationData, easeFunction, onDone);
+		}
+
+		public static Coroutine Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action<T> onDone)
+		{
+			return Instance._Animate<T> (duration, operation, animationData, easeFunction, onDone);
+		}
+
+		// ------------- ref Coroutine ease function --------------
+
+		public static void Animate (float duration, Action<float> operation, Func<float, float> easeFunction, ref Coroutine coroutine)
+		{
+			Stop (coroutine);
+			coroutine = Instance._Animate (duration, operation, easeFunction);
+		}
+
+		public static void Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, ref Coroutine coroutine)
+		{
+			Stop (coroutine);
+			coroutine = Instance._Animate<T> (duration, operation, animationData, easeFunction);
+		}
+
+		public static void Animate (float duration, Action<float> operation, Func<float, float> easeFunction, Action onDone, ref Coroutine coroutine)
+		{
+			Stop (coroutine);
+			coroutine = Instance._Animate (duration, operation, easeFunction, onDone);
+		}
+
+		public static void Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action onDone, ref Coroutine coroutine)
+		{
+			Stop (coroutine);
+			coroutine = Instance._Animate<T> (duration, operation, animationData, easeFunction, onDone);
+		}
+
+		public static void Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action<T> onDone, ref Coroutine coroutine)
+		{
+			Stop (coroutine);
+			coroutine = Instance._Animate<T> (duration, operation, animationData, easeFunction, onDone);
+		}
+
 		#endregion
 
 		#region Stop
@@ -209,7 +268,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiTimerBehaviour : EiComponentSingleton<EiTimerBehaviour>
+	public sealed class EiTimerBehaviour : EiComponentSingleton<EiTimerBehaviour>
 	{
 		#region Once
 
@@ -357,6 +416,33 @@ namespace Eitrum
 			return StartCoroutine (EAnimate<T> (duration, operation, animationData, onDone));
 		}
 
+		// ------------- ease functions
+
+		public Coroutine _Animate (float duration, Action<float> operation, Func<float, float> easeFunction)
+		{
+			return StartCoroutine (EAnimate (duration, operation, easeFunction));
+		}
+
+		public Coroutine _Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction)
+		{
+			return StartCoroutine (EAnimate<T> (duration, operation, animationData, easeFunction));
+		}
+
+		public Coroutine _Animate (float duration, Action<float> operation, Func<float, float> easeFunction, Action onDone)
+		{
+			return StartCoroutine (EAnimate (duration, operation, easeFunction, onDone));
+		}
+
+		public Coroutine _Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action onDone)
+		{
+			return StartCoroutine (EAnimate<T> (duration, operation, animationData, easeFunction, onDone));
+		}
+
+		public Coroutine _Animate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action<T> onDone)
+		{
+			return StartCoroutine (EAnimate<T> (duration, operation, animationData, easeFunction, onDone));
+		}
+
 		IEnumerator EAnimate (float duration, Action<float> operation)
 		{
 			var timer = 0f;
@@ -411,6 +497,66 @@ namespace Eitrum
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
 				operation (Math.Min (timer, 1f), animationData);
+			}
+			onDone (animationData);
+		}
+
+		//----------- Ease Functions
+
+		IEnumerator EAnimate (float duration, Action<float> operation, Func<float, float> easeFunction)
+		{
+			var timer = 0f;
+			operation (easeFunction (timer));
+			while (timer < 1f) {
+				yield return null;
+				timer += Time.unscaledDeltaTime / duration;
+				operation (easeFunction (Math.Min (timer, 1f)));
+			}
+		}
+
+		IEnumerator EAnimate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction)
+		{
+			var timer = 0f;
+			operation (easeFunction (timer), animationData);
+			while (timer < 1f) {
+				yield return null;
+				timer += Time.unscaledDeltaTime / duration;
+				operation (easeFunction (Math.Min (timer, 1f)), animationData);
+			}
+		}
+
+		IEnumerator EAnimate (float duration, Action<float> operation, Func<float, float> easeFunction, Action onDone)
+		{
+			var timer = 0f;
+			operation (easeFunction (timer));
+			while (timer < 1f) {
+				yield return null;
+				timer += Time.unscaledDeltaTime / duration;
+				operation (easeFunction (Math.Min (timer, 1f)));
+			}
+			onDone ();
+		}
+
+		IEnumerator EAnimate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action onDone)
+		{
+			var timer = 0f;
+			operation (easeFunction (timer), animationData);
+			while (timer < 1f) {
+				yield return null;
+				timer += Time.unscaledDeltaTime / duration;
+				operation (easeFunction (Math.Min (timer, 1f)), animationData);
+			}
+			onDone ();
+		}
+
+		IEnumerator EAnimate<T> (float duration, Action<float, T> operation, T animationData, Func<float, float> easeFunction, Action<T> onDone)
+		{
+			var timer = 0f;
+			operation (easeFunction (timer), animationData);
+			while (timer < 1f) {
+				yield return null;
+				timer += Time.unscaledDeltaTime / duration;
+				operation (easeFunction (Math.Min (timer, 1f)), animationData);
 			}
 			onDone (animationData);
 		}
