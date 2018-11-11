@@ -62,12 +62,13 @@ namespace Eitrum
 			AnimationCurve curve = new AnimationCurve ();
 			steps = Mathf.Clamp (steps, 4, 100);
 			float timePerStep = 1f / (float)steps;
+			float timeBetweenSteps = timePerStep / 2f;
 			for (int i = 0; i <= steps; i++) {
 				float time = timePerStep * (float)i;
 				var point = easeFunction (time);
-				var before = easeFunction (time - timePerStep);
-				var after = easeFunction (time + timePerStep);
-				curve.AddKey (new Keyframe (time, point, (point - before) / timePerStep, (after - point) / timePerStep, 0.5f, 0.5f));
+				var before = easeFunction (time - timeBetweenSteps);
+				var after = easeFunction (time + timeBetweenSteps);
+				curve.AddKey (new Keyframe (time, point, (point - before) / timeBetweenSteps, (after - point) / timeBetweenSteps, 0.5f, 0.5f));
 			}
 			return curve;
 		}
