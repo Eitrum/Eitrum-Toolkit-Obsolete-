@@ -124,21 +124,21 @@ namespace Eitrum
 		{
 			public static float EaseIn (float time)
 			{
-				return 0.5f * time * time;
+				return time * time;
 			}
 
 			public static float EaseOut (float time)
 			{
-				return -0.5f * time * (time - 2f);
+				return -time * (time - 2f);
 			}
 
 			public static float EaseInOut (float time)
 			{
 				time /= 0.5f;
 				if (time < 1f)
-					return 0.25f * time * time;
+					return 0.5f * time * time;
 				time -= 1f;
-				return -0.25f * (time * (time - 2f) - 1f);
+				return -0.5f * (time * (time - 2f) - 1f);
 			}
 
 			public static Func<float, float> Get (EaseType easeType)
@@ -163,22 +163,22 @@ namespace Eitrum
 		{
 			public static float EaseIn (float time)
 			{
-				return 0.5f * time * time * time;
+				return time * time * time;
 			}
 
 			public static float EaseOut (float time)
 			{
 				time--;
-				return 0.5f * (time * time * time + 1f);
+				return  (time * time * time + 1f);
 			}
 
 			public static float EaseInOut (float time)
 			{
 				time /= 0.5f;
 				if (time < 1f)
-					return 0.25f * time * time * time;
+					return 0.5f * time * time * time;
 				time -= 2f;
-				return 0.25f * (time * time * time + 2f);
+				return 0.5f * (time * time * time + 2f);
 			}
 
 			public static Func<float, float> Get (EaseType easeType)
@@ -203,22 +203,22 @@ namespace Eitrum
 		{
 			public static float EaseIn (float time)
 			{
-				return 0.5f * time * time * time * time;
+				return time * time * time * time;
 			}
 
 			public static float EaseOut (float time)
 			{
 				time--;
-				return -0.5f * (time * time * time * time - 1f);
+				return -(time * time * time * time - 1f);
 			}
 
 			public static float EaseInOut (float time)
 			{
 				time /= 0.5f;
 				if (time < 1f)
-					return 0.25f * time * time * time * time;
+					return 0.5f * time * time * time * time;
 				time -= 2f;
-				return -0.25f * (time * time * time * time - 2f);
+				return -0.5f * (time * time * time * time - 2f);
 			}
 
 			public static Func<float, float> Get (EaseType easeType)
@@ -243,22 +243,22 @@ namespace Eitrum
 		{
 			public static float EaseIn (float time)
 			{
-				return 0.5f * time * time * time * time * time;
+				return time * time * time * time * time;
 			}
 
 			public static float EaseOut (float time)
 			{
 				time--;
-				return 0.5f * (time * time * time * time * time + 1f);
+				return (time * time * time * time * time + 1f);
 			}
 
 			public static float EaseInOut (float time)
 			{
 				time /= 0.5f;
 				if (time < 1f)
-					return 0.25f * time * time * time * time * time;
+					return 0.5f * time * time * time * time * time;
 				time -= 2f;
-				return 0.25f * (time * time * time * time * time + 2f);
+				return 0.5f * (time * time * time * time * time + 2f);
 			}
 
 			public static Func<float, float> Get (EaseType easeType)
@@ -283,17 +283,17 @@ namespace Eitrum
 		{
 			public static float EaseIn (float time)
 			{
-				return -0.5f * Mathf.Cos ((time) * (Mathf.PI / 2f)) + 0.5f;
+				return -Mathf.Cos ((time) * (Mathf.PI / 2)) + 1f;
 			}
 
 			public static float EaseOut (float time)
 			{
-				return 0.5f * Mathf.Sin ((time) * (Mathf.PI / 2f));
+				return Mathf.Sin ((time) * (Mathf.PI / 2f));
 			}
 
 			public static float EaseInOut (float time)
 			{
-				return -0.25f * (Mathf.Cos (Mathf.PI * time) - 1f);
+				return -Mathf.Cos (time * Mathf.PI) / 2f + 0.5f;
 			}
 
 			public static Func<float, float> Get (EaseType easeType)
@@ -318,21 +318,21 @@ namespace Eitrum
 		{
 			public static float EaseIn (float time)
 			{
-				return 0.5f * Mathf.Pow (2f, 10f * (time / 0.5f - 1f));
+				return Mathf.Pow (2f, 10f * (time - 1f));
 			}
 
 			public static float EaseOut (float time)
 			{
-				return 0.5f * (-Mathf.Pow (2f, -10f * time / 0.5f) + 1f);
+				return (-Mathf.Pow (2f, -10f * time) + 1f);
 			}
 
 			public static float EaseInOut (float time)
 			{
 				time /= 0.5f;
 				if (time < 1f)
-					return 0.25f * Mathf.Pow (2f, 10f * (time - 1f));
+					return 0.5f * Mathf.Pow (2f, 10f * (time - 1f));
 				time--;
-				return 0.25f * (-Mathf.Pow (2f, -10f * time) + 2f);
+				return 0.5f * (-Mathf.Pow (2f, -10f * time) + 2f);
 			}
 
 			public static Func<float, float> Get (EaseType easeType)
