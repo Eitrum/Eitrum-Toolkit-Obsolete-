@@ -1,20 +1,24 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Eitrum {
-	public class EiMath {
+namespace Eitrum
+{
+	public class EiMath
+	{
 
 
-		public static Vector3 GetClosestPointOnLine(Line line, Vector3 point) {
+		public static Vector3 GetClosestPointOnLine (Line line, Vector3 point)
+		{
 			var p = line.StartReference - point;
 			var delta = line.Direction;
 
 			float t = (((-p.x * delta.x) + (-p.y * delta.y) + (-p.z * delta.z)) / (delta.x * delta.x + delta.y * delta.y + delta.z * delta.z));
 			t /= line.Length;
-			return line.GetPointFromReference(t);
+			return line.GetPointFromReference (t);
 		}
 
-		public static float GetValueFromPointOnLine(Line line, Vector3 point) {
+		public static float GetValueFromPointOnLine (Line line, Vector3 point)
+		{
 			var p = line.StartReference - point;
 			var delta = line.Direction;
 
@@ -25,7 +29,8 @@ namespace Eitrum {
 
 	}
 
-	public struct Line {
+	public struct Line
+	{
 		#region Variables
 
 		private Vector3 startReference;
@@ -43,7 +48,7 @@ namespace Eitrum {
 			}
 			set {
 				endReference = startReference + direction.normalized;
-				RecalculateDirection();
+				RecalculateDirection ();
 			}
 		}
 
@@ -59,7 +64,7 @@ namespace Eitrum {
 			}
 			set {
 				startReference = value;
-				RecalculateDirection();
+				RecalculateDirection ();
 			}
 		}
 
@@ -69,7 +74,7 @@ namespace Eitrum {
 			}
 			set {
 				endReference = value;
-				RecalculateDirection();
+				RecalculateDirection ();
 			}
 		}
 
@@ -83,43 +88,48 @@ namespace Eitrum {
 		/// EndReference = (Direction)
 		/// </summary>
 		/// <param name="direction"></param>
-		public Line(Vector3 direction) {
+		public Line (Vector3 direction)
+		{
 			this.startReference = Vector3.zero;
 			this.endReference = direction.normalized;
 			this.direction = this.endReference;
-			length = Vector3.Distance(this.startReference, this.endReference);
+			length = Vector3.Distance (this.startReference, this.endReference);
 		}
 
-		public Line(Vector3 startReference, Vector3 endReference) {
+		public Line (Vector3 startReference, Vector3 endReference)
+		{
 			this.startReference = startReference;
 			this.endReference = endReference;
 			direction = (endReference - startReference).normalized;
-			length = Vector3.Distance(this.startReference, this.endReference);
+			length = Vector3.Distance (this.startReference, this.endReference);
 		}
 
 		#endregion
 
 		#region Core
 
-		private void RecalculateDirection() {
+		private void RecalculateDirection ()
+		{
 			var value = (endReference - startReference);
 			if (value.sqrMagnitude < Mathf.Epsilon)
 				direction = Vector3.zero;
 			else
 				direction = value.normalized;
-			length = Vector3.Distance(this.startReference, this.endReference);
+			length = Vector3.Distance (this.startReference, this.endReference);
 		}
 
-		public Vector3 GetPointFromReference(float percentage) {
-			return Vector3.Lerp(startReference, endReference, percentage);
+		public Vector3 GetPointFromReference (float percentage)
+		{
+			return Vector3.Lerp (startReference, endReference, percentage);
 		}
 
-		public Vector3? GetPointAtIntersectionX(float value) {
+		public Vector3? GetPointAtIntersectionX (float value)
+		{
 			var dir = Direction;
 			if (dir.x == 0)
 				return null;
 
-			dir /= Mathf.Abs(dir.x);
+			dir /= Mathf.Abs (dir.x);
 			value -= startReference.x;
 			Vector3 result = startReference;
 			if (dir.x < 0)
@@ -130,12 +140,13 @@ namespace Eitrum {
 			return result;
 		}
 
-		public Vector3? GetPointAtIntersectionY(float value) {
+		public Vector3? GetPointAtIntersectionY (float value)
+		{
 			var dir = Direction;
 			if (dir.y == 0)
 				return null;
 
-			dir /= Mathf.Abs(dir.y);
+			dir /= Mathf.Abs (dir.y);
 			value -= startReference.y;
 			Vector3 result = startReference;
 			if (dir.y < 0)
@@ -146,12 +157,13 @@ namespace Eitrum {
 			return result;
 		}
 
-		public Vector3? GetPointAtIntersectionZ(float value) {
+		public Vector3? GetPointAtIntersectionZ (float value)
+		{
 			var dir = Direction;
 			if (dir.z == 0)
 				return null;
 
-			dir /= Mathf.Abs(dir.z);
+			dir /= Mathf.Abs (dir.z);
 			value -= startReference.z;
 			Vector3 result = startReference;
 			if (dir.z < 0)
