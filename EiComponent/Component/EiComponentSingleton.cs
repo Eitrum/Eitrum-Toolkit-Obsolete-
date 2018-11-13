@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Eitrum {
 	public class EiComponentSingleton<T> : EiComponentSingleton where T : EiComponentSingleton {
-		protected static T instance;
+		private static T instance;
 
 		public static T Instance {
 			get {
@@ -31,6 +31,17 @@ namespace Eitrum {
 				return instance;
 			}
 		}
+
+        public static bool HasInstance {
+            get {
+                return instance != null;
+            }
+        }
+
+        protected void AssignInstance(T targetInstance)
+        {
+            instance = targetInstance;
+        }
 
 		protected void KeepAlive() {
 			DontDestroyOnLoad(this.gameObject);

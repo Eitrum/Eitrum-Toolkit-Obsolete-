@@ -41,10 +41,10 @@ namespace Eitrum.Database
 
 		void Awake ()
 		{
-			if (instance) {
+			if (HasInstance) {
 				DestroyImmediate (this.gameObject);
 			}
-			instance = this;
+			AssignInstance(this);
 			DontDestroyOnLoad (gameObject);
 		}
 
