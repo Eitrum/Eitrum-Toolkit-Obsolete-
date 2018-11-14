@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Eitrum.Mathematics;
 
 namespace Eitrum.VR.UI {
 	public class VRSlider : EiComponent {

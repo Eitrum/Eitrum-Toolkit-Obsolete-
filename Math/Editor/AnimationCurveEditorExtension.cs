@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using Eitrum.Mathematics;
 
 namespace Eitrum
 {

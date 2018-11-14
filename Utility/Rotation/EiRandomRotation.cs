@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Eitrum.Mathematics;
 
 namespace Eitrum.Utility.Rotation {
 	[AddComponentMenu("Eitrum/Utility/Rotation/Random Rotation")]

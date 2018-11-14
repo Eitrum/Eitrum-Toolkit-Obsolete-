@@ -450,7 +450,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (Math.Min (timer, 1f));
+				operation (System.Math.Min (timer, 1f));
 			}
 		}
 
@@ -461,7 +461,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (Math.Min (timer, 1f), animationData);
+				operation (System.Math.Min (timer, 1f), animationData);
 			}
 		}
 
@@ -472,7 +472,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (Math.Min (timer, 1f));
+				operation (System.Math.Min (timer, 1f));
 			}
 			onDone ();
 		}
@@ -484,7 +484,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (Math.Min (timer, 1f), animationData);
+				operation (System.Math.Min (timer, 1f), animationData);
 			}
 			onDone ();
 		}
@@ -496,7 +496,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (Math.Min (timer, 1f), animationData);
+				operation (System.Math.Min (timer, 1f), animationData);
 			}
 			onDone (animationData);
 		}
@@ -510,7 +510,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (easeFunction (Math.Min (timer, 1f)));
+				operation (easeFunction (System.Math.Min (timer, 1f)));
 			}
 		}
 
@@ -521,7 +521,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (easeFunction (Math.Min (timer, 1f)), animationData);
+				operation (easeFunction (System.Math.Min (timer, 1f)), animationData);
 			}
 		}
 
@@ -532,7 +532,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (easeFunction (Math.Min (timer, 1f)));
+				operation (easeFunction (System.Math.Min (timer, 1f)));
 			}
 			onDone ();
 		}
@@ -544,7 +544,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (easeFunction (Math.Min (timer, 1f)), animationData);
+				operation (easeFunction (System.Math.Min (timer, 1f)), animationData);
 			}
 			onDone ();
 		}
@@ -556,7 +556,7 @@ namespace Eitrum
 			while (timer < 1f) {
 				yield return null;
 				timer += Time.unscaledDeltaTime / duration;
-				operation (easeFunction (Math.Min (timer, 1f)), animationData);
+				operation (easeFunction (System.Math.Min (timer, 1f)), animationData);
 			}
 			onDone (animationData);
 		}

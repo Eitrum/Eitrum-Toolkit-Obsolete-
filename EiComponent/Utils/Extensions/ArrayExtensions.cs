@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Eitrum.Mathematics;
 
 namespace Eitrum
 {
@@ -93,4 +94,3 @@ namespace Eitrum
 		#endregion
 	}
 }
-

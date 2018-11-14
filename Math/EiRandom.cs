@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.CompilerServices;
 
-namespace Eitrum
+namespace Eitrum.Mathematics
 {
 	public sealed class EiRandom : EiCoreSingleton<EiRandom>
 	{
