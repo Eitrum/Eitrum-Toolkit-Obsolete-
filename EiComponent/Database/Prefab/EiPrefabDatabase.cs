@@ -44,7 +44,7 @@ namespace Eitrum.Database
 			if (HasInstance) {
 				DestroyImmediate (this.gameObject);
 			}
-			AssignInstance(this);
+			AssignInstance (this);
 			DontDestroyOnLoad (gameObject);
 		}
 

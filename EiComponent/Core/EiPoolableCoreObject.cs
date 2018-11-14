@@ -4,6 +4,11 @@ namespace Eitrum
 {
 	public class EiPoolableCoreObject : EiCore
 	{
+		protected virtual void OnInstantiate ()
+		{
+
+		}
+
 		protected virtual void OnDispose ()
 		{
 

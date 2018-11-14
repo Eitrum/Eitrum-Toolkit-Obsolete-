@@ -13,6 +13,7 @@ namespace Eitrum.EditorUtil
 		static Dictionary<KeyCode, string> keyCodeToPath = new Dictionary<KeyCode, string> () {
 			{ KeyCode.None, "None" },
 			{ KeyCode.Backspace, "Keyboard/Not Used/Backspace" },
+			{ KeyCode.Delete, "Keyboard/Not Used/Delete" },
 			{ KeyCode.Tab, "Keyboard/Tab" },
 			{ KeyCode.Clear, "Keyboard/Not Used/Clear" },
 			{ KeyCode.Return, "Keyboard/Not Used/Return" },
@@ -82,7 +83,6 @@ namespace Eitrum.EditorUtil
 			{ KeyCode.X, "Alphabet/X" },
 			{ KeyCode.Y, "Alphabet/Y" },
 			{ KeyCode.Z, "Alphabet/Z" },
-			{ KeyCode.Delete, "Keyboard/Not Used/Delete" },
 			{ KeyCode.Keypad0, "Keypad/Keypad0" },
 			{ KeyCode.Keypad1, "Keypad/Keypad1" },
 			{ KeyCode.Keypad2, "Keypad/Keypad2" },
@@ -335,6 +335,7 @@ namespace Eitrum.EditorUtil
 		static Dictionary<string, KeyCode> pathToKeyCode = new Dictionary<string, KeyCode> () {
 			{ "None", KeyCode.None },
 			{ "Keyboard/Not Used/Backspace", KeyCode.Backspace },
+			{ "Keyboard/Not Used/Delete",KeyCode.Delete },
 			{ "Keyboard/Tab", KeyCode.Tab },
 			{ "Keyboard/Not Used/Clear", KeyCode.Clear },
 			{ "Keyboard/Not Used/Return", KeyCode.Return },
@@ -404,7 +405,6 @@ namespace Eitrum.EditorUtil
 			{ "Alphabet/X", KeyCode.X },
 			{ "Alphabet/Y", KeyCode.Y },
 			{ "Alphabet/Z", KeyCode.Z },
-			{ "Keyboard/Not Used/Delete", KeyCode.Delete },
 			{ "Keypad/Keypad0", KeyCode.Keypad0 },
 			{ "Keypad/Keypad1", KeyCode.Keypad1 },
 			{ "Keypad/Keypad2", KeyCode.Keypad2 },
@@ -673,18 +673,18 @@ namespace Eitrum.EditorUtil
 					index++;
 				}
 			}
-
-			var keycode = (KeyCode)property.enumValueIndex;
 			var i = 0;
-			var path = keyCodeToPath [keycode];
-			for (int x = 0; x < searchList.Length; x++) {
-				if (searchList [x] == path)
-					i = x;
+			for (int u = 0; u < searchList.Length; u++) {
+				var tKeyCode = pathToKeyCode [searchList [u]];
+				if ((int)tKeyCode == property.intValue) {
+					i = u;
+				}
 			}
 			var newIndex = EditorGUI.Popup (position, label.text, i, searchList);
-			if (i != newIndex) {
-				property.enumValueIndex = (int)(pathToKeyCode [searchList [newIndex]]);
-			}
+			var keyCode = pathToKeyCode [searchList [newIndex]];
+
+			var output = (int)(KeyCode)EditorGUI.EnumPopup (new Rect (0, 0, 0, 0), keyCode);
+			property.intValue = output;
 		}
 
 		private void Print ()
