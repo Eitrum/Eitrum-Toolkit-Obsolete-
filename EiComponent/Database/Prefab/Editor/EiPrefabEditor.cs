@@ -17,11 +17,11 @@ namespace Eitrum.Database.Prefab
 		{
 			var attributes = fieldInfo.GetCustomAttributes (false);
 
-			EiDatabaseFilter filter = null;
+			EiPrefabFilter filter = null;
 
 			for (int i = 0; i < attributes.Length; i++) {
-				if (attributes [i] is EiDatabaseFilter) {
-					filter = attributes [i] as EiDatabaseFilter;
+				if (attributes [i] is EiPrefabFilter) {
+					filter = attributes [i] as EiPrefabFilter;
 					break;
 				}
 			}

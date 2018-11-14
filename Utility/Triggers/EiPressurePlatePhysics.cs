@@ -154,7 +154,7 @@ namespace Eitrum.Utility.Trigger
 		void OnCollisionExit (Collision collision)
 		{
 			bodies.Remove (collision.rigidbody);
-			collision.rigidbody.sleepThreshold = Physics.sleepThreshold;
+			collision.rigidbody.sleepThreshold = UnityEngine.Physics.sleepThreshold;
 		}
 
 		#endregion

@@ -143,7 +143,7 @@ namespace Eitrum.VR {
 			}
 
 			if (useOptimizedGrab) {
-				var hits = Physics.OverlapSphereNonAlloc(this.transform.position, this.transform.lossyScale.x * grabRadius, optimizedGrab, layerMask, QueryTriggerInteraction.UseGlobal);
+				var hits = UnityEngine.Physics.OverlapSphereNonAlloc(this.transform.position, this.transform.lossyScale.x * grabRadius, optimizedGrab, layerMask, QueryTriggerInteraction.UseGlobal);
 				for (int i = 0; i < hits; i++) {
 					var grab = optimizedGrab[i].GetComponent<EiGrabInterface>();
 					if (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects) {
@@ -153,7 +153,7 @@ namespace Eitrum.VR {
 				}
 			}
 			else {
-				var hitObjects = Physics.OverlapSphere(this.transform.position, this.transform.lossyScale.x * grabRadius, layerMask, QueryTriggerInteraction.UseGlobal);
+				var hitObjects = UnityEngine.Physics.OverlapSphere(this.transform.position, this.transform.lossyScale.x * grabRadius, layerMask, QueryTriggerInteraction.UseGlobal);
 				for (int i = 0; i < hitObjects.Length; i++) {
 					var grab = hitObjects[i].GetComponent<EiGrabInterface>();
 					if (grab != null && (maxGrabObjects == 0 || grabbedObjects.Length < maxGrabObjects)) {

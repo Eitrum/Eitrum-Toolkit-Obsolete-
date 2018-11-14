@@ -30,37 +30,37 @@ namespace Eitrum
 
 		public static bool Hit (this Ray ray)
 		{
-			return Physics.Raycast (ray);
+			return UnityEngine.Physics.Raycast (ray);
 		}
 
 		public static bool Hit (this Ray ray, out RaycastHit hit)
 		{
-			return Physics.Raycast (ray, out hit);
+			return UnityEngine.Physics.Raycast (ray, out hit);
 		}
 
 		public static bool Hit (this Ray ray, float maxDistance)
 		{
-			return Physics.Raycast (ray, maxDistance);
+			return UnityEngine.Physics.Raycast (ray, maxDistance);
 		}
 
 		public static bool Hit (this Ray ray, out RaycastHit hit, float maxDistance)
 		{
-			return Physics.Raycast (ray, out hit, maxDistance);
+			return UnityEngine.Physics.Raycast (ray, out hit, maxDistance);
 		}
 
 		public static bool Hit (this Ray ray, out RaycastHit hit, float maxDistance, int layerMask)
 		{
-			return Physics.Raycast (ray, out hit, maxDistance, layerMask);
+			return UnityEngine.Physics.Raycast (ray, out hit, maxDistance, layerMask);
 		}
 
 		public static bool Hit (this Ray ray, int layerMask)
 		{
-			return Physics.Raycast (ray, Mathf.Infinity, layerMask);
+			return UnityEngine.Physics.Raycast (ray, Mathf.Infinity, layerMask);
 		}
 
 		public static bool Hit (this Ray ray, float maxDistance, int layerMask)
 		{
-			return Physics.Raycast (ray, maxDistance, layerMask);
+			return UnityEngine.Physics.Raycast (ray, maxDistance, layerMask);
 		}
 
 		#endregion
@@ -70,7 +70,7 @@ namespace Eitrum
 		public static float HitDistance (this Ray ray)
 		{
 			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit)) {
+			if (UnityEngine.Physics.Raycast (ray, out hit)) {
 				return hit.distance;
 			}
 			return -1f;
@@ -79,7 +79,7 @@ namespace Eitrum
 		public static float HitDistance (this Ray ray, float maxDistance)
 		{
 			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit, maxDistance)) {
+			if (UnityEngine.Physics.Raycast (ray, out hit, maxDistance)) {
 				return hit.distance;
 			}
 			return -1f;
@@ -87,7 +87,7 @@ namespace Eitrum
 
 		public static float HitDistance (this Ray ray, out RaycastHit hit, float maxDistance)
 		{
-			if (Physics.Raycast (ray, out hit, maxDistance)) {
+			if (UnityEngine.Physics.Raycast (ray, out hit, maxDistance)) {
 				return hit.distance;
 			}
 			return -1f;
@@ -95,7 +95,7 @@ namespace Eitrum
 
 		public static float HitDistance (this Ray ray, out RaycastHit hit, float maxDistance, int layerMask)
 		{
-			if (Physics.Raycast (ray, out hit, maxDistance, layerMask)) {
+			if (UnityEngine.Physics.Raycast (ray, out hit, maxDistance, layerMask)) {
 				return hit.distance;
 			}
 			return -1f;
@@ -104,7 +104,7 @@ namespace Eitrum
 		public static float HitDistance (this Ray ray, int layerMask)
 		{
 			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit, Mathf.Infinity, layerMask)) {
+			if (UnityEngine.Physics.Raycast (ray, out hit, Mathf.Infinity, layerMask)) {
 				return hit.distance;
 			}
 			return -1f;
@@ -113,7 +113,7 @@ namespace Eitrum
 		public static float HitDistance (this Ray ray, float maxDistance, int layerMask)
 		{
 			RaycastHit hit;
-			if (Physics.Raycast (ray, out hit, maxDistance, layerMask)) {
+			if (UnityEngine.Physics.Raycast (ray, out hit, maxDistance, layerMask)) {
 				return hit.distance;
 			}
 			return -1f;

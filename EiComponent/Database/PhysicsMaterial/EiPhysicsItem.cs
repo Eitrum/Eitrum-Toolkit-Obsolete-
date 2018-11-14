@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum
+namespace Eitrum.Physics
 {
+	[CreateAssetMenu (fileName = "Physics Configuration", menuName = "Eitrum/Physics/Physics Config", order = 0)]
 	public class EiPhysicsItem : EiScriptableObject<EiPhysicsItem>
 	{
 		#region Variables
@@ -15,18 +16,14 @@ namespace Eitrum
 
 		#region Properties
 
-		public PhysicMaterial PhysicMaterial
-		{
-			get
-			{
+		public PhysicMaterial PhysicMaterial {
+			get {
 				return physicMaterial;
 			}
 		}
 
-		public float MaterialStrength
-		{
-			get
-			{
+		public float MaterialStrength {
+			get {
 				return materialStrength;
 			}
 		}
