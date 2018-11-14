@@ -17,22 +17,9 @@ namespace Eitrum
 		#if EITRUM_NETWORKING
 		[SerializeField]
 		[HideInInspector]
-
-
-
-
-
-
-
-
-
-
-
-
-
-#pragma warning disable
+		#pragma warning disable
 		private EiNetworkView netView;
-#endif
+		#endif
 
 		// Should Not ever be touched by anything!!! Used by core engine for performance
 		private EiLLNode<EiPreUpdateInterface> preUpdateNode;
@@ -70,15 +57,14 @@ namespace Eitrum
 		}
 
 		#if EITRUM_NETWORKING
-		public EiNetworkView NetView // Ugly name of NetView because unity built in 'NetworkView'
-		{
+		public EiNetworkView NetView { // Ugly name of NetView because unity built in 'NetworkView'
 			get {
 				if (!netView)
-					netView = GetComponent<EiNetworkView>();
+					netView = GetComponent<EiNetworkView> ();
 				return netView;
 			}
 		}
-#endif
+		#endif
 
 		public object Target {
 			get {
@@ -336,7 +322,7 @@ namespace Eitrum
 		{
 			entity = GetComponentInParent<EiEntity> ();
 			#if EITRUM_NETWORKING
-			netView = GetComponent<EiNetworkView>();
+			netView = GetComponent<EiNetworkView> ();
 			#endif
 			AttachComponents ();
 			#if UNITY_EDITOR
