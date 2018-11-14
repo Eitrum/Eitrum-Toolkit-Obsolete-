@@ -78,9 +78,10 @@ namespace Eitrum.Database.Prefab
 
 			if (objectPicker) {
 				objectPicker = null;
-				var complex = EditorUtility.DisplayDialog ("Error", "Selected item does not exists in the prefab database", "Ok", "Database");
-				if (!complex)
+				var complex = EditorUtility.DisplayDialog ("Error", "Selected item does not exists in the prefab database", "Database", "Ok");
+				if (complex) {
 					Selection.activeObject = database.gameObject;
+				}
 			}
 
 			Rect quickSearch = new Rect (position);
