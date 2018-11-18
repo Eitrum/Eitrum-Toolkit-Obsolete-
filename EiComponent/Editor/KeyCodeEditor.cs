@@ -10,7 +10,7 @@ namespace Eitrum.EditorUtil
 	{
 		#region Dictianaries
 
-		static Dictionary<KeyCode, string> keyCodeToPath = new Dictionary<KeyCode, string> () {
+		/*static Dictionary<KeyCode, string> keyCodeToPath = new Dictionary<KeyCode, string> () {
 			{ KeyCode.None, "None" },
 			{ KeyCode.Backspace, "Keyboard/Not Used/Backspace" },
 			{ KeyCode.Delete, "Keyboard/Not Used/Delete" },
@@ -330,7 +330,7 @@ namespace Eitrum.EditorUtil
 			{ KeyCode.Joystick8Button17, "Joystick/Joystick8/Button17" },
 			{ KeyCode.Joystick8Button18, "Joystick/Joystick8/Button18" },
 			{ KeyCode.Joystick8Button19, "Joystick/Joystick8/Button19" }
-		};
+		};*/
 
 		static Dictionary<string, KeyCode> pathToKeyCode = new Dictionary<string, KeyCode> () {
 			{ "None", KeyCode.None },

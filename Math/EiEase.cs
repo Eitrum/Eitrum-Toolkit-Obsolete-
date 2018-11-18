@@ -57,7 +57,7 @@ namespace Eitrum.Mathematics
 
 		#region Core
 
-		public static AnimationCurve GetAnimationCurve (Func<float, float> easeFunction, int steps = 20)
+		public static AnimationCurve GetAnimationCurve (Func<float, float> easeFunction, int steps = 20, bool invert = false)
 		{
 			AnimationCurve curve = new AnimationCurve ();
 			steps = Mathf.Clamp (steps, 4, 100);
@@ -66,9 +66,15 @@ namespace Eitrum.Mathematics
 			for (int i = 0; i <= steps; i++) {
 				float time = timePerStep * (float)i;
 				var point = easeFunction (time);
-				var before = easeFunction (time - timeBetweenSteps);
-				var after = easeFunction (time + timeBetweenSteps);
-				curve.AddKey (new Keyframe (time, point, (point - before) / timeBetweenSteps, (after - point) / timeBetweenSteps, 0.5f, 0.5f));
+				if (invert) {
+					var before = easeFunction (time + timeBetweenSteps);
+					var after = easeFunction (time + -timeBetweenSteps);
+					curve.AddKey (new Keyframe (1f - time, point, (point - before) / timeBetweenSteps, (after - point) / timeBetweenSteps, 0.5f, 0.5f));
+				} else {
+					var before = easeFunction (time + -timeBetweenSteps);
+					var after = easeFunction (time + timeBetweenSteps);
+					curve.AddKey (new Keyframe (time, point, (point - before) / timeBetweenSteps, (after - point) / timeBetweenSteps, 0.5f, 0.5f));
+				}
 			}
 			return curve;
 		}

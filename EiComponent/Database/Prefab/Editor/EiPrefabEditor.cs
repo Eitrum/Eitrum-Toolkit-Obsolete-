@@ -65,7 +65,7 @@ namespace Eitrum.Database.Prefab
 			}
 
 			if (currentSelectedObject && index == 0) {
-				items.Insert (1, currentSelectedObject.editorPathName);
+				items.Insert (1, string.Format ("{0} / {1}", currentSelectedObject.editorPathName, currentSelectedObject.ItemName));
 				references.Insert (1, currentSelectedObject);
 				index = 1;
 			}

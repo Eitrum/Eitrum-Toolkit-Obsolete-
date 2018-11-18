@@ -42,7 +42,7 @@ namespace Eitrum
 
 		#region Config Settings (Menu Items)
 
-		[MenuItem ("Eitrum/Configure/Input Manager Simple")]
+		//[MenuItem ("Eitrum/Configure/Input Manager Simple")]
 		public static void ConfigureStandardSettingsSimple ()
 		{
 			ClearAxis ();
@@ -50,7 +50,7 @@ namespace Eitrum
 			GenerateJoystickAxisSimple ();
 		}
 
-		[MenuItem ("Eitrum/Configure/Input Manager Advanced")]
+		//[MenuItem ("Eitrum/Configure/Input Manager Advanced")]
 		public static void ConfigureStandardSettings ()
 		{
 			ClearAxis ();

@@ -51,7 +51,8 @@ namespace Eitrum
 
 		private EaseFunction easeFunction;
 		private EaseType easeType;
-		private int keyFrames = 50;
+		private int keyFrames = 8;
+		private bool invert = false;
 
 		public AnimationCurveGeneratorPopup (SerializedProperty property)
 		{
@@ -60,7 +61,7 @@ namespace Eitrum
 
 		public override Vector2 GetWindowSize ()
 		{
-			return new Vector2 (250f, 94f);
+			return new Vector2 (250f, 112f);
 		}
 
 		public override void OnGUI (Rect rect)
@@ -71,9 +72,10 @@ namespace Eitrum
 			easeFunction = (EaseFunction)EditorGUILayout.EnumPopup ("Ease Function", easeFunction);
 			easeType = (EaseType)EditorGUILayout.EnumPopup ("Ease Type", easeType);
 			keyFrames = Mathf.Clamp (EditorGUILayout.IntField ("Key Frames", keyFrames), 4, 100);
+			invert = EditorGUILayout.ToggleLeft ("Invert", invert);
 
 			if (GUILayout.Button ("Generate")) {
-				AnimationCurveEditorExtension.Apply (EiEase.GetAnimationCurve (EiEase.GetEaseFunction (easeFunction, easeType), keyFrames));
+				AnimationCurveEditorExtension.Apply (EiEase.GetAnimationCurve (EiEase.GetEaseFunction (easeFunction, easeType), keyFrames, invert));
 			}
 			GUILayout.EndArea ();
 		}
