@@ -22,8 +22,6 @@ namespace Eitrum
 			return new Ray (position, direction);
 		}
 
-
-
 		#endregion
 
 		#region Hit
@@ -122,4 +120,3 @@ namespace Eitrum
 		#endregion
 	}
 }
-

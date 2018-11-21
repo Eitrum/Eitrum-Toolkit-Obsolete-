@@ -15,6 +15,21 @@ namespace Eitrum
 			return EiRandom.Element (array);
 		}
 
+		public static T RandomElement<T> (this T[] array, EiRandom random)
+		{
+			return random._Element (array);
+		}
+
+		public static T RandomElement<T> (this IList<T> list)
+		{
+			return EiRandom.Element (list);
+		}
+
+		public static T RandomElement<T> (this IList<T> list, EiRandom random)
+		{
+			return random._Element (list);
+		}
+
 		#endregion
 
 		#region Add / Remove
@@ -73,10 +88,68 @@ namespace Eitrum
 
 		#endregion
 
+		#region Suffle
+
+		public static void Suffle<T> (this T[] array)
+		{
+			int amount = array.Length * 3;
+			int count = array.Length;
+			T tempValue;
+			for (int i = 0; i < amount; i++) {
+				var index1 = EiRandom.Range (count);
+				var index2 = EiRandom.Range (count);
+				tempValue = array [index1];
+				array [index1] = array [index2];
+				array [index2] = tempValue;
+			}
+		}
+
+		public static void Suffle<T> (this T[] array, int amount)
+		{
+			int count = array.Length;
+			T tempValue;
+			for (int i = 0; i < amount; i++) {
+				var index1 = EiRandom.Range (count);
+				var index2 = EiRandom.Range (count);
+				tempValue = array [index1];
+				array [index1] = array [index2];
+				array [index2] = tempValue;
+			}
+		}
+
+		public static void Suffle<T> (this T[] array, EiRandom random)
+		{
+			int amount = array.Length * 3;
+			int count = array.Length;
+			T tempValue;
+			for (int i = 0; i < amount; i++) {
+				var index1 = random._Range (count);
+				var index2 = random._Range (count);
+				tempValue = array [index1];
+				array [index1] = array [index2];
+				array [index2] = tempValue;
+			}
+		}
+
+		public static void Suffle<T> (this T[] array, EiRandom random, int amount)
+		{
+			int count = array.Length;
+			T tempValue;
+			for (int i = 0; i < amount; i++) {
+				var index1 = random._Range (count);
+				var index2 = random._Range (count);
+				tempValue = array [index1];
+				array [index1] = array [index2];
+				array [index2] = tempValue;
+			}
+		}
+
+		#endregion
+
 		#region List Dequeue/Enqueue
 
 		[MethodImpl (MethodImplOptions.AggressiveInlining)]
-		public static T Dequeue<T> (this List<T> list)
+		public static T Dequeue<T> (this IList<T> list)
 		{
 			if (list.Count == 0)
 				return default(T);
@@ -86,7 +159,7 @@ namespace Eitrum
 		}
 
 		[MethodImpl (MethodImplOptions.AggressiveInlining)]
-		public static void Enqueue<T> (this List<T> list, T item)
+		public static void Enqueue<T> (this IList<T> list, T item)
 		{
 			list.Add (item);
 		}

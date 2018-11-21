@@ -17,7 +17,12 @@ namespace Eitrum
 		#if EITRUM_NETWORKING
 		[SerializeField]
 		[HideInInspector]
-		#pragma warning disable
+		
+
+
+
+
+#pragma warning disable
 		private EiNetworkView netView;
 		#endif
 
@@ -120,12 +125,20 @@ namespace Eitrum
 
 		#region Destroy
 
-		public virtual void Destroy ()
+		public void Destroy ()
 		{
 			if (entity)
 				entity.Destroy ();
 			else
 				MonoBehaviour.Destroy (gameObject);
+		}
+
+		public void Destroy (float delay)
+		{
+			if (entity)
+				entity.Destroy (delay);
+			else
+				MonoBehaviour.Destroy (gameObject, delay);
 		}
 
 		public static void Destroy (EiEntity entity)

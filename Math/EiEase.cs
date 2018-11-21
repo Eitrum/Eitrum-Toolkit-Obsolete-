@@ -31,30 +31,6 @@ namespace Eitrum.Mathematics
 
 	public static class EiEase
 	{
-		#region Extensions
-
-		public static float Ease (this float time, EaseFunction functionType, EaseType easeType)
-		{
-			return GetEaseFunction (functionType, easeType) (time);
-		}
-
-		public static float EaseIn (this float time, EaseFunction functionType)
-		{
-			return GetEaseFunction (functionType, EaseType.In) (time);
-		}
-
-		public static float EaseOut (this float time, EaseFunction functionType)
-		{
-			return GetEaseFunction (functionType, EaseType.Out) (time);
-		}
-
-		public static float EaseInOut (this float time, EaseFunction functionType)
-		{
-			return GetEaseFunction (functionType, EaseType.InOut) (time);
-		}
-
-		#endregion
-
 		#region Core
 
 		public static AnimationCurve GetAnimationCurve (Func<float, float> easeFunction, int steps = 20, bool invert = false)

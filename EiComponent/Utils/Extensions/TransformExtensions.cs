@@ -57,7 +57,12 @@ namespace Eitrum
 
 		public static void Destroy (this Transform transform, float delay)
 		{
-			MonoBehaviour.Destroy (transform, delay);
+			var entity = transform.GetComponent<EiEntity> ();
+			if (entity) {
+				entity.Destroy (delay);
+			} else {
+				MonoBehaviour.Destroy (transform, delay);
+			}
 		}
 
 		public static void DestroyAllChildren (this Transform transform)

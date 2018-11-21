@@ -52,6 +52,7 @@ namespace Eitrum
 		private bool isPooled = false;
 		#endif
 		private Action<EiEntity> onDestroy;
+		private Coroutine destroyCoroutine;
 
 		#endregion
 
@@ -210,16 +211,26 @@ namespace Eitrum
 		#endif
 
 
-		public override void Destroy ()
+		#endregion
+
+		#region Destroy
+
+		public new void Destroy ()
 		{
 			if (onDestroy != null)
 				onDestroy (this);
-#if EITRUM_POOLING
+			#if EITRUM_POOLING
 			EiPoolData.OnPoolDestroyHelper (this);
-#else
+			#else
 			MonoBehaviour.Destroy(gameObject);
-#endif
+			#endif
 		}
+
+		public new void Destroy (float delay)
+		{
+			EiTimer.Once (delay, Destroy, ref destroyCoroutine);
+		}
+
 
 		#endregion
 
