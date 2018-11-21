@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Eitrum
 {
 	[CreateAssetMenu (fileName = "Prefab", menuName = "Eitrum/Database/Prefab", order = 1)]
-	public class EiPrefab : EiScriptableObject<EiPrefab>
+	public class EiPrefab : EiScriptableObject
 	{
 		#region Variables
 

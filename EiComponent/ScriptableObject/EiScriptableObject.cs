@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Eitrum
 {
-	public class EiScriptableObject<T> : ScriptableObject, EiBaseInterface
+	public class EiScriptableObject : ScriptableObject, EiBaseInterface
 	{
 		#region EiBaseInterface implementation
 

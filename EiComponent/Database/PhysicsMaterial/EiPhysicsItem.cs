@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Eitrum.Physics
 {
 	[CreateAssetMenu (fileName = "Physics Configuration", menuName = "Eitrum/Physics/Physics Config", order = 0)]
-	public class EiPhysicsItem : EiScriptableObject<EiPhysicsItem>
+	public class EiPhysicsItem : EiScriptableObject
 	{
 		#region Variables
 

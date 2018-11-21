@@ -15,6 +15,7 @@ namespace Eitrum.Database.Prefab
 			if (amount > 1) {
 				for (int i = 0; i < amount; i++) {
 					var prefab = (EiPrefab)targets [i];
+
 					Header ("------------------(" + prefab.ItemName + ")------------------");
 					if (prefab.Database == null) {
 						EditorGUILayout.LabelField ("WARNING - NO DATABASE REFERENCE");
@@ -22,6 +23,7 @@ namespace Eitrum.Database.Prefab
 					// Base Editor
 					DrawBase (prefab);
 					DrawPool (prefab);
+					EditorUtility.SetDirty (prefab);
 				}
 			} else {
 				var prefab = (EiPrefab)target;
@@ -32,6 +34,7 @@ namespace Eitrum.Database.Prefab
 				// Base Editor
 				DrawBase (prefab);
 				DrawPool (prefab);
+				EditorUtility.SetDirty (prefab);
 			}
 		}
 
