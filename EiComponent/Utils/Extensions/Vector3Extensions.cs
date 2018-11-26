@@ -88,6 +88,15 @@ namespace Eitrum
 		}
 
 		#endregion
+
+		#region Scale
+
+		public static Vector3 ScaleReturn (this Vector3 target, Vector3 scale)
+		{
+			target.Scale (scale);
+			return target;
+		}
+
+		#endregion
 	}
 }
-
