@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum.Physics
+namespace Eitrum.PhysicsExtension
 {
 	[CreateAssetMenu (fileName = "Physics Configuration", menuName = "Eitrum/Physics/Physics Config", order = 0)]
 	public class EiPhysicsItem : EiScriptableObject

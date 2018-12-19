@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b582f548306e43143a3aa5eb70ae4a7b, type: 3}
+  m_Name: Physics Settings
+  m_EditorClassIdentifier: 
+  gravity: {x: 0, y: -9.81, z: 0}
+  physicsTimeStep: 0.02
+  autoSimulation: 1
+  autoSyncTransforms: 1
+  enhancedDeterminism: 0
+  physicsLayerSettings: {fileID: 11400000, guid: 38ce0d92369db024e8b1056fe0dfc384,
+    type: 2}
+  defaultMaterial: {fileID: 0}
+  enableAdaptiveForce: 0
+  bounceThreshold: 2
+  sleepThreashold: 0.005
+  defaultContactOffset: 0.001
+  defaultSolverIterations: 6
+  defaultSolverVelocityIterations: 1
+  queriesHitBackfaces: 0
+  queriesHitTriggers: 1
+  worldBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 250, y: 250, z: 250}
+  worldSubdivisions: 8
+  clothInterCollisionSettingsToggle: 1
+  clothInterCollisionDistance: 0
+  clothInterCollisionStiffness: 0
