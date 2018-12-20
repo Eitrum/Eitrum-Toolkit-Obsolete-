@@ -31,6 +31,8 @@ namespace Eitrum.Mathematics
 
 		public bool IsLooping { get { return loop; } }
 
+		public bool IsFreeHandle{ get { return freeHandle; } }
+
 		public static EiSpline Default {
 			get {
 				return new EiSpline () {
