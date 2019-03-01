@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Eitrum.Networking.Internal
 {
@@ -94,12 +95,26 @@ namespace Eitrum.Networking.Internal
 			var view = EiNetworkView.Find (viewId);
 			if (view) {
 				view.Destroy ();
+				allocatedViews.Remove (viewId);
+			}
+		}
+
+		public new void DestroyPlayerViews (int ownerId)
+		{
+			foreach (var netView in allocatedViews) {
+				if (netView.Value.OwnerId == ownerId) {
+					netView.Value.Destroy ();
+					allocatedViews.Remove (netView.Key);
+				}
 			}
 		}
 
 		public new void DestroyAll ()
 		{
-
+			foreach (var netView in allocatedViews) {
+				netView.Value?.Destroy ();
+			}
+			allocatedViews.Clear ();
 		}
 
 		#endregion
@@ -170,9 +185,9 @@ namespace Eitrum.Networking.Internal
 
 		#region Player Sync
 
-		public void OnPlayerJoined ()
+		public void OnPlayerJoined (EiNetworkPlayerInternal player)
 		{
-
+			//Fix player joined setup
 		}
 
 		#endregion
@@ -187,12 +202,108 @@ namespace Eitrum.Networking.Internal
 
 		public void Add (EiNetworkPlayerInternal player)
 		{
-			
+			bool hasPlayer = false;
+			for (int i = playerList.Count - 1; i >= 0; i--) {
+				if (playerList [i].Id == player.Id) {
+					hasPlayer = true;
+					break;
+				}
+			}
+			if (hasPlayer) {
+				LogError ("Already has a player with given id: " + player.Id);
+			} else {
+				playerList.Add (player);
+			}
+		}
+
+		public void Remove (EiNetworkPlayerInternal player)
+		{
+			for (int i = playerList.Count - 1; i >= 0; i--) {
+				if (playerList [i].Id == player.Id) {
+					playerList.RemoveAt (i);
+					Log ("Removed player with id: " + player.Id);
+				}
+			}
 		}
 
 		public void Add (EiNetworkServerInternal server)
 		{
+			bool hasServer = false;
+			for (int i = serverList.Count - 1; i >= 0; i--) {
+				if (serverList [i].Id == server.Id) {
+					hasServer = true;
+					break;
+				}
+			}
+			if (hasServer) {
+				LogError ("Already has a server with given id: " + server.Id);
+			} else {
+				serverList.Add (server);
+			}
+		}
 
+		public void Remove (EiNetworkServerInternal server)
+		{
+			for (int i = serverList.Count - 1; i >= 0; i--) {
+				if (serverList [i].Id == server.Id) {
+					serverList.RemoveAt (i);
+					Log ("Removed server with id: " + server.Id);
+				}
+			}
+		}
+
+		public void UpdateServerList (EiNetworkServerInternal[] servers)
+		{
+			List<bool> toRemove = new List<bool> ();
+			for (int i = serverList.Count - 1; i >= 0; i--) {
+				toRemove.Add (true);
+			}
+			for (int i = 0; i < servers.Length; i++) {
+				bool hasServer = false;
+				var server = servers [i];
+				for (int si = serverList.Count - 1; si >= 0; si--) {
+					if (serverList [si].Id == server.Id) {
+						toRemove [si] = false;
+						hasServer = true;
+						break;
+					}
+				}
+				if (!hasServer) {
+					serverList.Add (server);
+				}
+			}
+			for (int i = toRemove.Count - 1; i >= 0; i--) {
+				if (toRemove [i]) {
+					serverList.RemoveAt (i);
+				}
+			}
+		}
+
+		#endregion
+
+		#region RPC
+
+		public void ReceiveRPC (byte[] rpcData)
+		{
+			EiBuffer buffer = new EiBuffer (rpcData);
+			var viewId = buffer.ReadInt ();
+			var methodId = buffer.ReadByte ();
+			var array = buffer.ReadByteArray (rpcData.Length - 5);
+			var view = EiNetworkView.Find (viewId);
+			if (view) {
+				//view.ReceiveRPC(methodId, array);
+			} else {
+				Debug.LogWarning ("Received an RPC for a network View that does not exists");
+			}
+		}
+
+		public void SendRPC (int viewId, byte methodId, EiNetworkTarget targets, byte[] rpcData)
+		{
+			buffer.ClearBuffer ();
+			buffer.Write (viewId);
+			buffer.Write (methodId);
+			buffer.Write (rpcData);
+			network.RPC (buffer.GetWrittenBuffer (), targets);
 		}
 
 		#endregion

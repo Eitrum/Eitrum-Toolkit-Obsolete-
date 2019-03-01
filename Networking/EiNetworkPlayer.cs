@@ -2,14 +2,38 @@
 
 namespace Eitrum.Networking
 {
-	public abstract class EiNetworkPlayer
+	public interface EiNetworkPlayer
+	{
+		#region Properties
+
+		string Name { get; }
+
+		int Id { get; }
+
+		bool IsLocalPlayer{ get; }
+
+		#endregion
+
+		#region Methods
+
+		void Subscribe (Action<EiNetworkPlayer> method);
+
+		void Unsubscribe (Action<EiNetworkPlayer> method);
+
+		#endregion
+	}
+}
+
+namespace Eitrum.Networking.Internal
+{
+	public sealed class EiNetworkPlayerInternal : EiNetworkPlayer
 	{
 		#region Variables
 
-		protected string playerName = "";
-		protected int playerId;
-		protected Action<EiNetworkPlayer> onUpdate;
-		protected EiNetwork network;
+		private string playerName = "";
+		private int playerId;
+		private Action<EiNetworkPlayer> onUpdate;
+		private EiNetwork network;
 
 		#endregion
 
@@ -19,18 +43,37 @@ namespace Eitrum.Networking
 			get {
 				return playerName;
 			}
+			set {
+				playerName = value;
+				onUpdate?.Invoke (this);
+			}
 		}
 
 		public int Id {
 			get {
 				return playerId;
 			}
+			set {
+				playerId = value;
+				onUpdate?.Invoke (this);
+			}
 		}
 
 		public bool IsLocalPlayer {
 			get {
-				return network.LocalPlayer == this;
+				return network.LocalPlayer.Id == playerId;
 			}
+		}
+
+		#endregion
+
+		#region Constructor
+
+		public EiNetworkPlayerInternal (EiNetwork network, string name, int id)
+		{
+			this.network = network;
+			this.playerName = name;
+			this.playerId = id;
 		}
 
 		#endregion
@@ -47,47 +90,6 @@ namespace Eitrum.Networking
 			if (onUpdate != null) {
 				onUpdate -= method;
 			}
-		}
-
-		#endregion
-	}
-}
-
-namespace Eitrum.Networking.Internal
-{
-	public class EiNetworkPlayerInternal : EiNetworkPlayer
-	{
-		#region Properties
-
-		public new string Name {
-			get {
-				return playerName;
-			}
-			set {
-				playerName = value;
-				onUpdate?.Invoke (this);
-			}
-		}
-
-		public new int Id {
-			get {
-				return playerId;
-			}
-			set {
-				playerId = value;
-				onUpdate?.Invoke (this);
-			}
-		}
-
-		#endregion
-
-		#region Constructor
-
-		public EiNetworkPlayerInternal (EiNetwork network, string name, int id)
-		{
-			this.network = network;
-			this.playerName = name;
-			this.playerId = id;
 		}
 
 		#endregion

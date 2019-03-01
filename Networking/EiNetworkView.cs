@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Eitrum.Networking.Internal;
 
 namespace Eitrum.Networking
 {
 	[AddComponentMenu ("Eitrum/Networking/Network View")]
-	public class EiNetworkView : EiComponent
+	public sealed class EiNetworkView : EiComponent
 	{
 		#region Variables
 

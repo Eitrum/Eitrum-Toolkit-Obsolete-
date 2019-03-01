@@ -113,22 +113,26 @@ namespace Eitrum.Networking.Internal
 
 		void INetwork.Destroy (int viewId)
 		{
-
+			networkInternal.Destroy (viewId);
 		}
 
 		void INetwork.DestroyPlayerViews (int ownerId)
 		{
-			
+			networkInternal.DestroyPlayerViews (ownerId);
 		}
 
 		void INetwork.DestroyAll ()
 		{
-
+			networkInternal.DestroyAll ();
 		}
 
 		void INetwork.RPC (byte[] rpcData, EiNetworkTarget target)
 		{
-			throw new NotImplementedException ();
+			if (target != EiNetworkTarget.Others) {
+				networkInternal.ReceiveRPC (rpcData);
+			} else {
+				UnityEngine.Debug.Log ("Can't send to others as its only singleplayer, will skip this RPC message");
+			}
 		}
 
 		void INetwork.SerializeViews ()

@@ -2,7 +2,7 @@
 
 namespace Eitrum.Networking
 {
-	public interface EiObserverInterface : EiBaseInterface
+	public interface EiObserverInterface : IBase
 	{
 		void Serialize (EiBuffer buffer, bool isWriting);
 	}

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using Eitrum.Networking.Internal;
 using System.Collections.Generic;
+using Eitrum.Networking.Internal;
 
 namespace Eitrum.Networking
 {
@@ -9,21 +9,30 @@ namespace Eitrum.Networking
 	{
 		#region Variables
 
+		// Debugging
 		protected EiNetworkLogLevel logLevel;
+
+		// The actualy networking
 		protected INetwork network;
+
+		// Default Connect settings
 		protected int defaultPort = 7777;
 		protected int defaultMaxPlayers = 1000;
 
+		// Local data
 		protected EiNetworkPlayerInternal localPlayer;
 		protected EiNetworkServerInternal currentServer;
-
 		protected List<EiNetworkPlayerInternal> playerList = new List<EiNetworkPlayerInternal> ();
+
+		// Server list when servers are available
 		protected List<EiNetworkServerInternal> serverList = new List<EiNetworkServerInternal> ();
 
+		// View id and id generator
 		protected Dictionary<int, EiNetworkView> allocatedViews = new Dictionary<int, EiNetworkView> ();
 		protected int allocateViewId = 0;
 		protected Queue<int> freeViewId = new Queue<int> ();
 
+		// Shared buffer class for sending data
 		protected EiBuffer buffer = new EiBuffer (true);
 
 		#endregion
@@ -88,7 +97,7 @@ namespace Eitrum.Networking
 		public void Connect ()
 		{
 			if (network.IsConnected) {
-				Debug.LogWarning ("Can connect when you already connected");
+				Debug.LogWarning ("Can't connect when you already connected");
 			} else {
 				network.Connect ();
 			}
@@ -109,7 +118,7 @@ namespace Eitrum.Networking
 
 		public void CreateServer ()
 		{
-			string name = "ServerRandom" + EiRandom.Range (100000, 999999);
+			string name = "ServerRandom" + Eitrum.Mathematics.EiRandom.Range (100000, 999999);
 			network.CreateServer (name, defaultPort, defaultMaxPlayers, 0);
 		}
 
@@ -137,7 +146,7 @@ namespace Eitrum.Networking
 			int attempt = 0;
 			EiNetworkServer server;
 			do {
-				server = EiRandom.Element (serverList);
+				server = Eitrum.Mathematics.EiRandom.Element (serverList);
 				if (++attempt > 20)
 					break;
 			} while(server.IsPasswordProtected);
@@ -184,7 +193,7 @@ namespace Eitrum.Networking
 
 		public void UpdateServerList ()
 		{
-
+			
 		}
 
 		#endregion
@@ -195,7 +204,7 @@ namespace Eitrum.Networking
 		{
 			buffer.ClearBuffer ();
 			buffer.Write ((byte)EiNetworkInstantiateMask.None);								/*01*/
-			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (prefab.Id);													/*04*/
 			buffer.Write (AllocateViewId);													/*04*/
 			buffer.Write (localPlayer.Id);													/*04*/
 			network.Instantiate (buffer.GetWrittenBuffer ());								/*Total 13 bytes*/
@@ -205,7 +214,7 @@ namespace Eitrum.Networking
 		{
 			buffer.ClearBuffer ();
 			buffer.Write ((byte)EiNetworkInstantiateMask.Position);							/*01*/
-			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (prefab.Id);													/*04*/
 			buffer.Write (AllocateViewId);													/*04*/
 			buffer.Write (localPlayer.Id);													/*04*/
 			buffer.Write (position);														/*12*/
@@ -216,7 +225,7 @@ namespace Eitrum.Networking
 		{
 			buffer.ClearBuffer ();
 			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotation);					/*01*/
-			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (prefab.Id);													/*04*/
 			buffer.Write (AllocateViewId);													/*04*/
 			buffer.Write (localPlayer.Id);													/*04*/
 			buffer.Write (position);														/*12*/
@@ -228,7 +237,7 @@ namespace Eitrum.Networking
 		{
 			buffer.ClearBuffer ();
 			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationParent);			/*01*/
-			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (prefab.Id);													/*04*/
 			buffer.Write (AllocateViewId);													/*04*/
 			buffer.Write (localPlayer.Id);													/*04*/
 			buffer.Write (position);														/*12*/
@@ -241,7 +250,7 @@ namespace Eitrum.Networking
 		{
 			buffer.ClearBuffer ();
 			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationScale);			/*01*/
-			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (prefab.Id);													/*04*/
 			buffer.Write (AllocateViewId);													/*04*/
 			buffer.Write (localPlayer.Id);													/*04*/
 			buffer.Write (position);														/*12*/
@@ -254,7 +263,7 @@ namespace Eitrum.Networking
 		{
 			buffer.ClearBuffer ();
 			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationScaleParent);		/*01*/
-			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (prefab.Id);													/*04*/
 			buffer.Write (AllocateViewId);													/*04*/
 			buffer.Write (localPlayer.Id);													/*04*/
 			buffer.Write (position);														/*12*/
@@ -268,7 +277,7 @@ namespace Eitrum.Networking
 		{
 			buffer.ClearBuffer ();
 			buffer.Write ((byte)EiNetworkInstantiateMask.PositionRotationScale3DParent);	/*01*/
-			buffer.Write (prefab.UniqueId);													/*04*/
+			buffer.Write (prefab.Id);													/*04*/
 			buffer.Write (AllocateViewId);													/*04*/
 			buffer.Write (localPlayer.Id);													/*04*/
 			buffer.Write (position);														/*12*/
