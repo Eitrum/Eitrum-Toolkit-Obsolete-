@@ -9,10 +9,10 @@ namespace Eitrum.VR.Utility {
 		[SerializeField]
 		private float duration = 0.2f;
 		[SerializeField]
-		private AnimationCurve animationCurve;
+		private AnimationCurve animationCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
 		[Header("Components")]
-		public VRGrabbable grabbable;
+		public VRGrabbable grabbable = null;
 
 		private Vector3 lastMovedPosition;
 		private Quaternion lastMovedRotation;

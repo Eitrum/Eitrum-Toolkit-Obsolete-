@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Eitrum.VR {
 	[AddComponentMenu("Eitrum/VR/Grabbable")]
-	public class VRGrabbable : EiComponent, EiGrabInterface, EiPoolableInterface {
+	public class VRGrabbable : EiComponent, EiGrabInterface, IPoolable {
 
 		#region Variables
 
@@ -130,11 +130,11 @@ namespace Eitrum.VR {
 
 		#region Pool Interface
 
-		void EiPoolableInterface.OnPoolInstantiate() {
+		void IPoolable.OnInstantiate() {
 
 		}
 
-		void EiPoolableInterface.OnPoolDestroy() {
+		void IPoolable.OnDestroy() {
 			lastGrabbedHand = null;
 		}
 

@@ -1,36 +1,47 @@
 ﻿using System.Threading;
 
-namespace Eitrum
-{
-	public class EiUnityThreading : EiComponentSingleton<EiUnityThreading>
-	{
-		public override void SingletonCreation ()
-		{
-			KeepAlive ();
-		}
+namespace Eitrum {
+    public class EiUnityThreading : EiComponentSingleton<EiUnityThreading> {
 
-		public static EiPropertyEvent<bool> CloseThreads = new EiPropertyEvent<bool> (false);
-		public static bool gameRunning = true;
+        #region Singleton
 
-		static Thread mainThread = Thread.CurrentThread;
+        protected override bool KeepAlive { get => true; set => base.KeepAlive = value; }
 
-		public static Thread MainThread {
-			get {
-				return mainThread;
-			}
-		}
+        #endregion
 
-		public static bool IsMainThread {
-			get {
-				return Thread.CurrentThread == mainThread;
-			}
-		}
+        #region Variables
 
-		void OnDestroy ()
-		{
-			gameRunning = false;
-			CloseThreads.Value = true;
-		}
-	}
+        public static EiPropertyEvent<bool> CloseThreads = new EiPropertyEvent<bool>(false);
+        public static bool gameRunning = true;
+
+        static Thread mainThread = Thread.CurrentThread;
+
+        #endregion
+
+        #region Properties
+
+        public static Thread MainThread {
+            get {
+                return mainThread;
+            }
+        }
+
+        public static bool IsMainThread {
+            get {
+                return Thread.CurrentThread == mainThread;
+            }
+        }
+
+        #endregion
+
+        #region Unity Methods
+
+        void OnDestroy() {
+            gameRunning = false;
+            CloseThreads.Value = true;
+        }
+
+        #endregion
+    }
 }
 

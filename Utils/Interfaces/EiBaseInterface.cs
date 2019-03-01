@@ -2,7 +2,7 @@
 
 namespace Eitrum
 {
-	public interface EiBaseInterface
+	public interface IBase
 	{
 		object Target{ get; }
 

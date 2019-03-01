@@ -4,194 +4,163 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Eitrum.Loading
-{
-	public class EiLoadingScreen : EiComponentSingleton<EiLoadingScreen>
-	{
-		#region Singleton
+namespace Eitrum.Loading {
+    public class EiLoadingScreen : EiComponentSingleton<EiLoadingScreen> {
 
-		public override void SingletonCreation()
-		{
-			KeepAlive();
-		}
+        #region Singleton
 
-		#endregion
+        protected override bool KeepAlive { get => true; set => base.KeepAlive = value; }
 
-		#region Variables
+        #endregion
 
-		public bool autoActivateScene = false;
-		private AsyncOperation async = null;
-		private string currentLoadingSceneName = "";
+        #region Variables
 
-		private EiTrigger<string> onStartLoading = new EiTrigger<string>();
-		private EiTrigger<string> onDoneLoading = new EiTrigger<string>();
+        public bool autoActivateScene = false;
+        private AsyncOperation async = null;
+        private string currentLoadingSceneName = "";
 
-		#endregion
+        private EiTrigger<string> onStartLoading = new EiTrigger<string>();
+        private EiTrigger<string> onDoneLoading = new EiTrigger<string>();
 
-		#region Properties
+        #endregion
 
-		public bool IsLoading
-		{
-			get
-			{
-				return async != null;
-			}
-		}
+        #region Properties
 
-		public float Progress
-		{
-			get
-			{
-				if (async == null)
-					return 0f;
+        public bool IsLoading {
+            get {
+                return async != null;
+            }
+        }
 
-				if (!IsAllowSceneActivation)
-				{
-					return async.progress / 0.9f;
-				}
-				return async.progress;
-			}
-		}
+        public float Progress {
+            get {
+                if (async == null)
+                    return 0f;
 
-		public bool IsAllowSceneActivation
-		{
-			get
-			{
-				if (async == null)
-					return autoActivateScene;
-				return async.allowSceneActivation;
-			}
-		}
+                if (!IsAllowSceneActivation) {
+                    return async.progress / 0.9f;
+                }
+                return async.progress;
+            }
+        }
 
-		public bool IsDone
-		{
-			get
-			{
-				if (async == null)
-					return true;
-				return async.isDone;
-			}
-		}
+        public bool IsAllowSceneActivation {
+            get {
+                if (async == null)
+                    return autoActivateScene;
+                return async.allowSceneActivation;
+            }
+        }
 
-		#endregion
+        public bool IsDone {
+            get {
+                if (async == null)
+                    return true;
+                return async.isDone;
+            }
+        }
 
-		#region Core
+        #endregion
 
-		public void LoadLevel(string sceneName)
-		{
-			LoadLevel(sceneName, true);
-		}
+        #region Core
 
-		public void LoadLevel(string sceneName, bool unloadAllScenes)
-		{
-			if (async != null)
-			{
-				Debug.LogWarning("Can't start loading a level as its currently loading an other level");
-				return;
-			}
+        public void LoadLevel(string sceneName) {
+            LoadLevel(sceneName, true);
+        }
 
-			StartCoroutine(LoadLevelAsync(sceneName, unloadAllScenes));
-		}
+        public void LoadLevel(string sceneName, bool unloadAllScenes) {
+            if (async != null) {
+                Debug.LogWarning("Can't start loading a level as its currently loading an other level");
+                return;
+            }
 
-		private IEnumerator LoadLevelAsync(string sceneName, bool unloadAllScenes)
-		{
-			currentLoadingSceneName = sceneName;
-			onStartLoading.Trigger(currentLoadingSceneName);
-			this.gameObject.SetActive(true);
+            StartCoroutine(LoadLevelAsync(sceneName, unloadAllScenes));
+        }
 
-			yield return null;
+        private IEnumerator LoadLevelAsync(string sceneName, bool unloadAllScenes) {
+            currentLoadingSceneName = sceneName;
+            onStartLoading.Trigger(currentLoadingSceneName);
+            this.gameObject.SetActive(true);
 
-			if (unloadAllScenes)
-				async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-			else
-				async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            yield return null;
 
-			async.allowSceneActivation = autoActivateScene;
-			async.completed += OnComplete;
+            if (unloadAllScenes)
+                async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            else
+                async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
-			while (!async.isDone)
-				yield return null;
-		}
+            async.allowSceneActivation = autoActivateScene;
+            async.completed += OnComplete;
 
-		public void ActivateScene()
-		{
-			if (async != null)
-			{
-				async.allowSceneActivation = true;
-			}
-		}
+            while (!async.isDone)
+                yield return null;
+        }
 
-		private void OnComplete(AsyncOperation async)
-		{
-			onDoneLoading.Trigger(currentLoadingSceneName);
-			this.async = null;
-			this.gameObject.SetActive(false);
-		}
+        public void ActivateScene() {
+            if (async != null) {
+                async.allowSceneActivation = true;
+            }
+        }
 
-		#endregion
+        private void OnComplete(AsyncOperation async) {
+            onDoneLoading.Trigger(currentLoadingSceneName);
+            this.async = null;
+            this.gameObject.SetActive(false);
+        }
 
-		#region Unloading
+        #endregion
 
-		public void UnloadAllNonActiveScenes()
-		{
-			UnloadAllScenesExcept(SceneManager.GetActiveScene().name);
-		}
+        #region Unloading
 
-		public void UnloadAllScenes()
-		{
-			var sceneCount = SceneManager.sceneCount;
-			for (int i = sceneCount - 1; i >= 0; i--)
-			{
-				var scene = SceneManager.GetSceneAt(i);
-				SceneManager.UnloadSceneAsync(scene);
-			}
-		}
+        public void UnloadAllNonActiveScenes() {
+            UnloadAllScenesExcept(SceneManager.GetActiveScene().name);
+        }
 
-		public void UnloadAllScenesExcept(string sceneName)
-		{
-			var sceneCount = SceneManager.sceneCount;
-			for (int i = sceneCount - 1; i >= 0; i--)
-			{
-				var scene = SceneManager.GetSceneAt(i);
-				if (scene.name != sceneName)
-					SceneManager.UnloadSceneAsync(scene);
-			}
-		}
+        public void UnloadAllScenes() {
+            var sceneCount = SceneManager.sceneCount;
+            for (int i = sceneCount - 1; i >= 0; i--) {
+                var scene = SceneManager.GetSceneAt(i);
+                SceneManager.UnloadSceneAsync(scene);
+            }
+        }
 
-		#endregion
+        public void UnloadAllScenesExcept(string sceneName) {
+            var sceneCount = SceneManager.sceneCount;
+            for (int i = sceneCount - 1; i >= 0; i--) {
+                var scene = SceneManager.GetSceneAt(i);
+                if (scene.name != sceneName)
+                    SceneManager.UnloadSceneAsync(scene);
+            }
+        }
 
-		#region Subscribe
+        #endregion
 
-		public void SubscribeOnStartLoading(Action<string> method)
-		{
-			onStartLoading.Subscribe(method);
-		}
+        #region Subscribe
 
-		public void SubscribeOnStartLoading(Action<string> method, bool anyThread)
-		{
-			onStartLoading.Subscribe(method, anyThread);
-		}
+        public void SubscribeOnStartLoading(Action<string> method) {
+            onStartLoading.Subscribe(method);
+        }
 
-		public void UnsubscribeOnStartLoading(Action<string> method)
-		{
-			onStartLoading.Unsubscribe(method);
-		}
+        public void SubscribeOnStartLoading(Action<string> method, bool anyThread) {
+            onStartLoading.Subscribe(method, anyThread);
+        }
 
-		public void SubscribeOnDoneLoading(Action<string> method)
-		{
-			onDoneLoading.Subscribe(method);
-		}
+        public void UnsubscribeOnStartLoading(Action<string> method) {
+            onStartLoading.Unsubscribe(method);
+        }
 
-		public void SubscribeOnDoneLoading(Action<string> method, bool anyThread)
-		{
-			onDoneLoading.Subscribe(method, anyThread);
-		}
+        public void SubscribeOnDoneLoading(Action<string> method) {
+            onDoneLoading.Subscribe(method);
+        }
 
-		public void UnsubscribeOnDoneLoading(Action<string> method)
-		{
-			onDoneLoading.Unsubscribe(method);
-		}
+        public void SubscribeOnDoneLoading(Action<string> method, bool anyThread) {
+            onDoneLoading.Subscribe(method, anyThread);
+        }
 
-		#endregion
-	}
+        public void UnsubscribeOnDoneLoading(Action<string> method) {
+            onDoneLoading.Unsubscribe(method);
+        }
+
+        #endregion
+    }
 }

@@ -22,7 +22,7 @@ namespace Eitrum.VR {
 		[Range(0, 128)]
 		private int maxGrabObjects = 0;
 		[SerializeField]
-		private LayerMask layerMask;
+		private LayerMask layerMask = (LayerMask)0;
 		[SerializeField]
 		[Tooltip("This limits the amount of collisions for grab check down to 32 objects")]
 		private bool useOptimizedGrab = false;

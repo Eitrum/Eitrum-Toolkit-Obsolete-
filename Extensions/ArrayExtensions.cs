@@ -15,17 +15,20 @@ namespace Eitrum
 			return EiRandom.Element (array);
 		}
 
-		public static T RandomElement<T> (this T[] array, EiRandom random)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T RandomElement<T> (this T[] array, EiRandom random)
 		{
 			return random._Element (array);
 		}
 
-		public static T RandomElement<T> (this IList<T> list)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T RandomElement<T> (this IList<T> list)
 		{
 			return EiRandom.Element (list);
 		}
 
-		public static T RandomElement<T> (this IList<T> list, EiRandom random)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T RandomElement<T> (this IList<T> list, EiRandom random)
 		{
 			return random._Element (list);
 		}

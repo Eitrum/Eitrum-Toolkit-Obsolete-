@@ -21,16 +21,16 @@ namespace Eitrum.Health
 
 				var go = AssetDatabase.LoadAssetAtPath<GameObject> (path);
 				if (!go) {
-					var tempObj = new GameObject ("EiDamageTypeResource", typeof(EiDamageTypeResource));
+					var tempObj = new GameObject ("EiDamageTypeResource", typeof(DamageTypeResource));
 					EiDamageTypeResourceEditor.LoadDefaultValues ();
 					var list = EiDamageTypeResourceEditor.defaultValues;
-					var tempResource = tempObj.GetComponent<EiDamageTypeResource> ();
+					var tempResource = tempObj.GetComponent<DamageTypeResource> ();
 					tempResource.GetType ().GetField ("damageCategories", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (tempResource, list);
-					go = PrefabUtility.CreatePrefab (path, tempObj);
+					go = PrefabUtility.SaveAsPrefabAsset (tempObj, path);
 					UnityEngine.MonoBehaviour.DestroyImmediate (tempObj);
 				}
 
-				EiDamageTypeResource resources = go.GetComponent<EiDamageTypeResource> ();
+				DamageTypeResource resources = go.GetComponent<DamageTypeResource> ();
 				var currentSelectedId = property.intValue;
 				var index = 0;
 

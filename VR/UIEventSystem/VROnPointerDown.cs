@@ -1,5 +1,5 @@
 ﻿namespace Eitrum.VR.UI {
-	public interface VROnPointerDown : EiBaseInterface {
+	public interface VROnPointerDown : IBase {
 		void OnPointerDown(VREventSystem eventSystem);
 	}
 }

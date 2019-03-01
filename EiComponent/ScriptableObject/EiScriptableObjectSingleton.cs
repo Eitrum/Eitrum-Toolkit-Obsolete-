@@ -2,58 +2,73 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum
-{
-	public class EiScriptableObjectSingleton<T> : EiScriptableObject
-		where T : EiScriptableObject
-	{
-		#region Singleton
+namespace Eitrum {
+    public class EiScriptableObjectSingleton<T> : EiScriptableObject
+        where T : EiScriptableObjectSingleton<T> {
 
-		private static T instance;
+        #region Singleton
 
-		public static T Instance {
-			get {
-				if (!instance) {
-					instance = Resources.Load<T> (typeof(T).Name);
-					if (!instance)
-						instance = CreateInstance<T> ();
-				}
-				ToSingleton (instance)?.OnSingletonCreated ();
-				return instance;
-			}
-			protected set {
-				instance = value;
-				ToSingleton (instance)?.OnSingletonCreated ();
-			}
-		}
+        private static T instance;
 
-		#endregion
+        public static T Instance {
+            get {
+                if (!instance) {
+                    instance = Resources.Load<T>(typeof(T).Name);
+                    if (!instance) {
+                        instance = CreateInstance<T>();
+                    }
+                    else if (!instance.KeepInResources) {
+                        instance = Instantiate<T>(instance);
+                    }
+                }
+                instance?.OnSingletonCreated();
+                return instance;
+            }
+            protected set {
+                if (!value.AllowAssignSingleton) {
+                    Debug.LogErrorFormat("Assigning singleton instance of type '{0}' is not allowed", typeof(T).Name);
+                    return;
+                }
+                if (instance == value) {
+                    Debug.LogWarningFormat("Assigning singleton instance of type '{0}' when it is already assigned", typeof(T).Name);
+                    return;
+                }
+                instance?.OnSingletonDestroyed();
+                instance = value;
+                instance?.OnSingletonCreated();
+            }
+        }
 
-		#region Conversion
+        #endregion
 
-		private static EiScriptableObjectSingleton<T> ToSingleton (T target)
-		{
-			return target as EiScriptableObjectSingleton<T>;
-		}
+        #region Properties
 
-		#endregion
+        public static bool HasInstance { get { return instance != null; } }
 
-		#region Core
+        protected virtual bool AllowAssignSingleton { get { return false; } }
 
-		protected void AssignInstance (T instance)
-		{
-			Instance = instance;
-		}
+        protected virtual bool KeepInResources { get { return false; } }
+        
+        #endregion
 
-		#endregion
+        #region Core
 
-		#region On Creation
+        protected void AssignInstance(T instance) {
+            Instance = instance;
+        }
 
-		protected virtual void OnSingletonCreated ()
-		{
-			
-		}
+        #endregion
 
-		#endregion
-	}
+        #region On Creation
+
+        protected virtual void OnSingletonCreated() {
+
+        }
+
+        protected virtual void OnSingletonDestroyed() {
+
+        }
+
+        #endregion
+    }
 }

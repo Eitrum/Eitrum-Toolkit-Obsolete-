@@ -8,14 +8,14 @@ using System;
 
 namespace Eitrum.Health
 {
-	[CustomEditor (typeof(EiDamageTypeResource))]
+	[CustomEditor (typeof(DamageTypeResource))]
 	public class EiDamageTypeResourceEditor : Editor
 	{
 		public static List<string> defaultValues = new List<string> ();
 
 		public override void OnInspectorGUI ()
 		{
-			var damageTypes = (EiDamageTypeResource)target;
+			var damageTypes = (DamageTypeResource)target;
 			Undo.RecordObject (damageTypes, "Damage Types Resource");
 			if (defaultValues == null || defaultValues.Count == 0) {
 				LoadDefaultValues ();
@@ -42,7 +42,7 @@ namespace Eitrum.Health
 			defaultValues.Add ("Magic / Thunder");
 		}
 
-		private void DrawDamageType (EiDamageTypeResource resource)
+		private void DrawDamageType (DamageTypeResource resource)
 		{
 			var categoryList = GetCategoryList (resource);
 			if (categoryList.Count < defaultValues.Count) {
@@ -112,9 +112,9 @@ namespace Eitrum.Health
 
 		//----------------------------------------------------------
 
-		public List<string> GetCategoryList (EiDamageTypeResource resource)
+		public List<string> GetCategoryList (DamageTypeResource resource)
 		{
-			return GetListFromType<string, EiDamageTypeResource> (resource, "damageCategories");
+			return GetListFromType<string, DamageTypeResource> (resource, "damageCategories");
 		}
 
 		public List<TList> GetListFromType<TList, TResource> (TResource resource, string fieldName)

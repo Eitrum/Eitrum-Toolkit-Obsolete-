@@ -10,7 +10,7 @@ namespace Eitrum.Health
 
 		[Header ("Settings")]
 		[SerializeField]
-		private EiCombatData healDataPerSecond;
+		private EiCombatData healDataPerSecond = default(EiCombatData);
 
 		[Header ("Time Settings")]
 		[SerializeField]

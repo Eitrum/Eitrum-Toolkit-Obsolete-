@@ -20,7 +20,7 @@ namespace Eitrum
 
 		#region Subscribe
 
-		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (EiBaseInterface target, Action<T> method, int channel = 0)
+		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (IBase target, Action<T> method, int channel = 0)
 		{
 			var newSub = new EiMessageSubscriber <T> (target, method);
 			newSub.channel = channel;
@@ -44,7 +44,7 @@ namespace Eitrum
 		#region Variables
 
 		Action<T> method;
-		EiBaseInterface baseInterface;
+		IBase baseInterface;
 
 		public int calls = 0;
 		public int channel = 0;
@@ -53,7 +53,7 @@ namespace Eitrum
 
 		#region Constructors
 
-		public EiMessageSubscriber (EiBaseInterface baseInterface, Action<T> method)
+		public EiMessageSubscriber (IBase baseInterface, Action<T> method)
 		{
 			this.baseInterface = baseInterface;
 			this.method = method;

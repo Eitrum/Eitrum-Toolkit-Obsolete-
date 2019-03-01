@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Eitrum
 {
 	[Serializable]
-	public class EiSerializeInterface<T> : ISerializationCallbackReceiver where T : EiBaseInterface
+	public class EiSerializeInterface<T> : ISerializationCallbackReceiver where T : IBase
 	{
 		#region Variables
 
@@ -87,7 +87,7 @@ namespace Eitrum
 
 		public static TObject[] ToSerializableArray<TObject, TInterface> (this TInterface[] oldList) 
 			where TObject : EiSerializeInterface<TInterface>
-			where TInterface : EiBaseInterface
+			where TInterface : IBase
 		{
 			TObject[] array = new TObject[oldList.Length];
 			for (int i = 0; i < array.Length; i++) {
@@ -99,7 +99,7 @@ namespace Eitrum
 
 		public static void ToSerializableArray<TObject, TInterface> (this TInterface[] oldList, ref TObject[] array) 
 			where TObject : EiSerializeInterface<TInterface>
-			where TInterface : EiBaseInterface
+			where TInterface : IBase
 		{
 
 			array = new TObject[oldList.Length];

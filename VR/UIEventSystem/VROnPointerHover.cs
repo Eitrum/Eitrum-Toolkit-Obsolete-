@@ -1,5 +1,5 @@
 ﻿namespace Eitrum.VR.UI {
-	public interface VROnPointerHover : EiBaseInterface {
+	public interface VROnPointerHover : IBase {
 		void OnPointerHover(VREventSystem eventSystem, VREventState state);
 	}
 }

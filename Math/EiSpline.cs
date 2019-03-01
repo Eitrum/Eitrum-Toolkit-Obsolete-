@@ -107,7 +107,7 @@ namespace Eitrum.Mathematics
 
 		#endregion
 
-		#region Loop
+		#region Help Methods
 
 		public void SetLooping ()
 		{

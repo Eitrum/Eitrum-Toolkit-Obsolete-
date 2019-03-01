@@ -5,16 +5,14 @@ using UnityEngine;
 using Eitrum.Networking;
 #endif
 
-namespace Eitrum
-{
-	public class EiComponent : MonoBehaviour, EiPreUpdateInterface, EiUpdateInterface, EiLateUpdateInterface, EiFixedUpdateInterface, EiThreadedUpdateInterface
-	{
-		#region Variables
+namespace Eitrum {
+    public class EiComponent : MonoBehaviour, IPreUpdate, IUpdate, ILateUpdate, IFixedUpdate, IThreadedUpdate {
+        #region Variables
 
-		[SerializeField]
-		[HideInInspector]
-		private EiEntity entity;
-		#if EITRUM_NETWORKING
+        [SerializeField]
+        [HideInInspector]
+        private EiEntity entity;
+#if EITRUM_NETWORKING
 		[SerializeField]
 		[HideInInspector]
 		
@@ -24,44 +22,44 @@ namespace Eitrum
 
 #pragma warning disable
 		private EiNetworkView netView;
-		#endif
+#endif
 
-		// Should Not ever be touched by anything!!! Used by core engine for performance
-		private EiLLNode<EiPreUpdateInterface> preUpdateNode;
-		private EiLLNode<EiUpdateInterface> updateNode;
-		private EiLLNode<EiLateUpdateInterface> lateUpdateNode;
-		private EiLLNode<EiFixedUpdateInterface> fixedUpdateNode;
-		private EiLLNode<EiThreadedUpdateInterface> threadedUpdateNode;
+        // Should Not ever be touched by anything!!! Used by core engine for performance
+        private EiLLNode<IPreUpdate> preUpdateNode;
+        private EiLLNode<IUpdate> updateNode;
+        private EiLLNode<ILateUpdate> lateUpdateNode;
+        private EiLLNode<IFixedUpdate> fixedUpdateNode;
+        private EiLLNode<IThreadedUpdate> threadedUpdateNode;
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		public EiEntity Entity {
-			get {
-				if (!entity)
-					entity = GetComponent<EiEntity> ();
-				return entity;
-			}
-		}
+        public EiEntity Entity {
+            get {
+                if (!entity)
+                    entity = GetComponent<EiEntity>();
+                return entity;
+            }
+        }
 
-		public bool IsNetworked {
-			get {
+        public bool IsNetworked {
+            get {
 #if EITRUM_NETWORKING
 				return netView != null;
 #else
-				return false;
+                return false;
 #endif
-			}
-		}
+            }
+        }
 
-		public static bool GameRunning {
-			get {
-				return EiUnityThreading.gameRunning;
-			}
-		}
+        public static bool GameRunning {
+            get {
+                return EiUnityThreading.gameRunning;
+            }
+        }
 
-		#if EITRUM_NETWORKING
+#if EITRUM_NETWORKING
 		public EiNetworkView NetView { // Ugly name of NetView because unity built in 'NetworkView'
 			get {
 				if (!netView)
@@ -69,288 +67,248 @@ namespace Eitrum
 				return netView;
 			}
 		}
-		#endif
-
-		public object Target {
-			get {
-				return this;
-			}
-		}
-
-		public bool IsNull {
-			get {
-#if EITRUM_POOLING
-				return this == null || (Entity && entity.IsPooled);
-#else
-				return this == null;
 #endif
-			}
-		}
 
-		#endregion
+        public object Target {
+            get {
+                return this;
+            }
+        }
 
-		#region Instantiate EiPrefab
+        public bool IsNull { get { return this == null; } }
 
-		public static GameObject Instantiate (EiPrefab prefab)
-		{
-			return prefab.Instantiate ();
-		}
+        #endregion
 
-		public static GameObject Instantiate (EiPrefab prefab, Vector3 position)
-		{
-			return prefab.Instantiate (position);
-		}
+        #region Instantiate EiPrefab
 
-		public static GameObject Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation)
-		{
-			return prefab.Instantiate (position, rotation);
-		}
+        public static GameObject Instantiate(EiPrefab prefab) {
+            return prefab.Instantiate();
+        }
 
-		public static GameObject Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation, Transform parent)
-		{
-			return prefab.Instantiate (position, rotation, parent);
-		}
+        public static GameObject Instantiate(EiPrefab prefab, Vector3 position) {
+            return prefab.Instantiate(position);
+        }
 
-		public static GameObject Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation, Vector3 scale)
-		{
-			return prefab.Instantiate (position, rotation, scale);
-		}
+        public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation) {
+            return prefab.Instantiate(position, rotation);
+        }
 
-		public static GameObject Instantiate (EiPrefab prefab, Vector3 position, Quaternion rotation, Vector3 scale, Transform parent)
-		{
-			return prefab.Instantiate (position, rotation, scale, parent);
-		}
+        public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation, Transform parent) {
+            return prefab.Instantiate(position, rotation, parent);
+        }
 
-		#endregion
+        public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation, Vector3 scale) {
+            return prefab.Instantiate(position, rotation, scale);
+        }
 
-		#region Destroy
+        public static GameObject Instantiate(EiPrefab prefab, Vector3 position, Quaternion rotation, Vector3 scale, Transform parent) {
+            return prefab.Instantiate(position, rotation, scale, parent);
+        }
 
-		public void Destroy ()
-		{
-			if (entity)
-				entity.Destroy ();
-			else
-				MonoBehaviour.Destroy (gameObject);
-		}
+        #endregion
 
-		public void Destroy (float delay)
-		{
-			if (entity)
-				entity.Destroy (delay);
-			else
-				MonoBehaviour.Destroy (gameObject, delay);
-		}
+        #region Destroy
 
-		public static void Destroy (EiEntity entity)
-		{
-			entity.Destroy ();
-		}
+        public void Destroy() {
+            if (entity)
+                entity.Destroy();
+            else
+                MonoBehaviour.Destroy(gameObject);
+        }
 
-		public static void Destroy (GameObject gameObject)
-		{
-			var entity = gameObject.GetComponent<EiEntity> ();
-			if (entity) {
-				entity.Destroy ();
-			} else {
-				MonoBehaviour.Destroy (gameObject);
-			}
-		}
+        public void Destroy(float delay) {
+            if (entity)
+                entity.Destroy(delay);
+            else
+                MonoBehaviour.Destroy(gameObject, delay);
+        }
 
-		public static void Destroy (Transform transform)
-		{
-			Destroy (transform.gameObject);
-		}
+        public static void Destroy(EiEntity entity) {
+            entity.Destroy();
+        }
 
-		#endregion
+        public static void Destroy(GameObject gameObject) {
+            var entity = gameObject.GetComponent<EiEntity>();
+            if (entity) {
+                entity.Destroy();
+            }
+            else {
+                MonoBehaviour.Destroy(gameObject);
+            }
+        }
 
-		#region Virtual Update Calls
+        public static void Destroy(Transform transform) {
+            Destroy(transform.gameObject);
+        }
 
-		public virtual void PreUpdateComponent (float time)
-		{
+        #endregion
 
-		}
+        #region Virtual Update Calls
 
-		public virtual void UpdateComponent (float time)
-		{
+        public virtual void PreUpdateComponent(float time) {
 
-		}
+        }
 
-		public virtual void LateUpdateComponent (float time)
-		{
+        public virtual void UpdateComponent(float time) {
 
-		}
+        }
 
-		public virtual void FixedUpdateComponent (float time)
-		{
+        public virtual void LateUpdateComponent(float time) {
 
-		}
+        }
 
-		public virtual void ThreadedUpdateComponent (float time)
-		{
+        public virtual void FixedUpdateComponent(float time) {
 
-		}
+        }
 
-		#endregion
+        public virtual void ThreadedUpdateComponent(float time) {
 
-		#region Subscribe/Unsubscribe
+        }
 
-		#region Update Timer
+        #endregion
 
-		/// <summary>
-		/// Subscribes the update timer, store value to be able to unsubscribe.
-		/// </summary>
-		/// <returns>The update timer.</returns>
-		/// <param name="time">Time.</param>
-		/// <param name="method">Method.</param>
-		protected EiLLNode<EiUpdateSystem.TimerUpdateData> SubscribeUpdateTimer (float time, Action method)
-		{
-			return EiUpdateSystem.Instance.SubscribeUpdateTimer (this, time, method);
-		}
+        #region Subscribe/Unsubscribe
 
-		protected void UnsubscribeUpdateTimer (EiLLNode<EiUpdateSystem.TimerUpdateData> node)
-		{
-			EiUpdateSystem.Instance.UnsubscribeTimerUpdate (node);
-		}
+        #region Update Timer
 
-		#endregion
+        /// <summary>
+        /// Subscribes the update timer, store value to be able to unsubscribe.
+        /// </summary>
+        /// <returns>The update timer.</returns>
+        /// <param name="time">Time.</param>
+        /// <param name="method">Method.</param>
+        protected EiLLNode<EiUpdateSystem.TimerUpdateData> SubscribeUpdateTimer(float time, Action method) {
+            return EiUpdateSystem.Instance.SubscribeUpdateTimer(this, time, method);
+        }
 
-		#region Pre Update
+        protected void UnsubscribeUpdateTimer(EiLLNode<EiUpdateSystem.TimerUpdateData> node) {
+            EiUpdateSystem.Instance.UnsubscribeTimerUpdate(node);
+        }
 
-		protected void SubscribePreUpdate ()
-		{
-			if (preUpdateNode == null)
-				preUpdateNode = EiUpdateSystem.Instance.SubscribePreUpdate (this);
-		}
+        #endregion
 
-		protected void UnsubscribePreUpdate ()
-		{
-			if (preUpdateNode != null)
-				EiUpdateSystem.Instance.UnsubscribePreUpdate (preUpdateNode);
-			preUpdateNode = null;
-		}
+        #region Pre Update
 
-		#endregion
+        protected void SubscribePreUpdate() {
+            if (preUpdateNode == null)
+                preUpdateNode = EiUpdateSystem.Instance.SubscribePreUpdate(this);
+        }
 
-		#region Update
+        protected void UnsubscribePreUpdate() {
+            if (preUpdateNode != null)
+                EiUpdateSystem.Instance.UnsubscribePreUpdate(preUpdateNode);
+            preUpdateNode = null;
+        }
 
-		protected void SubscribeUpdate ()
-		{
-			if (updateNode == null)
-				updateNode = EiUpdateSystem.Instance.SubscribeUpdate (this);
-		}
+        #endregion
 
-		protected void UnsubscribeUpdate ()
-		{
-			if (updateNode != null && GameRunning)
-				EiUpdateSystem.Instance.UnsubscribeUpdate (updateNode);
-			updateNode = null;
-		}
+        #region Update
 
-		#endregion
+        protected void SubscribeUpdate() {
+            if (updateNode == null)
+                updateNode = EiUpdateSystem.Instance.SubscribeUpdate(this);
+        }
 
-		#region Threaded Update
+        protected void UnsubscribeUpdate() {
+            if (updateNode != null && GameRunning)
+                EiUpdateSystem.Instance.UnsubscribeUpdate(updateNode);
+            updateNode = null;
+        }
 
-		protected void SubscribeThreadedUpdate ()
-		{
-			if (threadedUpdateNode == null)
-				threadedUpdateNode = EiThreadedUpdateSystem.Instance.Subscribe (this);
-		}
+        #endregion
 
-		protected void UnsubscribeThreadedUpdate ()
-		{
-			if (threadedUpdateNode != null)
-				EiThreadedUpdateSystem.Instance.Unsubscribe (threadedUpdateNode);
-			threadedUpdateNode = null;
-		}
+        #region Threaded Update
 
-		#endregion
+        protected void SubscribeThreadedUpdate() {
+            if (threadedUpdateNode == null)
+                threadedUpdateNode = EiThreadedUpdateSystem.Instance.Subscribe(this);
+        }
 
-		#region Late Update
+        protected void UnsubscribeThreadedUpdate() {
+            if (threadedUpdateNode != null)
+                EiThreadedUpdateSystem.Instance.Unsubscribe(threadedUpdateNode);
+            threadedUpdateNode = null;
+        }
 
-		protected void SubscribeLateUpdate ()
-		{
-			if (lateUpdateNode == null)
-				lateUpdateNode = EiUpdateSystem.Instance.SubscribeLateUpdate (this);
-		}
+        #endregion
 
-		protected void UnsubscribeLateUpdate ()
-		{
-			if (lateUpdateNode != null)
-				EiUpdateSystem.Instance.UnsubscribeLateUpdate (lateUpdateNode);
-			lateUpdateNode = null;
-		}
+        #region Late Update
 
-		#endregion
+        protected void SubscribeLateUpdate() {
+            if (lateUpdateNode == null)
+                lateUpdateNode = EiUpdateSystem.Instance.SubscribeLateUpdate(this);
+        }
 
-		#region Fixed Update
+        protected void UnsubscribeLateUpdate() {
+            if (lateUpdateNode != null)
+                EiUpdateSystem.Instance.UnsubscribeLateUpdate(lateUpdateNode);
+            lateUpdateNode = null;
+        }
 
-		protected void SubscribeFixedUpdate ()
-		{
-			if (fixedUpdateNode == null)
-				fixedUpdateNode = EiUpdateSystem.Instance.SubscribeFixedUpdate (this);
-		}
+        #endregion
 
-		protected void UnsubscribeFixedUpdate ()
-		{
-			if (fixedUpdateNode != null)
-				EiUpdateSystem.Instance.UnsubscribeFixedUpdate (fixedUpdateNode);
-			fixedUpdateNode = null;
-		}
+        #region Fixed Update
 
-		#endregion
+        protected void SubscribeFixedUpdate() {
+            if (fixedUpdateNode == null)
+                fixedUpdateNode = EiUpdateSystem.Instance.SubscribeFixedUpdate(this);
+        }
 
-		#region Message System
+        protected void UnsubscribeFixedUpdate() {
+            if (fixedUpdateNode != null)
+                EiUpdateSystem.Instance.UnsubscribeFixedUpdate(fixedUpdateNode);
+            fixedUpdateNode = null;
+        }
 
-		protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (Action<T> action)
-		{
-			return EiMessage.Subscribe<T> (this, action);
-		}
+        #endregion
 
-		public static void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> subscriber)
-		{
-			EiMessage.Unsubscribe<T> (subscriber);
-		}
+        #region Message System
 
-		public static void Publish<T> (T message)
-		{
-			EiMessage<T>.Publish (message);
-		}
+        protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T>(Action<T> action) {
+            return EiMessage.Subscribe<T>(this, action);
+        }
 
-		#endregion
+        public static void Unsubscribe<T>(EiLLNode<EiMessageSubscriber<T>> subscriber) {
+            EiMessage.Unsubscribe<T>(subscriber);
+        }
 
-		#endregion
+        public static void Publish<T>(T message) {
+            EiMessage<T>.Publish(message);
+        }
 
-		#region Editor
+        #endregion
 
-		[ContextMenu ("Attach All Components On Entity")]
-		public void AttachAllComponentsOnEntity ()
-		{
-			var objs = GetComponentsInChildren<EiComponent> (true);
-			foreach (var obj in objs)
-				obj.AttachComponentContextMenu ();
-		}
+        #endregion
 
-		[ContextMenu ("Attach Components")]
-		private void AttachComponentContextMenu ()
-		{
-			entity = GetComponentInParent<EiEntity> ();
-			#if EITRUM_NETWORKING
+        #region Editor
+
+        [ContextMenu("Attach All Components On Entity")]
+        public void AttachAllComponentsOnEntity() {
+            var objs = GetComponentsInChildren<EiComponent>(true);
+            foreach (var obj in objs)
+                obj.AttachComponentContextMenu();
+        }
+
+        [ContextMenu("Attach Components")]
+        private void AttachComponentContextMenu() {
+            entity = GetComponentInParent<EiEntity>();
+#if EITRUM_NETWORKING
 			netView = GetComponent<EiNetworkView> ();
-			#endif
-			AttachComponents ();
-			#if UNITY_EDITOR
-			if (gameObject.scene.isLoaded) {
-				UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty (gameObject.scene);
-			} else {
-				UnityEditor.EditorUtility.SetDirty (this);
-			}
-			#endif
-		}
+#endif
+            AttachComponents();
+#if UNITY_EDITOR
+            if (gameObject.scene.isLoaded) {
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+            }
+            else {
+                UnityEditor.EditorUtility.SetDirty(this);
+            }
+#endif
+        }
 
-		protected virtual void AttachComponents ()
-		{
-		}
+        protected virtual void AttachComponents() {
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

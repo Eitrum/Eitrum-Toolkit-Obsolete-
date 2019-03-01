@@ -10,9 +10,9 @@ namespace Eitrum.Utility.Spawner {
 
 		[Header("Spawn Settings")]
 		[SerializeField]
-		private EiPrefab prefabToSpawn;
+		private EiPrefab prefabToSpawn = null;
 		[SerializeField]
-		private Transform spawnTarget;
+		private Transform spawnTarget = null;
 		[SerializeField]
 		private bool spawnOnAwake = false;
 		[SerializeField]

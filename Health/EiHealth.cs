@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Eitrum.Health
 {
 	[AddComponentMenu("Eitrum/Health/Health")]
-	public class EiHealth : EiComponent, EiDamageInterface, EiHealingInterface, EiPoolableInterface
+	public class EiHealth : EiComponent, EiDamageInterface, EiHealingInterface, IPoolable
 	{
 		#region Variables
 
@@ -302,11 +302,11 @@ namespace Eitrum.Health
 
 		#region PoolInterface
 		
-		void EiPoolableInterface.OnPoolInstantiate() {
+		void IPoolable.OnInstantiate() {
 			ResetHealth();
 		}
 
-		void EiPoolableInterface.OnPoolDestroy() {
+		void IPoolable.OnDestroy() {
 
 		}
 

@@ -1,76 +1,110 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum.Database
-{
-	public class EiPrefabDatabase : EiComponentSingleton<EiPrefabDatabase>
-	{
-		#region Singleton
+namespace Eitrum.Database {
+    [CreateAssetMenu(fileName = "PrefabDatabase", menuName = "Eitrum/Database/Prefab Database", order = 1)]
+    public class EiPrefabDatabase : EiScriptableObjectSingleton<EiPrefabDatabase> {
 
-		public override bool KeepInResources ()
-		{
-			return true;
-		}
+        #region Singleton
 
-		#endregion
+        protected override bool KeepInResources => true;
 
-		#region Variables
+        protected override bool AllowAssignSingleton => true;
 
-		[SerializeField]
-		private List<EiPrefab> cachedItems = new List<EiPrefab> ();
+        protected override void OnSingletonCreated() {
+            for (int i = 0, length = cachedItems.Count; i < length; i++) {
+                cachedItems[i].Initialize();
+                cachedDictionary.Add(cachedItems[i].Id, cachedItems[i]);
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Variables
 
-		public int Length {
-			get {
-				return cachedItems.Count;
-			}
-		}
+        [SerializeField]
+        private List<EiPrefab> cachedItems = new List<EiPrefab>();
 
-		public EiPrefab this [int index] {
-			get {
-				return cachedItems [index];
-			}
-		}
+        private Dictionary<int, EiPrefab> cachedDictionary = new Dictionary<int, EiPrefab>();
 
-		#endregion
+        #endregion
 
-		#region Core
+        #region Properties
 
-		void Awake ()
-		{
-			if (HasInstance) {
-				DestroyImmediate (this.gameObject);
-			}
-			AssignInstance (this);
-			DontDestroyOnLoad (gameObject);
-		}
+        public int Length {
+            get {
+                return cachedItems.Count;
+            }
+        }
 
-		#endregion
+        /// <summary>
+        /// Gets the prefab at index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public EiPrefab this[int index] {
+            get {
+                return cachedItems[index];
+            }
+        }
 
-		#region Get
+        #endregion
 
-		public EiPrefab Get (int index)
-		{
-			return cachedItems [index];
-		}
+        #region Core
 
-		#endregion
+        void Awake() {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) {
+                return;
+            }
+#endif
+            if (HasInstance) {
+                DestroyImmediate(this);
+                return;
+            }
+            AssignInstance(this);
+        }
 
-		#region Editor
+        #endregion
 
-		[ContextMenu ("Build And Prefill database")]
-		private void BuildAndPrefillDatabase ()
-		{
-			if (!gameObject.scene.IsValid ()) {
-				Debug.Log ("Has to be in scene");
-				return;
-			}
+        #region Get
 
-		}
+        public EiPrefab GetPrefabById(int id) {
+            return cachedDictionary[id];
+        }
 
-		#endregion
-	}
+        public EiPrefab GetPrefabByIndex(int index) {
+            return cachedItems[index];
+        }
+
+        public EiPrefab GetPrefabByName(string name) {
+            return cachedDictionary[name.GetDeterministicHashCode()];
+        }
+
+        #endregion
+
+        #region Editor
+
+        [ContextMenu("Add all Prefabs")]
+        public void AddAllPrefabs() {
+#if UNITY_EDITOR
+            UnityEditor.Undo.RecordObject(this, "Adding all prefabs");
+            var assetsGUID = UnityEditor.AssetDatabase.FindAssets("t:" + nameof(EiPrefab));
+            cachedItems.Clear();
+            for (int i = 0, length = assetsGUID.Length; i < length; i++) {
+                cachedItems.Add(
+                    UnityEditor.AssetDatabase.LoadAssetAtPath<EiPrefab>(
+                        UnityEditor.AssetDatabase.GUIDToAssetPath(assetsGUID[i])));
+            }
+#endif
+        }
+
+        [ContextMenu("Clear Prefabs")]
+        public void ClearPrefabs() {
+            cachedItems.Clear();
+            cachedDictionary.Clear();
+        }
+
+        #endregion
+    }
 }
