@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 
 namespace Eitrum {
-	[AddComponentMenu("Eitrum/Core/Initialize")]
-	public class EiInitialize : EiComponent {
+    [AddComponentMenu("Eitrum/Core/Initialize")]
+    public class EiInitialize : EiComponent {
 
-        [SerializeField] private PhysicsExtension.PhysicsSettings optionalPhysicsSettings;
+        [SerializeField] private PhysicsExtension.PhysicsSettings optionalPhysicsSettings = null;
 
-		void Awake() {
-			var updateSystem = EiUpdateSystem.Instance;
-			var timer = EiTimer.Instance;
-			var threadingFix = EiUnityThreading.Instance;
+        void Awake() {
+            var updateSystem = EiUpdateSystem.Instance;
+            var timer = EiTimer.Instance;
+            var threadingFix = EiUnityThreading.Instance;
             optionalPhysicsSettings?.ApplyAllPhysicsSettings();
-		}
-	}
+        }
+    }
 }
