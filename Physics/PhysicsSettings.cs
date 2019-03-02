@@ -5,6 +5,17 @@ using UnityEngine;
 namespace Eitrum.PhysicsExtension {
     [CreateAssetMenu(fileName = "Physics Settings", menuName = "Eitrum/Physics/Physics Settings")]
     public class PhysicsSettings : EiScriptableObject {
+        #region Enum
+
+        public enum FrictionType {
+            Patch,
+            OneDirectional,
+            TwoDirectional
+        }
+
+
+        #endregion
+
         #region Variables
 
         [Header("Basic Settings")]
@@ -12,12 +23,14 @@ namespace Eitrum.PhysicsExtension {
         [SerializeField, Range(0.001f, 0.2f)] private float physicsTimeStep = 0.02f;
         [SerializeField] private bool autoSimulation = true;
         [SerializeField] private bool autoSyncTransforms = true;
-        [SerializeField] private bool enhancedDeterminism = false;
         [SerializeField] private PhysicsLayerSettings physicsLayerSettings;
 
-        [Header("Other Settings")]
+        [Header("Editor Only Settings")]
         [SerializeField] private PhysicMaterial defaultMaterial;
+        [SerializeField] private FrictionType frictionType = FrictionType.Patch;
+        [SerializeField] private bool enhancedDeterminism = false;
         [SerializeField] private bool enableAdaptiveForce = false;
+        [SerializeField] private bool unifiedHeightmaps = true;
 
         [Header("Threshold Settings")]
         [SerializeField] private float bounceThreshold = 2f;
@@ -128,23 +141,29 @@ namespace Eitrum.PhysicsExtension {
             so.ApplyModifiedProperties();
 #endif
         }
-
+        
         public void ApplyUnsupportedSettings() {
 #if UNITY_EDITOR
             var obj = UnityEditor.Unsupported.GetSerializedAssetInterfaceSingleton("PhysicsManager");
             UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(obj);
             so.FindProperty("m_EnableEnhancedDeterminism").boolValue = enhancedDeterminism;
             so.FindProperty("m_EnableAdaptiveForce").boolValue = enableAdaptiveForce;
+            so.FindProperty("m_EnableUnifiedHeightmaps").boolValue = unifiedHeightmaps;
+            so.FindProperty("m_FrictionType").intValue = (int)frictionType;
+            so.FindProperty("m_DefaultMaterial").objectReferenceValue = defaultMaterial;
             so.ApplyModifiedProperties();
 #endif
         }
 
-        public void ApplyUnsupportedSettings(bool enhancedDeterminism, bool adaptiveForce) {
+        public void ApplyUnsupportedSettings(PhysicMaterial defaultMaterial, bool enhancedDeterminism, bool adaptiveForce, bool unifiedHeightmaps, FrictionType frictionType) {
 #if UNITY_EDITOR
             var obj = UnityEditor.Unsupported.GetSerializedAssetInterfaceSingleton("PhysicsManager");
             UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(obj);
+            so.FindProperty("m_DefaultMaterial").objectReferenceValue = this.defaultMaterial = defaultMaterial;
             so.FindProperty("m_EnableEnhancedDeterminism").boolValue = this.enhancedDeterminism = enhancedDeterminism;
             so.FindProperty("m_EnableAdaptiveForce").boolValue = this.enableAdaptiveForce = adaptiveForce;
+            so.FindProperty("m_EnableUnifiedHeightmaps").boolValue = this.unifiedHeightmaps = unifiedHeightmaps;
+            so.FindProperty("m_FrictionType").intValue = (int)(this.frictionType = frictionType);
             so.ApplyModifiedProperties();
 #endif
         }
@@ -210,12 +229,12 @@ namespace Eitrum.PhysicsExtension {
 
         #region Layer Collision
 
-        [ContextMenu("Apply Collision Layer Settings", false, 10)]
+        [ContextMenu("Apply Collision Layer Settings", false, 30)]
         public void ApplyCollisionLayerSettings() {
             physicsLayerSettings?.ApplyLayerSettings();
         }
 
-        [ContextMenu("Load Collision Layer Settings", false, 11)]
+        [ContextMenu("Load Collision Layer Settings", false, 31)]
         public void LoadCollisionLayerSettings() {
             if (physicsLayerSettings == null) {
                 physicsLayerSettings = CreateInstance<PhysicsLayerSettings>();
@@ -245,8 +264,11 @@ namespace Eitrum.PhysicsExtension {
             // Unsupported settings, can only be changed in editor
             var obj = UnityEditor.Unsupported.GetSerializedAssetInterfaceSingleton("PhysicsManager");
             UnityEditor.SerializedObject so = new UnityEditor.SerializedObject(obj);
+            defaultMaterial = so.FindProperty("m_DefaultMaterial").objectReferenceValue as PhysicMaterial;
             enhancedDeterminism = so.FindProperty("m_EnableEnhancedDeterminism").boolValue;
             enableAdaptiveForce = so.FindProperty("m_EnableAdaptiveForce").boolValue;
+            unifiedHeightmaps = so.FindProperty("m_EnableUnifiedHeightmaps").boolValue;
+            frictionType = (FrictionType)so.FindProperty("m_FrictionType").intValue;
             worldBounds = so.FindProperty("m_WorldBounds").boundsValue;
             worldSubdivisions = so.FindProperty("m_WorldSubdivisions").intValue;
 #endif
