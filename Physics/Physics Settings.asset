@@ -16,11 +16,13 @@ MonoBehaviour:
   physicsTimeStep: 0.02
   autoSimulation: 1
   autoSyncTransforms: 1
-  enhancedDeterminism: 0
   physicsLayerSettings: {fileID: 11400000, guid: 38ce0d92369db024e8b1056fe0dfc384,
     type: 2}
   defaultMaterial: {fileID: 0}
+  frictionType: 0
+  enhancedDeterminism: 0
   enableAdaptiveForce: 0
+  unifiedHeightmaps: 1
   bounceThreshold: 2
   sleepThreashold: 0.005
   defaultContactOffset: 0.001

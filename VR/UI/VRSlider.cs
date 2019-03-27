@@ -19,8 +19,8 @@ namespace Eitrum.VR.UI {
 
 		void OnSliderDragged(Vector3 pointerPosition) {
 			Line line = new Line(startPosition.position, endPosition.position);
-			value.Value = EiMath.GetValueFromPointOnLine(line, pointerPosition);
-			handle.transform.position = line.GetPointFromReference(value.Value);
+			value.Value = line.GetValueFromPointOnLine(pointerPosition);
+			handle.transform.position = line.GetPointOnLine(value.Value);
 		}
 
 		void OnEndEdit() {
