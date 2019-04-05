@@ -3,9 +3,7 @@ using Eitrum;
 using UnityEngine;
 
 public class PerformanceTest : EiComponent {
-
-    public TestClass testClass;
-
+    
     #region Hide block 1
     [Header("Basic Settings")]
     public int testsPerFrame = 10;
@@ -31,8 +29,8 @@ public class PerformanceTest : EiComponent {
             for (int i = 0; i < iterationsPerTest; i++) {
                 #endregion
                 /// Test Case 1 ///
+                
 
-                testClass.NativeArray();
 
                 /// ----------- ///
                 #region Hide Block 2
@@ -44,7 +42,7 @@ public class PerformanceTest : EiComponent {
                 #endregion
                 /// Test Case 2 ///
 
-                testClass.TestArray();
+                
 
                 /// ----------- ///
                 #region Hide Block 3
