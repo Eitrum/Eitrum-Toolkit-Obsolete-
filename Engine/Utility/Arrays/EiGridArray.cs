@@ -7,7 +7,7 @@ namespace Eitrum
 		void OnClear ();
 	}
 
-	public class EiGridArray<T> : EiCore
+	public class EiGridArray<T> : EiClass
 	{
 		#region Variables
 

@@ -2,7 +2,7 @@
 
 namespace Eitrum
 {
-	public class EiPriorityList<T> : EiCore
+	public class EiPriorityList<T> : EiClass
 	{
 		#region Variables
 

@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Eitrum
 {
-	public class EiTask : EiCore, EiUnityThreadCallbackInterface
+	public class EiTask : EiClass, EiUnityThreadCallbackInterface
 	{
 		#region Variables
 
@@ -563,7 +563,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiTask<TResult> : EiCore, EiUnityThreadCallbackInterface
+	public class EiTask<TResult> : EiClass, EiUnityThreadCallbackInterface
 	{
 		#region Variables
 
@@ -703,7 +703,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiTask<T1, TResult> : EiCore, EiUnityThreadCallbackInterface
+	public class EiTask<T1, TResult> : EiClass, EiUnityThreadCallbackInterface
 	{
 		#region Variables
 
@@ -843,7 +843,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiTask<T1, T2, TResult> : EiCore, EiUnityThreadCallbackInterface
+	public class EiTask<T1, T2, TResult> : EiClass, EiUnityThreadCallbackInterface
 	{
 		#region Variables
 
@@ -983,7 +983,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiTask<T1, T2, T3, TResult> : EiCore, EiUnityThreadCallbackInterface
+	public class EiTask<T1, T2, T3, TResult> : EiClass, EiUnityThreadCallbackInterface
 	{
 		#region Variables
 
@@ -1123,7 +1123,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiTask<T1, T2, T3, T4, TResult> : EiCore, EiUnityThreadCallbackInterface
+	public class EiTask<T1, T2, T3, T4, TResult> : EiClass, EiUnityThreadCallbackInterface
 	{
 		#region Variables
 

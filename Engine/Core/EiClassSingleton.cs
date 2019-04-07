@@ -2,7 +2,8 @@
 
 namespace Eitrum
 {
-	public class EiCoreSingleton<T> : EiCoreSingleton where T : EiCoreSingleton, new()
+    //TODO rewrite this shit make it similar to Component Singleton
+	public class EiClassSingleton<T> : EiClassSingleton where T : EiClassSingleton, new()
 	{
 		protected static T instance;
 
@@ -17,7 +18,7 @@ namespace Eitrum
 		}
 	}
 
-	public class EiCoreSingleton : EiCore
+	public class EiClassSingleton : EiClass
 	{
 		public virtual void SingletonCreation ()
 		{

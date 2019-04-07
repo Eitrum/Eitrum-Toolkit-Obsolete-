@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Eitrum.Mathematics
 {
-	public sealed class EiRandom : EiCoreSingleton<EiRandom>
+	public sealed class EiRandom : EiClassSingleton<EiRandom>
 	{
 		#region Variables
 

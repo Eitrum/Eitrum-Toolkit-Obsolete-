@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Eitrum
 {
-	public class EiSyncronizedQueue<T> : EiCore
+	public class EiSyncronizedQueue<T> : EiClass
 	{
 		
 		Queue<T> queue = new Queue<T> ();

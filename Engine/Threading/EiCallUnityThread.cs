@@ -2,7 +2,7 @@
 
 namespace Eitrum.Threading
 {
-	public class EiCallUnityThread : EiCore, EiUnityThreadCallbackInterface
+	public class EiCallUnityThread : EiClass, EiUnityThreadCallbackInterface
 	{
 		private Action method;
 

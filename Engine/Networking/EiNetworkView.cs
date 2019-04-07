@@ -5,8 +5,7 @@ using Eitrum.Networking.Internal;
 
 namespace Eitrum.Networking
 {
-	[AddComponentMenu ("Eitrum/Networking/Network View")]
-	public sealed class EiNetworkView : EiComponent
+	public sealed class EiNetworkView
 	{
 		#region Variables
 
@@ -87,15 +86,6 @@ namespace Eitrum.Networking
 		{
 			view.network = network;
 			view.onUpdate?.Invoke (view);
-		}
-
-		#endregion
-
-		#region Editor
-
-		protected override void AttachComponents ()
-		{
-			
 		}
 
 		#endregion

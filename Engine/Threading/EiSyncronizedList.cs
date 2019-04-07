@@ -5,7 +5,7 @@ using System.Linq;
 namespace Eitrum
 {
 	[Serializable]
-	public class EiSyncronizedList<T> : EiCore
+	public class EiSyncronizedList<T> : EiClass
 	{
 		#region Variables
 

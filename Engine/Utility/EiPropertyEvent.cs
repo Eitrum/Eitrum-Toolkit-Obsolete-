@@ -5,7 +5,7 @@ using System.Threading;
 namespace Eitrum
 {
 	[Serializable]
-	public class EiPropertyEvent<T> : EiCore , EiUnityThreadCallbackInterface
+	public class EiPropertyEvent<T> : EiClass , EiUnityThreadCallbackInterface
 	{
 		#region Variables
 

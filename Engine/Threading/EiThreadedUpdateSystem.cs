@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Eitrum
 {
-	public class EiThreadedUpdateSystem : EiCoreSingleton<EiThreadedUpdateSystem>
+	public class EiThreadedUpdateSystem : EiClassSingleton<EiThreadedUpdateSystem>
 	{
 		#region Singleton Creation
 
@@ -26,7 +26,7 @@ namespace Eitrum
 
 		#region Classes
 
-		public class ThreadContainer : EiCore
+		public class ThreadContainer : EiClass
 		{
 			#region Variables
 

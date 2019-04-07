@@ -5,7 +5,7 @@ using Eitrum.Mathematics;
 
 namespace Eitrum
 {
-	public class EiRandomizedQueue<T> : EiCore
+	public class EiRandomizedQueue<T> : EiClass
 	{
 		#region Variables
 

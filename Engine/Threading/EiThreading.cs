@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Eitrum
 {
-	public class EiThreading : EiCore
+	public class EiThreading : EiClass
 	{
 		List<Action> actions = new List<Action> ();
 		EiSyncronizedQueue<Action> addQueue = new EiSyncronizedQueue<Action> ();

@@ -5,7 +5,7 @@ using Eitrum.Networking.Internal;
 
 namespace Eitrum.Networking
 {
-	public abstract class EiNetwork : EiCore
+	public abstract class EiNetwork : EiClass
 	{
 		#region Variables
 
