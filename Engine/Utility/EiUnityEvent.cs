@@ -2,8 +2,9 @@
 using UnityEngine.Events;
 using UnityEngine;
 using Eitrum;
+using Eitrum.Engine.Core;
 
-namespace Eitrum
+namespace Eitrum.Engine.Utility
 {
 	[Serializable]
 	public class UnityEventEiEntity : UnityEvent<EiEntity>

@@ -1,7 +1,9 @@
-﻿using System.Threading;
+﻿using Eitrum.Engine.Core;
+using Eitrum.Engine.Core.Singleton;
+using System.Threading;
 
-namespace Eitrum {
-    public class EiUnityThreading : EiComponentSingleton<EiUnityThreading> {
+namespace Eitrum.Engine.Threading {
+    public class UnityThreading : EiComponentSingleton<UnityThreading> {
 
         #region Singleton
 

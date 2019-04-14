@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Eitrum.Engine.Core;
+using UnityEngine;
 
 namespace Eitrum.Health {
 	public class EiDamageOnImpact : EiComponent {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eitrum.Engine.Core;
+using System;
 using UnityEngine;
 
 namespace Eitrum.Health

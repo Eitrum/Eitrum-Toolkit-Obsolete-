@@ -3,138 +3,124 @@ using System.Collections.Generic;
 using UnityEngine;
 using Eitrum.Mathematics;
 
-namespace Eitrum
-{
-	public class EiRandomizedQueue<T> : EiClass
-	{
-		#region Variables
+namespace Eitrum {
+    public class EiRandomizedQueue<T> {
+        #region Variables
 
-		[SerializeField]
-		protected List<T> content = new List<T> ();
-		protected EiRandom random = new EiRandom ();
+        [SerializeField]
+        protected List<T> content = new List<T>();
+        protected EiRandom random = new EiRandom();
 
-		#endregion
+        #endregion
 
-		#region Properties
+        #region Properties
 
-		public virtual int Seed {
-			get {
-				return random._Seed;
-			}
-			set {
-				random.SetSeed (value);
-			}
-		}
+        public virtual int Seed {
+            get {
+                return random._Seed;
+            }
+            set {
+                random.SetSeed(value);
+            }
+        }
 
-		public virtual bool HasValues {
-			get {
-				return content.Count > 0;
-			}
-		}
+        public virtual bool HasValues {
+            get {
+                return content.Count > 0;
+            }
+        }
 
-		public virtual int RandomIndex {
-			get {
-				return random._Range (0, content.Count);
-			}
-		}
+        public virtual int RandomIndex {
+            get {
+                return random._Range(0, content.Count);
+            }
+        }
 
-		public virtual T Random {
-			get {
-				return content [RandomIndex];
-			}
-		}
+        public virtual T Random {
+            get {
+                return content[RandomIndex];
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-		public EiRandomizedQueue ()
-		{
-			random = new EiRandom (EiRandom.Range (0, 1000000));
-		}
+        public EiRandomizedQueue() {
+            random = new EiRandom(EiRandom.Range(0, 1000000));
+        }
 
-		public EiRandomizedQueue (IEnumerable<T> items)
-		{
-			random = new EiRandom (EiRandom.Range (0, 1000000));
-			content.AddRange (items);
-		}
+        public EiRandomizedQueue(IEnumerable<T> items) {
+            random = new EiRandom(EiRandom.Range(0, 1000000));
+            content.AddRange(items);
+        }
 
-		#endregion
+        #endregion
 
-		#region Add
+        #region Add
 
-		public virtual void Add (T item)
-		{
-			content.Add (item);
-		}
+        public virtual void Add(T item) {
+            content.Add(item);
+        }
 
-		public virtual void AddRange (IEnumerable<T> items)
-		{
-			content.AddRange (items);
-		}
+        public virtual void AddRange(IEnumerable<T> items) {
+            content.AddRange(items);
+        }
 
-		#endregion
+        #endregion
 
-		#region Remove
+        #region Remove
 
-		public virtual void Remove (T item)
-		{
-			content.Remove (item);
-		}
+        public virtual void Remove(T item) {
+            content.Remove(item);
+        }
 
-		public virtual void RemoveAt (int index)
-		{
-			content.RemoveAt (index);
-		}
+        public virtual void RemoveAt(int index) {
+            content.RemoveAt(index);
+        }
 
-		#endregion
+        #endregion
 
-		#region Queue / Dequeue
+        #region Queue / Dequeue
 
-		public virtual void Queue (T item)
-		{
-			content.Add (item);
-		}
+        public virtual void Queue(T item) {
+            content.Add(item);
+        }
 
-		public virtual void Queue (IEnumerable<T> items)
-		{
-			content.AddRange (items);
-		}
+        public virtual void Queue(IEnumerable<T> items) {
+            content.AddRange(items);
+        }
 
-		public virtual T Dequeue ()
-		{
-			if (!HasValues)
-				return default(T);
-			var index = random._Range (0, content.Count);
-			var value = content [index];
-			content.RemoveAt (index);
-			return value;
-		}
+        public virtual T Dequeue() {
+            if (!HasValues)
+                return default(T);
+            var index = random._Range(0, content.Count);
+            var value = content[index];
+            content.RemoveAt(index);
+            return value;
+        }
 
-		#endregion
+        #endregion
 
-		#region Utils
+        #region Utils
 
-		public virtual void Clear ()
-		{
-			content.Clear ();
-		}
+        public virtual void Clear() {
+            content.Clear();
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 
-	public class EiRandomizedQueueInt : EiRandomizedQueue<int>
-	{
-		/// <summary>
-		/// Fill the specified range, inclusive min to exlusive max
-		/// </summary>
-		/// <param name="min">Minimum.</param>
-		/// <param name="max">Max.</param>
-		public void Fill (int min, int max)
-		{
-			for (int i = min; i < max; i++) {
-				content.Add (i);
-			}
-		}
-	}
+    public class EiRandomizedQueueInt : EiRandomizedQueue<int> {
+        /// <summary>
+        /// Fill the specified range, inclusive min to exlusive max
+        /// </summary>
+        /// <param name="min">Minimum.</param>
+        /// <param name="max">Max.</param>
+        public void Fill(int min, int max) {
+            for (int i = min; i < max; i++) {
+                content.Add(i);
+            }
+        }
+    }
 }

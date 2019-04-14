@@ -4,6 +4,7 @@ namespace Eitrum.Networking
 {
 	public enum EiNetworkType
 	{
+        None,
 		Singleplayer,
 		Photon,
 		Other

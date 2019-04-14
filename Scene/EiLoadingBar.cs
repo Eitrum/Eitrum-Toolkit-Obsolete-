@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Eitrum;
+using Eitrum.Engine.Core;
 
 namespace Eitrum.Loading
 {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Eitrum {
+namespace Eitrum.Engine.Core {
     [AddComponentMenu("Eitrum/Core/Entity")]
     public class EiEntity : EiComponent {
 
@@ -38,9 +38,6 @@ namespace Eitrum {
 
         [SerializeField]
         private AudioSource audioComponent;
-
-        [SerializeField]
-        private EiInput input;
 
 #if EITRUM_POOLING
         [Header("Pool Settings")]
@@ -111,12 +108,6 @@ namespace Eitrum {
             }
             set {
                 audioComponent = value;
-            }
-        }
-
-        public EiInput Input {
-            get {
-                return input;
             }
         }
 
@@ -207,7 +198,7 @@ namespace Eitrum {
         }
 
         public new void Destroy(float delay) {
-            EiTimer.Once(delay, Destroy, ref destroyCoroutine);
+            Timer.Once(delay, Destroy, ref destroyCoroutine);
         }
 
 
@@ -256,15 +247,13 @@ namespace Eitrum {
         public virtual void AddMissingComponents() {
             if (!rigidbodyComponent)
                 rigidbodyComponent = this.GetOrAddComponent<Rigidbody>();
-            if (!colliderComponent)
-                Debug.LogWarning("Can't add 'collider'. Manually add collider if you want it");
+            if (!colliderComponent) {
+                colliderComponent = GetComponent<Collider>();
+                if (!colliderComponent)
+                    Debug.LogWarning("Can't add 'collider'. Manually add collider if you want it");
+            }
             if (!audioComponent)
                 audioComponent = this.GetOrAddComponent<AudioSource>();
-            if (!input) {
-                input = this.GetComponent<EiInput>();
-                if (!input)
-                    Debug.LogWarning("Input Component Will not be created, make sure you do not need it or add it manually");
-            }
         }
 
         protected override void AttachComponents() {
@@ -272,7 +261,6 @@ namespace Eitrum {
             rigidbodyComponent = GetComponentInChildren<Rigidbody>();
             colliderComponent = GetComponentInChildren<Collider>();
             audioComponent = GetComponentInChildren<AudioSource>();
-            input = GetComponentInChildren<EiInput>();
         }
 
         #endregion

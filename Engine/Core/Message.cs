@@ -2,44 +2,44 @@
 
 namespace Eitrum
 {
-	public class EiMessage
+	public class Message
 	{
 		#region Publish
 
 		public static void Publish<T> (T message) where T : class
 		{
-			EiMessage<T>.Publish (message);
+			Message<T>.Publish (message);
 		}
 
 		public static void Publish<T> (T message, int channel) where T: class
 		{
-			EiMessage<T>.Publish (message, channel);
+			Message<T>.Publish (message, channel);
 		}
 
 		#endregion
 
 		#region Subscribe
 
-		public static EiLLNode<EiMessageSubscriber<T>> Subscribe<T> (IBase target, Action<T> method, int channel = 0)
+		public static EiLLNode<MessageSubscriber<T>> Subscribe<T> (IBase target, Action<T> method, int channel = 0)
 		{
-			var newSub = new EiMessageSubscriber <T> (target, method);
+			var newSub = new MessageSubscriber <T> (target, method);
 			newSub.channel = channel;
-			return EiMessage<T>.subscribers.Add (newSub);
+			return Message<T>.subscribers.Add (newSub);
 		}
 
 		#endregion
 
 		#region Unsubscribe
 
-		public static void Unsubscribe<T> (EiLLNode<EiMessageSubscriber<T>> component)
+		public static void Unsubscribe<T> (EiLLNode<MessageSubscriber<T>> component)
 		{
-			EiMessage<T>.subscribers.Remove (component);
+			Message<T>.subscribers.Remove (component);
 		}
 
 		#endregion
 	}
 
-	public class EiMessageSubscriber<T>
+	public class MessageSubscriber<T>
 	{
 		#region Variables
 
@@ -53,7 +53,7 @@ namespace Eitrum
 
 		#region Constructors
 
-		public EiMessageSubscriber (IBase baseInterface, Action<T> method)
+		public MessageSubscriber (IBase baseInterface, Action<T> method)
 		{
 			this.baseInterface = baseInterface;
 			this.method = method;
@@ -78,16 +78,16 @@ namespace Eitrum
 		#endregion
 	}
 
-	public class EiMessage<T>
+	public class Message<T>
 	{
-		public static EiLinkedList<EiMessageSubscriber<T>> subscribers = new EiLinkedList<EiMessageSubscriber<T>> ();
+		public static EiLinkedList<MessageSubscriber<T>> subscribers = new EiLinkedList<MessageSubscriber<T>> ();
 
 		#region Publish
 
 		public static void Publish (T message)
 		{
 			var iterator = subscribers.GetIterator ();
-			EiLLNode<EiMessageSubscriber<T>> subsNode;
+			EiLLNode<MessageSubscriber<T>> subsNode;
 			while (iterator.Next (out subsNode)) {
 				if (subsNode.Value.IsDestroyed) {
 					iterator.DestroyCurrent ();
@@ -99,7 +99,7 @@ namespace Eitrum
 		public static void Publish (T message, int channel)
 		{
 			var iterator = subscribers.GetIterator ();
-			EiLLNode<EiMessageSubscriber<T>> subsNode;
+			EiLLNode<MessageSubscriber<T>> subsNode;
 			while (iterator.Next (out subsNode)) {
 				if (subsNode.Value.IsDestroyed) {
 					iterator.DestroyCurrent ();

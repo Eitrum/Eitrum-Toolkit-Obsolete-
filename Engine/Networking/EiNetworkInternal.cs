@@ -1,6 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Eitrum.Networking.Plugin;
+using Eitrum.Engine.Core;
 
 namespace Eitrum.Networking.Internal
 {
@@ -124,19 +126,19 @@ namespace Eitrum.Networking.Internal
 		public void OnConnected ()
 		{
 			Log ("Connected to service");
-			Publish (new NetworkConnectedMessage ());
+			Message.Publish (new NetworkConnectedMessage ());
 		}
 
 		public void OnConnectedFailed (string error)
 		{
 			LogError ("Failed connecting to service: " + error);
-			Publish (new NetworkConnectedFailedMessage (error));
+			Message.Publish (new NetworkConnectedFailedMessage (error));
 		}
 
 		public void OnDisconnected ()
 		{
 			Log ("Disconnected from service successfully");
-			Publish (new NetworkDisconnectedMessage ());
+			Message.Publish (new NetworkDisconnectedMessage ());
 			playerList.Clear ();
 			serverList.Clear ();
 			localPlayer = null;
@@ -145,37 +147,37 @@ namespace Eitrum.Networking.Internal
 		public void OnDisconnectedError (string errorCode)
 		{
 			LogError ("Disconnected from service: " + errorCode);
-			Publish (new NetworkDisconnectedMessage (errorCode));
+            Message.Publish (new NetworkDisconnectedMessage (errorCode));
 		}
 
 		public void OnCreatedServer (EiNetworkServerInternal serverInternal)
 		{
 			Log ("Server Created - " + serverInternal.Name);
-			Publish (new NetworkServerCreatedMessage (serverInternal));
+            Message.Publish (new NetworkServerCreatedMessage (serverInternal));
 		}
 
 		public void OnCreatedServerFailed (string errorCode)
 		{
 			LogError ("Server Failed to create: " + errorCode);
-			Publish (new NetworkServerCreatedFailedMessage (errorCode));
+            Message.Publish (new NetworkServerCreatedFailedMessage (errorCode));
 		}
 
 		public void OnJoinedServer (EiNetworkServerInternal serverInternal)
 		{
 			Log ("Joined server - " + serverInternal.Name);
-			Publish (new NetworkServerJoinedMessage (serverInternal));
+            Message.Publish (new NetworkServerJoinedMessage (serverInternal));
 		}
 
 		public void OnJoinedServerFailed (string errorCode)
 		{
 			Log ("Joined server failed: " + errorCode);
-			Publish (new NetworkServerJoinedFailedMessage (errorCode));
+            Message.Publish (new NetworkServerJoinedFailedMessage (errorCode));
 		}
 
 		public void OnLeftServer ()
 		{
 			Log ("Left Server successfully");
-			Publish (new NetworkServerLeftMessage ());
+            Message.Publish (new NetworkServerLeftMessage ());
 			playerList.Clear ();
 			serverList.Clear ();
 			localPlayer = null;

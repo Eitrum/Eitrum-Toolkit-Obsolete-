@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Eitrum.Engine.Core.Singleton;
+using System;
 
-namespace Eitrum {
-    public class EiUpdateSystem : EiComponentSingleton<EiUpdateSystem> {
+namespace Eitrum.Engine.Core {
+    public class UpdateSystem : EiComponentSingleton<UpdateSystem> {
 
         #region Singleton stuff
 

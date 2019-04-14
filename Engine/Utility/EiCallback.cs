@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Eitrum
 {
-	public class EiCallback : EiClass
+	public class EiCallback
 	{
 		#region Variables
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Eitrum.Engine.Core;
+using UnityEngine;
 using UnityEngine.XR;
 
 namespace Eitrum.VR {

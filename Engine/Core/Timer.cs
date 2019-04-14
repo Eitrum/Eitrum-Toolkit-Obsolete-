@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Eitrum.Engine.Core.Singleton;
+using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Eitrum
-{
-	public sealed class EiTimer
+namespace Eitrum.Engine.Core {
+	public sealed class Timer
 	{
 		#region Singleton
 
-		public static EiTimerBehaviour Instance {
+		public static TimerBehaviour Instance {
 			get {
-				return EiTimerBehaviour.Instance;
+				return TimerBehaviour.Instance;
 			}
 		}
 
@@ -268,7 +268,7 @@ namespace Eitrum
 		#endregion
 	}
 
-	public sealed class EiTimerBehaviour : EiComponentSingleton<EiTimerBehaviour>
+	public sealed class TimerBehaviour : EiComponentSingleton<TimerBehaviour>
 	{
 		#region Once
 

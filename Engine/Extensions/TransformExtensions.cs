@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Eitrum.Engine.Core;
+using System;
 using UnityEngine;
 
-namespace Eitrum
+namespace Eitrum.Engine.Extensions
 {
 	public static class TransformExtensions
 	{

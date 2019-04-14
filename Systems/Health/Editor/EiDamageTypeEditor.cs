@@ -9,7 +9,7 @@ namespace Eitrum.Health
 	[CustomPropertyDrawer (typeof(EiDamageType))]
 	public class EiDamageTypeEditor : PropertyDrawer
 	{
-		static string path = "Assets/Eitrum/Configuration/EiDamageTypeResource.prefab";
+		static string path = "Assets/Eitrum/Resources/DamageTypeResource.asset";
 
 		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
 		{
@@ -19,18 +19,17 @@ namespace Eitrum.Health
 				items.Add ("None");
 				ids.Add (-1);
 
-				var go = AssetDatabase.LoadAssetAtPath<GameObject> (path);
-				if (!go) {
-					var tempObj = new GameObject ("EiDamageTypeResource", typeof(DamageTypeResource));
+				var resources = AssetDatabase.LoadAssetAtPath<DamageTypeResource> (path);
+				if (!resources) {
+                    var tempObj = ScriptableObject.CreateInstance<DamageTypeResource>();
 					EiDamageTypeResourceEditor.LoadDefaultValues ();
 					var list = EiDamageTypeResourceEditor.defaultValues;
-					var tempResource = tempObj.GetComponent<DamageTypeResource> ();
-					tempResource.GetType ().GetField ("damageCategories", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (tempResource, list);
-					go = PrefabUtility.SaveAsPrefabAsset (tempObj, path);
-					UnityEngine.MonoBehaviour.DestroyImmediate (tempObj);
-				}
+                    tempObj.GetType ().GetField ("damageCategories", BindingFlags.NonPublic | BindingFlags.Instance).SetValue (tempObj, list);
+                    AssetDatabase.CreateAsset(tempObj, path);
+                    resources = tempObj;
 
-				DamageTypeResource resources = go.GetComponent<DamageTypeResource> ();
+                }
+
 				var currentSelectedId = property.intValue;
 				var index = 0;
 
@@ -62,7 +61,7 @@ namespace Eitrum.Health
 				databaseReferencePosition.width = 20f;
 				if (GUI.Button(databaseReferencePosition, "~"))
 				{
-					Selection.activeObject = go;
+					Selection.activeObject = resources;
 				}
 
 			} else {

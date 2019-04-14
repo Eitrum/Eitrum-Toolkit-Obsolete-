@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Eitrum.Engine.Core;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Eitrum.Database {
@@ -68,7 +69,7 @@ namespace Eitrum.Database {
 
         void _Add(Data data) {
             if (toInstantiate.Count == 0)
-                EiUpdateSystem.Instance.SubscribeUpdate(this);
+                UpdateSystem.Instance.SubscribeUpdate(this);
             toInstantiate.Add(data);
         }
 

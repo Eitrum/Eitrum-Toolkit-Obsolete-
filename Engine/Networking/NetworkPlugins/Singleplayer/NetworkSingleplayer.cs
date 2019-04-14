@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Eitrum.Networking.Internal;
+using System;
 
-namespace Eitrum.Networking.Internal
+namespace Eitrum.Networking.Plugin
 {
 	public class NetworkSingleplayer : INetwork
 	{

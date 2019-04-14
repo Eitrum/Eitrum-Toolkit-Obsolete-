@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Eitrum.Engine.Core;
+using Eitrum.Engine.Extensions;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -62,15 +64,15 @@ namespace Eitrum.VR.UI {
 		void ApplyClickTransition() {
 			lastColor = currentColor;
 			newColor = onPointerClick;
-			EiTimer.Stop(transition);
-			transition = EiTimer.Animate(transitionTime, Animation, () => ApplyColorTransition(normal));
+			Timer.Stop(transition);
+			transition = Timer.Animate(transitionTime, Animation, () => ApplyColorTransition(normal));
 		}
 
 		void ApplyColorTransition(Color color) {
 			lastColor = currentColor;
 			newColor = color;
-			EiTimer.Stop(transition);
-			transition = EiTimer.Animate(transitionTime, Animation);
+			Timer.Stop(transition);
+			transition = Timer.Animate(transitionTime, Animation);
 		}
 
 		void Animation(float time) {

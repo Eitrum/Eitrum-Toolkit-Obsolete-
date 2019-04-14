@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Eitrum.Mathematics;
+using Eitrum.Engine.Core;
 
 namespace Eitrum.Utility.Spawner {
 	[AddComponentMenu("Eitrum/Utility/Spawner/Prefab Spawner")]

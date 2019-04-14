@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Eitrum.Engine.Core;
 
 namespace Eitrum.Health
 {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Eitrum.Engine.Core;
+using UnityEngine;
 
 namespace Eitrum.Utility.Rotation {
 	[AddComponentMenu("Eitrum/Utility/Rotation/Basic Rotation")]
@@ -9,21 +10,19 @@ namespace Eitrum.Utility.Rotation {
 		private Vector3 rotation = Vector3.zero;
 		[SerializeField]
 		private Space rotationSpace = Space.Self;
+        [SerializeField]
+        private UpdateMode updateMode = UpdateMode.PreUpdate;
 
-		#endregion
+        #endregion
 
-		#region Core
-
-		private void Awake() {
-			SubscribeUpdate();
-		}
+        #region Core
 
 		private void OnEnable() {
-			SubscribeUpdate();
+			Subscribe(updateMode);
 		}
 
 		private void OnDisable() {
-			UnsubscribeUpdate();
+			Unsubscribe(updateMode);
 		}
 
 		public override void UpdateComponent(float time) {

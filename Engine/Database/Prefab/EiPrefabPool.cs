@@ -1,7 +1,9 @@
 ﻿using Eitrum.Database;
+using Eitrum.Engine.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Eitrum.Engine.Extensions;
 
 namespace Eitrum {
     [Serializable]
@@ -165,7 +167,7 @@ namespace Eitrum {
         /// <param name="time"></param>
         public void Fill(int amount, float time) {
             amount -= pooledObjects.Count;
-            EiTimer.Repeat(time / (float)amount, amount, Edit.LoadPrefab);
+            Timer.Repeat(time / (float)amount, amount, Edit.LoadPrefab);
         }
 
         /// <summary>

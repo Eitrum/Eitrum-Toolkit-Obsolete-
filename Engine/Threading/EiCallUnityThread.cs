@@ -1,27 +1,23 @@
-﻿using System;
+﻿using Eitrum.Engine.Core;
+using System;
 
-namespace Eitrum.Threading
-{
-	public class EiCallUnityThread : EiClass, EiUnityThreadCallbackInterface
-	{
-		private Action method;
+namespace Eitrum.Engine.Threading {
+    public class EiCallUnityThread : EiUnityThreadCallbackInterface {
+        private Action method;
 
-		public EiCallUnityThread (Action method)
-		{
-			this.method = method;
-			while (!EiUpdateSystem.AddUnityThreadCallbackToQueue (this)) {
+        public EiCallUnityThread(Action method) {
+            this.method = method;
+            while (!UpdateSystem.AddUnityThreadCallbackToQueue(this)) {
 
-			}
-		}
+            }
+        }
 
-		public void UnityThreadOnChangeOnly ()
-		{
-			method ();
-		}
+        public void UnityThreadOnChangeOnly() {
+            method();
+        }
 
-		public static EiCallUnityThread New (Action method)
-		{
-			return new EiCallUnityThread (method);
-		}
-	}
+        public static EiCallUnityThread New(Action method) {
+            return new EiCallUnityThread(method);
+        }
+    }
 }

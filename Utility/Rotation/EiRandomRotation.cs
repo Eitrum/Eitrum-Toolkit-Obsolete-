@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Eitrum.Mathematics;
+using Eitrum.Engine.Core;
 
 namespace Eitrum.Utility.Rotation {
 	[AddComponentMenu("Eitrum/Utility/Rotation/Random Rotation")]
@@ -12,6 +13,8 @@ namespace Eitrum.Utility.Rotation {
 		private Vector3 maxRotation = Vector3.zero;
 		[SerializeField]
 		private Space rotationSpace = Space.Self;
+        [SerializeField]
+        private UpdateMode updateMode = UpdateMode.PreUpdate;
 
 		private Vector3 rotation;
 
@@ -25,15 +28,14 @@ namespace Eitrum.Utility.Rotation {
 				Mathf.Lerp(minRotation.y, maxRotation.y, EiRandom.Float),
 				Mathf.Lerp(minRotation.z, maxRotation.z, EiRandom.Float)
 				);
-			SubscribeUpdate();
 		}
 
 		private void OnEnable() {
-			SubscribeUpdate();
+			Subscribe(updateMode);
 		}
 
 		private void OnDisable() {
-			UnsubscribeUpdate();
+			Unsubscribe(updateMode);
 		}
 
 		public override void UpdateComponent(float time) {

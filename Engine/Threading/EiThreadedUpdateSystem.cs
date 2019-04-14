@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Threading;
 using System.Diagnostics;
-using System.Collections.Generic;
+using Eitrum.Engine.Core.Singleton;
+using Eitrum.Engine.Core;
 
-namespace Eitrum
+namespace Eitrum.Engine.Threading
 {
-	public class EiThreadedUpdateSystem : EiClassSingleton<EiThreadedUpdateSystem>
+	public class ThreadedUpdateSystem : ClassSingleton<ThreadedUpdateSystem>
 	{
-		#region Singleton Creation
+        #region Singleton Creation
 
-		public override void SingletonCreation ()
-		{
-			var us = EiUpdateSystem.Instance;
+        protected override void OnSingletonCreated() {
+			var us = UpdateSystem.Instance;
 			var processors = Math.Max (1, Environment.ProcessorCount - 1);
 			for (int i = 0; i < processors; i++) {
 				var thread = new ThreadContainer (10000);
 				var node = threads.Add (thread);
 				thread.SetNode (node);
 			}
-			var inst = EiUnityThreading.Instance;
-			EiUnityThreading.CloseThreads.Subscribe (CloseThreads, true);
+			var inst = UnityThreading.Instance;
+			UnityThreading.CloseThreads.Subscribe (CloseThreads, true);
 		}
 
 		#endregion
 
 		#region Classes
 
-		public class ThreadContainer : EiClass
+		public class ThreadContainer
 		{
 			#region Variables
 

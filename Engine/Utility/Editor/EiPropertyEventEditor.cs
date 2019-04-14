@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Eitrum
+namespace Eitrum.Engine.Core
 {
 	[CustomPropertyDrawer (typeof(EiPropertyEventFloat))]
 	public class EiPropertyEventEditor : PropertyDrawer

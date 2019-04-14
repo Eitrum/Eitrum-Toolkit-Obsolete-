@@ -12,6 +12,8 @@ namespace Eitrum.Networking
 
 		bool IsLocalPlayer{ get; }
 
+        bool Exists { get; }
+
 		#endregion
 
 		#region Methods
@@ -64,6 +66,9 @@ namespace Eitrum.Networking.Internal
 				return network.LocalPlayer.Id == playerId;
 			}
 		}
+
+        // TODO: implement exists check
+        public bool Exists { get { return true; } }
 
 		#endregion
 

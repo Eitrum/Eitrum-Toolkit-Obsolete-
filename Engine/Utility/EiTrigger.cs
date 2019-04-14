@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eitrum.Engine.Threading;
+using System;
 
 namespace Eitrum
 {
@@ -163,7 +164,7 @@ namespace Eitrum
 		public void Trigger(T value)
 		{
 			this.value = value;
-			if (EiUnityThreading.IsMainThread)
+			if (UnityThreading.IsMainThread)
 			{
 				UnityThreadTrigger();
 				EiTask.Run(AnyThreadTrigger);

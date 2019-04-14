@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Eitrum.Engine.Core;
+using UnityEngine;
 
 namespace Eitrum.VR.Utility {
 	public class VRSnapBack : EiComponent {
@@ -37,13 +38,13 @@ namespace Eitrum.VR.Utility {
 				startPosition = this.transform.position;
 				startRotation = this.transform.rotation;
 			}
-			EiTimer.Stop(coroutine);
+			Timer.Stop(coroutine);
 		}
 
 		void OnRelease(VRGrab grab) {
 			lastMovedPosition = this.transform.position;
 			lastMovedRotation = this.transform.rotation;
-			coroutine = EiTimer.Animate(duration, AnimateBack, Reset);
+			coroutine = Timer.Animate(duration, AnimateBack, Reset);
 		}
 
 		void AnimateBack(float time) {

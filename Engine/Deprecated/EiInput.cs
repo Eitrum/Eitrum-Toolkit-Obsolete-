@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Eitrum
+namespace Eitrum.Engine.Core.Deprecated
 {
 	[AddComponentMenu ("Eitrum/Core/Input")]
 	public class EiInput : EiComponent

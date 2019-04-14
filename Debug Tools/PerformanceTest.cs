@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Eitrum;
+using Eitrum.Engine.Core;
 using UnityEngine;
 
 public class PerformanceTest : EiComponent {

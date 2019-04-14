@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eitrum.Engine.Core;
+using System;
 
 namespace Eitrum.Energy
 {

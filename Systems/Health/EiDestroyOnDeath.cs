@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eitrum.Engine.Core;
+using System;
 using UnityEngine;
 
 namespace Eitrum.Health {
@@ -30,7 +31,7 @@ namespace Eitrum.Health {
 			if (timeBeforeDestroy == 0f)
 				DestroyThis();
 			else
-				EiTimer.Once(timeBeforeDestroy, DestroyThis);
+				Timer.Once(timeBeforeDestroy, DestroyThis);
 		}
 
 		void DestroyThis() {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Eitrum.Engine.Core;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +21,6 @@ namespace Eitrum.Utility.Rotation {
 
 		private void Awake() {
 			body = Entity.Body;
-			SubscribeFixedUpdate();
 		}
 
 		private void OnEnable() {

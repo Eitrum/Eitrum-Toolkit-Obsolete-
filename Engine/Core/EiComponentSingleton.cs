@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Eitrum {
+namespace Eitrum.Engine.Core.Singleton {
     public class EiComponentSingleton<T> : EiComponent where T : EiComponentSingleton<T> {
 
         #region Singleton

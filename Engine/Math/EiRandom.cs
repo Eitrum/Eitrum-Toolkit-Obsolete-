@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.CompilerServices;
+using Eitrum.Engine.Core.Singleton;
 
 namespace Eitrum.Mathematics
 {
-	public sealed class EiRandom : EiClassSingleton<EiRandom>
+	public sealed class EiRandom : ClassSingleton<EiRandom>
 	{
 		#region Variables
 
@@ -148,7 +149,7 @@ namespace Eitrum.Mathematics
 
 		public EiRandom ()
 		{
-			seed = (instance == null) ? DateTime.UtcNow.Millisecond : Int;
+			seed = (!HasInstance) ? DateTime.UtcNow.Millisecond : Int;
 			random = new System.Random (seed);
 		}
 

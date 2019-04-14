@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Eitrum.Engine.Threading;
+using System;
 using UnityEngine;
 
 #if EITRUM_NETWORKING
 using Eitrum.Networking;
 #endif
 
-namespace Eitrum {
+namespace Eitrum.Engine.Core {
     public class EiComponent : MonoBehaviour, IPreUpdate, IUpdate, ILateUpdate, IFixedUpdate, IThreadedUpdate {
         #region Variables
 
@@ -55,7 +56,7 @@ namespace Eitrum {
 
         public static bool GameRunning {
             get {
-                return EiUnityThreading.gameRunning;
+                return UnityThreading.gameRunning;
             }
         }
 
@@ -177,12 +178,12 @@ namespace Eitrum {
         /// <returns>The update timer.</returns>
         /// <param name="time">Time.</param>
         /// <param name="method">Method.</param>
-        protected EiLLNode<EiUpdateSystem.TimerUpdateData> SubscribeUpdateTimer(float time, Action method) {
-            return EiUpdateSystem.Instance.SubscribeUpdateTimer(this, time, method);
+        protected EiLLNode<UpdateSystem.TimerUpdateData> SubscribeUpdateTimer(float time, Action method) {
+            return UpdateSystem.Instance.SubscribeUpdateTimer(this, time, method);
         }
 
-        protected void UnsubscribeUpdateTimer(EiLLNode<EiUpdateSystem.TimerUpdateData> node) {
-            EiUpdateSystem.Instance.UnsubscribeTimerUpdate(node);
+        protected void UnsubscribeUpdateTimer(EiLLNode<UpdateSystem.TimerUpdateData> node) {
+            UpdateSystem.Instance.UnsubscribeTimerUpdate(node);
         }
 
         #endregion
@@ -191,12 +192,12 @@ namespace Eitrum {
 
         protected void SubscribePreUpdate() {
             if (preUpdateNode == null)
-                preUpdateNode = EiUpdateSystem.Instance.SubscribePreUpdate(this);
+                preUpdateNode = UpdateSystem.Instance.SubscribePreUpdate(this);
         }
 
         protected void UnsubscribePreUpdate() {
             if (preUpdateNode != null)
-                EiUpdateSystem.Instance.UnsubscribePreUpdate(preUpdateNode);
+                UpdateSystem.Instance.UnsubscribePreUpdate(preUpdateNode);
             preUpdateNode = null;
         }
 
@@ -206,12 +207,12 @@ namespace Eitrum {
 
         protected void SubscribeUpdate() {
             if (updateNode == null)
-                updateNode = EiUpdateSystem.Instance.SubscribeUpdate(this);
+                updateNode = UpdateSystem.Instance.SubscribeUpdate(this);
         }
 
         protected void UnsubscribeUpdate() {
             if (updateNode != null && GameRunning)
-                EiUpdateSystem.Instance.UnsubscribeUpdate(updateNode);
+                UpdateSystem.Instance.UnsubscribeUpdate(updateNode);
             updateNode = null;
         }
 
@@ -221,12 +222,12 @@ namespace Eitrum {
 
         protected void SubscribeThreadedUpdate() {
             if (threadedUpdateNode == null)
-                threadedUpdateNode = EiThreadedUpdateSystem.Instance.Subscribe(this);
+                threadedUpdateNode = ThreadedUpdateSystem.Instance.Subscribe(this);
         }
 
         protected void UnsubscribeThreadedUpdate() {
             if (threadedUpdateNode != null)
-                EiThreadedUpdateSystem.Instance.Unsubscribe(threadedUpdateNode);
+                ThreadedUpdateSystem.Instance.Unsubscribe(threadedUpdateNode);
             threadedUpdateNode = null;
         }
 
@@ -236,12 +237,12 @@ namespace Eitrum {
 
         protected void SubscribeLateUpdate() {
             if (lateUpdateNode == null)
-                lateUpdateNode = EiUpdateSystem.Instance.SubscribeLateUpdate(this);
+                lateUpdateNode = UpdateSystem.Instance.SubscribeLateUpdate(this);
         }
 
         protected void UnsubscribeLateUpdate() {
             if (lateUpdateNode != null)
-                EiUpdateSystem.Instance.UnsubscribeLateUpdate(lateUpdateNode);
+                UpdateSystem.Instance.UnsubscribeLateUpdate(lateUpdateNode);
             lateUpdateNode = null;
         }
 
@@ -251,29 +252,79 @@ namespace Eitrum {
 
         protected void SubscribeFixedUpdate() {
             if (fixedUpdateNode == null)
-                fixedUpdateNode = EiUpdateSystem.Instance.SubscribeFixedUpdate(this);
+                fixedUpdateNode = UpdateSystem.Instance.SubscribeFixedUpdate(this);
         }
 
         protected void UnsubscribeFixedUpdate() {
             if (fixedUpdateNode != null)
-                EiUpdateSystem.Instance.UnsubscribeFixedUpdate(fixedUpdateNode);
+                UpdateSystem.Instance.UnsubscribeFixedUpdate(fixedUpdateNode);
             fixedUpdateNode = null;
+        }
+
+        #endregion
+
+        #region Subscribe Update Mode
+
+        protected void Subscribe(UpdateMode mode) {
+            switch (mode) {
+                case UpdateMode.PreUpdate:
+                    SubscribePreUpdate();
+                    return;
+                case UpdateMode.Update:
+                    SubscribeUpdate();
+                    return;
+                case UpdateMode.LateUpdate:
+                    SubscribeLateUpdate();
+                    return;
+                case UpdateMode.PostUpdate:
+                    Debug.LogError("Post Update yet not implemented");
+                    return;
+                case UpdateMode.FixedUpdate:
+                    SubscribeFixedUpdate();
+                    return;
+                case UpdateMode.ThreadedUpdate:
+                    SubscribeThreadedUpdate();
+                    return;
+            }
+        }
+
+        protected void Unsubscribe(UpdateMode mode) {
+            switch (mode) {
+                case UpdateMode.PreUpdate:
+                    UnsubscribePreUpdate();
+                    return;
+                case UpdateMode.Update:
+                    UnsubscribeUpdate();
+                    return;
+                case UpdateMode.LateUpdate:
+                    UnsubscribeLateUpdate();
+                    return;
+                case UpdateMode.PostUpdate:
+                    Debug.LogError("Post Update yet not implemented");
+                    return;
+                case UpdateMode.FixedUpdate:
+                    UnsubscribeFixedUpdate();
+                    return;
+                case UpdateMode.ThreadedUpdate:
+                    UnsubscribeThreadedUpdate();
+                    return;
+            }
         }
 
         #endregion
 
         #region Message System
 
-        protected EiLLNode<EiMessageSubscriber<T>> Subscribe<T>(Action<T> action) {
-            return EiMessage.Subscribe<T>(this, action);
+        protected EiLLNode<MessageSubscriber<T>> Subscribe<T>(Action<T> action) {
+            return Message.Subscribe<T>(this, action);
         }
 
-        public static void Unsubscribe<T>(EiLLNode<EiMessageSubscriber<T>> subscriber) {
-            EiMessage.Unsubscribe<T>(subscriber);
+        public static void Unsubscribe<T>(EiLLNode<MessageSubscriber<T>> subscriber) {
+            Message.Unsubscribe<T>(subscriber);
         }
 
         public static void Publish<T>(T message) {
-            EiMessage<T>.Publish(message);
+            Message<T>.Publish(message);
         }
 
         #endregion

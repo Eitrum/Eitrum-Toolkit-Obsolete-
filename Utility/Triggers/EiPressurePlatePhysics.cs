@@ -2,6 +2,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using Eitrum.Engine.Core;
+using Eitrum.Engine.Utility;
 
 namespace Eitrum.Utility.Trigger
 {
