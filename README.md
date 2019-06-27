@@ -1,4 +1,4 @@
-# NOT LONGER IN PRODUCTION AND IS NOT ALLOWED TO BE USED
+# NOT LONGER IN PRODUCTION AND IS NOT ALLOWED TO BE USED - THIS PROJECT IS MOVED INTO V2 TO SUPPORT MULTIPLAYER BY DEFAULT + UNITY DOTS
 
 # EiComponent
 A framework to develop and make games with good performance and multi-threaded system for Unity.
